@@ -12,7 +12,7 @@ import javax.swing.JPanel;
  * @author Wong Chi Jian
  */
 public class OODMS extends JFrame{
-    private final JPanel start;
+    JPanel start;
 
     public OODMS() {
         start = new TestJPanel();
