@@ -1,6 +1,8 @@
 package com.mycompany.oodms.user;
 
-public abstract class User implements UserAuthn{
+public abstract class User implements UserAuthn {
+    public static final String userFilename = "user";
+
     private Long id;
     private String username;
     private String password;
@@ -63,5 +65,16 @@ public abstract class User implements UserAuthn{
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", staff=" + staff +
+                ", admin=" + admin +
+                '}';
     }
 }

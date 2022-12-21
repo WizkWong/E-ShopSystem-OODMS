@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer extends User {
+    public static final String filename = "customer";
+
     private String phoneNo;
     private String address;
     private List<CartItem> cart;
@@ -48,6 +50,28 @@ public class Customer extends User {
         }
     }
 
+    public static Customer StringToCustomer(List<String> customerData) {
+        return new Customer(
+                Long.parseLong(customerData.get(0)),
+                customerData.get(1),
+                customerData.get(2),
+                Boolean.parseBoolean(customerData.get(3)),
+                Boolean.parseBoolean(customerData.get(4)),
+                customerData.get(5),
+                customerData.get(6)
+        );
+    }
+
+    public static List<String> joinWithUser(List<String> customerData, List<String> userData) {
+        if (customerData.size() == 3 && userData.size() == 5) {
+            customerData.remove(0);
+            userData.addAll(customerData);
+            return userData;
+        } else {
+            throw new RuntimeException("WARNING, customerData or userData does not fulfill condition or not follow the format");
+        }
+    }
+
     public String getPhoneNo() {
         return phoneNo;
     }
@@ -70,5 +94,15 @@ public class Customer extends User {
 
     public void setCart(List<CartItem> cart) {
         this.cart = cart;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{ " +
+                super.toString() + ", " +
+                "phoneNo='" + phoneNo + '\'' +
+                ", address='" + address + '\'' +
+                ", cart=" + cart +
+                '}';
     }
 }

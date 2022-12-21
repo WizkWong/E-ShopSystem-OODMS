@@ -4,15 +4,12 @@
 
 package com.mycompany.oodms;
 
-import com.mycompany.oodms.customer.Customer;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Wong Chi Jian
  */
 public class OODMS extends JFrame{
-    static String fileDirectory = "src\\file\\";
+    public static final String fileDirectory = "src\\file\\";
     JPanel start;
 
     public OODMS() {
@@ -32,9 +29,9 @@ public class OODMS extends JFrame{
         
     }
 
-    public static List<List<String>> readFile(Object object) {
+    public static List<List<String>> readFile(String string) {
         // make sure the class name does not appear twice in different package
-        String filename = String.format("%s%s.txt", fileDirectory, object.getClass().getSimpleName());
+        String filename = String.format("%s%s.txt", fileDirectory, string);
         File file = new File(filename);
         checkFileExist(file);
 
@@ -75,7 +72,7 @@ public class OODMS extends JFrame{
         }
     }
 
-    public static void createOrModifyFile(String filename, String content, Boolean append) {
+    public static void modifyFile(String filename, String content, Boolean append) {
         // create or replace the file
         FileWriter fw;
         BufferedWriter bw = null;
