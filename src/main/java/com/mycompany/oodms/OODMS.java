@@ -33,8 +33,9 @@ public class OODMS extends JFrame{
         // make sure the class name does not appear twice in different package
         String filename = String.format("%s%s.txt", fileDirectory, string);
         File file = new File(filename);
-        checkFileExist(file);
-
+        if (!file.exists()) {
+            createFile(file);
+        }
         FileReader fr;
         BufferedReader br = null;
         List<List<String>> array = new ArrayList<>();
@@ -56,19 +57,23 @@ public class OODMS extends JFrame{
         return array;
     }
 
-    public static void checkFileExist(File file) {
+    public static void createFile(File file) {
         // create or replace the file
-        File directory;
-        if ((directory = file.getParentFile()) != null) {
-            directory.mkdir();
+        File directory = file.getParentFile();
+        if (directory != null) {
+            if (!(directory).exists()) {
+                if (!directory.mkdir()) {
+                    throw new RuntimeException(String.format("Fail to create a new file \"%s\"", file.getName()));
+                }
+            }
         }
 
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (!file.createNewFile()) {
+                throw new RuntimeException(String.format("Fail to create a new file \"%s\"", file.getName()));
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
