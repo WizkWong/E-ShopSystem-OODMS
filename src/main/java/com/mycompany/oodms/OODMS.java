@@ -29,9 +29,9 @@ public class OODMS extends JFrame{
         
     }
 
-    public static List<List<String>> readFile(String string) {
+    public static List<List<String>> readFile(String name) {
         // make sure the class name does not appear twice in different package
-        String filename = String.format("%s%s.txt", fileDirectory, string);
+        String filename = String.format("%s%s.txt", fileDirectory, name);
         File file = new File(filename);
         if (!file.exists()) {
             createFile(file);
@@ -45,7 +45,7 @@ public class OODMS extends JFrame{
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.length() > 0) {
-                    array.add(Arrays.stream(line.split(";")).map(String::trim).collect(Collectors.toList()));
+                    array.add(List.of(line.split(";")));
                 }
             }
 
@@ -101,6 +101,38 @@ public class OODMS extends JFrame{
                 e.printStackTrace();
             }
         }
+    }
+
+    public static List<List<String>> findSpecificData(String name, int column, String matchData) {
+        String filename = String.format("%s%s.txt", fileDirectory, name);
+        File file = new File(filename);
+        List<List<String>> array = new ArrayList<>();
+        if (!file.exists()) {
+            System.out.printf("Cannot find the specific file call \"%s\"", filename);
+            return array;
+        }
+        FileReader fr;
+        BufferedReader br = null;
+        String[] tempArray;
+        try {
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.length() > 0) {
+                    tempArray = line.split(";");
+                    if (matchData.equals(tempArray[column])) {
+                        array.add(List.of(tempArray));
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeFile(br);
+        }
+        return array;
     }
 
     public static void main(String[] args) {
