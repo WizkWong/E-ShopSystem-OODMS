@@ -50,7 +50,7 @@ public class Customer extends User {
         }
     }
 
-    public static Customer StringToCustomer(List<String> customerData) {
+    public static Customer listToCustomer(List<String> customerData) {
         return new Customer(
                 Long.parseLong(customerData.get(0)),
                 customerData.get(1),
