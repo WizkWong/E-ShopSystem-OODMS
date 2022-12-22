@@ -1,5 +1,7 @@
 package com.mycompany.oodms.item;
 
+import java.util.List;
+
 public class Item {
     private Long id;
     private String name;
@@ -13,6 +15,16 @@ public class Item {
         this.category = category;
         this.price = price;
         this.stock = stock;
+    }
+
+    public static Item listToItem(List<String> itemData) {
+        return new Item(
+                Long.parseLong(itemData.get(0)),
+                itemData.get(1),
+                itemData.get(2),
+                Double.parseDouble(itemData.get(3)),
+                Integer.parseInt(itemData.get(4))
+        );
     }
 
     public Long getId() {
