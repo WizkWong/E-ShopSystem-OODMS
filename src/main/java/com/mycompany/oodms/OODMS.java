@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -45,7 +44,7 @@ public class OODMS extends JFrame{
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.length() > 0) {
-                    array.add(List.of(line.split(";")));
+                    array.add(new ArrayList<>(Arrays.asList(line.split(";"))));
                 }
             }
 
@@ -78,7 +77,7 @@ public class OODMS extends JFrame{
     }
 
     public static void modifyFile(String filename, String content, Boolean append) {
-        // create or replace the file
+        // replace the file
         FileWriter fw;
         BufferedWriter bw = null;
         try {
@@ -122,7 +121,7 @@ public class OODMS extends JFrame{
                 if (line.length() > 0) {
                     tempArray = line.split(";");
                     if (matchData.equals(tempArray[column])) {
-                        array.add(List.of(tempArray));
+                        array.add(new ArrayList<>(Arrays.asList(line.split(";"))));
                     }
                 }
             }
