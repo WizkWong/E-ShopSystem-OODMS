@@ -1,8 +1,13 @@
 package com.mycompany.oodms.item;
 
+import com.mycompany.oodms.user.User;
+import com.mycompany.oodms.user.UserAuthn;
+
 import java.util.List;
 
 public class Item {
+    public static final String FILENAME = "item";
+
     private Long id;
     private String name;
     private String category;

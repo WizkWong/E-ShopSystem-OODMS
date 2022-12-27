@@ -1,7 +1,7 @@
 package com.mycompany.oodms.user;
 
 public abstract class User implements UserAuthn {
-    public static final String userFilename = "user";
+    public static final String USER_FILENAME = "user";
 
     private Long id;
     private String username;

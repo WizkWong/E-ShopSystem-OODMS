@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer extends User {
-    public static final String filename = "customer";
+    public static final String FILENAME = "customer";
 
     private String phoneNo;
     private String address;
