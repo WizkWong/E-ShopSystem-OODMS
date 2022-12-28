@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileServices {
     public static final String fileDirectory = "src\\file\\";
@@ -144,7 +143,7 @@ public class FileServices {
         modifyFile(filename, content, false);
 
         if (!newData.isEmpty()) {
-            System.out.println("These are the data that is not found");
+            System.out.printf("These are the data that is not found in %s", filename);
             System.out.println(newData);
         }
     }
@@ -160,20 +159,30 @@ public class FileServices {
         return false;
     }
 
-//    public static void deleteRowsById(String filename, List<String> arrayId) {
-//        List<List<String>> array = readFile(filename);
-//        String content = "";
-//        int i = 0;
-//        for (List<String> oldRow : array) {
-//            for (List<String> newRow : newData) {
-//                if (oldRow.get(0).equals(newRow.get(0))) {
-//                    newData.remove(array.set(i, newRow));
-//                    break;
-//                }
-//            }
-//            content += String.join(";", array.get(i)) + "\n";
-//            i++;
-//        }
-//        modifyFile(filename, content, false);
-//    }
+    public static void deleteRowsById(String filename, List<String> arrayId) {
+        List<List<String>> array = readFile(filename);
+        String content = "";
+        boolean remain;
+        int i = 0;
+        for (List<String> row : array) {
+            remain = true;
+            for (String id : arrayId) {
+                if (row.get(0).equals(id)) {
+                    arrayId.remove(id);
+                    remain = false;
+                    break;
+                }
+            }
+            if (remain) {
+                content += String.join(";", array.get(i)) + "\n";
+            }
+            i++;
+        }
+        modifyFile(filename, content, false);
+
+        if (!arrayId.isEmpty()) {
+            System.out.printf("These are the data that is not found in %s", filename);
+            System.out.println(arrayId);
+        }
+    }
 }
