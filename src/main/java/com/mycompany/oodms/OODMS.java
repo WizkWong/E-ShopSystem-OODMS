@@ -29,7 +29,8 @@ public class OODMS extends JFrame{
     public void refresh(JPanel oldPanel, JPanel newPanel) {
         this.remove(oldPanel);
         this.add(newPanel);
-        this.pack();
+        this.revalidate();
+        this.repaint();
     }
 
     public static void main(String[] args) {
