@@ -63,13 +63,13 @@ public class Customer extends User {
     }
 
     public static List<String> joinWithUser(List<String> customerData, List<String> userData) {
-        if (customerData.size() == 3 && userData.size() == 5) {
+        if (customerData.get(0).equals(userData.get(0))) {
             customerData.remove(0);
             userData.addAll(customerData);
             return userData;
-        } else {
-            throw new RuntimeException("WARNING, customerData or userData does not fulfill condition or not follow the format");
         }
+        System.out.println("Id does not match, fail to join list");
+        return null;
     }
 
     public String getPhoneNo() {
