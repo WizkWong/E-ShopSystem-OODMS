@@ -1,9 +1,7 @@
 package com.mycompany.oodms;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class FileServices {
     public static final String fileDirectory = "src\\file\\";
@@ -118,45 +116,55 @@ public class FileServices {
         return array;
     }
 
-    public static void updateRowsById(String filename, List<List<String>> newData) {
+    public static void updateRowsById(String filename, List<List<String>> newArray) {
         // NEVER USE THIS METHOD WHEN THERE ARE MULTIPLE SAME ID
 
-        List<String> check = newData.stream().map(array -> array.get(0)).toList();
+        List<String> check = newArray.stream().map(array -> array.get(0)).toList();
         if (duplicationExist(check)) {
             System.out.println("Cannot update the file cause duplication ID exist");
             return;
         }
 
-        List<List<String>> array = readFile(filename);
+        List<List<String>> oldArray = readFile(filename);
         String content = "";
         int i = 0;
-        for (List<String> oldRow : array) {
-            for (List<String> newRow : newData) {
+        for (List<String> oldRow : oldArray) {
+            for (List<String> newRow : newArray) {
                 if (oldRow.get(0).equals(newRow.get(0))) {
-                    newData.remove(array.set(i, newRow));
+                    oldArray.set(i, newRow);
+                    newArray.remove(newRow);
                     break;
                 }
             }
-            content += String.join(";", array.get(i)) + "\n";
+            content += String.join(";", oldArray.get(i)) + "\n";
             i++;
         }
         modifyFile(filename, content, false);
 
-        if (!newData.isEmpty()) {
+        if (!newArray.isEmpty()) {
             System.out.printf("These are the data that is not found in %s", filename);
-            System.out.println(newData);
+            System.out.println(newArray);
         }
     }
 
-    public static boolean duplicationExist(List<String> array) {
-        for (String a : array) {
-            for (String b : array) {
-                if (a.equals(b)) {
-                    return true;
-                }
+    public static void updateSingleRowById(String filename, List<String> newData) {
+        List<List<String>> oldArray = readFile(filename);
+        String content = "";
+        int i = 0;
+        for (List<String> oldRow : oldArray) {
+            if (oldRow.get(0).equals(newData.get(0))) {
+                oldArray.set(i, newData);
+                break;
             }
+            content += String.join(";", oldArray.get(i)) + "\n";
+            i++;
         }
-        return false;
+        modifyFile(filename, content, false);
+    }
+
+    public static boolean duplicationExist(List<String> array) {
+        Set<String> set = Set.copyOf(array);
+        return set.size() != array.size();
     }
 
     public static void deleteRowsById(String filename, List<String> arrayId) {
