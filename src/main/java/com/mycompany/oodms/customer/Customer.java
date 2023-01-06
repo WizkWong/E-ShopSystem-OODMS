@@ -10,18 +10,16 @@ public class Customer extends User {
     public static final String FILENAME = "customer";
 
     private String phoneNo;
-    private String address;
     private List<CartItem> cart;
 
-    public Customer(Long id, String username, String password, Boolean staff, Boolean admin, String phoneNo, String address) {
+    public Customer(Long id, String username, String password, Boolean staff, Boolean admin, String phoneNo) {
         super(id, username, password, staff, admin);
         this.phoneNo = phoneNo;
-        this.address = address;
         this.cart = new ArrayList<>();
     }
 
     public Customer() {
-        this(null, null,null, null, null, null, null);
+        this(null, null,null, null, null, null);
     }
 
     static class CartItem {
@@ -50,6 +48,17 @@ public class Customer extends User {
         }
     }
 
+    public List<String> toList() {
+        return new ArrayList<>(List.of(
+                String.valueOf(this.getId()),
+                this.getUsername(),
+                this.getPassword(),
+                String.valueOf(this.getStaff()),
+                String.valueOf(this.getAdmin()),
+                String.valueOf(this.getPhoneNo())
+        ));
+    }
+
     public static Customer listToCustomer(List<String> customerData) {
         return new Customer(
                 Long.parseLong(customerData.get(0)),
@@ -57,19 +66,18 @@ public class Customer extends User {
                 customerData.get(2),
                 Boolean.parseBoolean(customerData.get(3)),
                 Boolean.parseBoolean(customerData.get(4)),
-                customerData.get(5),
-                customerData.get(6)
+                customerData.get(5)
         );
     }
 
     public static List<String> joinWithUser(List<String> customerData, List<String> userData) {
-        if (customerData.size() == 3 && userData.size() == 5) {
+        if (customerData.get(0).equals(userData.get(0))) {
             customerData.remove(0);
             userData.addAll(customerData);
             return userData;
-        } else {
-            throw new RuntimeException("WARNING, customerData or userData does not fulfill condition or not follow the format");
         }
+        System.out.println("Id does not match, fail to join list");
+        return null;
     }
 
     public String getPhoneNo() {
@@ -78,14 +86,6 @@ public class Customer extends User {
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public List<CartItem> getCart() {
@@ -101,7 +101,6 @@ public class Customer extends User {
         return "Customer{ " +
                 super.toString() + ", " +
                 "phoneNo='" + phoneNo + '\'' +
-                ", address='" + address + '\'' +
                 ", cart=" + cart +
                 '}';
     }

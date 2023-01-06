@@ -1,10 +1,7 @@
 package com.mycompany.oodms;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class FileServices {
     public static final String fileDirectory = "src\\file\\";
@@ -119,61 +116,90 @@ public class FileServices {
         return array;
     }
 
-    public static void updateRowsById(String filename, List<List<String>> newData) {
+    public static void updateRows(String filename, List<List<String>> newArray, int columnNum) {
         // NEVER USE THIS METHOD WHEN THERE ARE MULTIPLE SAME ID
 
-        List<String> check = newData.stream().map(array -> array.get(0)).toList();
+        List<String> check = newArray.stream().map(array -> array.get(0)).toList();
         if (duplicationExist(check)) {
             System.out.println("Cannot update the file cause duplication ID exist");
             return;
         }
 
-        List<List<String>> array = readFile(filename);
+        List<List<String>> oldArray = readFile(filename);
         String content = "";
         int i = 0;
-        for (List<String> oldRow : array) {
-            for (List<String> newRow : newData) {
-                if (oldRow.get(0).equals(newRow.get(0))) {
-                    newData.remove(array.set(i, newRow));
+        for (List<String> oldRow : oldArray) {
+            for (List<String> newRow : newArray) {
+                if (oldRow.get(columnNum).equals(newRow.get(columnNum))) {
+                    oldArray.set(i, newRow);
+                    newArray.remove(newRow);
                     break;
                 }
             }
-            content += String.join(";", array.get(i)) + "\n";
+            content += String.join(";", oldArray.get(i)) + "\n";
             i++;
         }
         modifyFile(filename, content, false);
 
-        if (!newData.isEmpty()) {
-            System.out.println("These are the data that is not found");
-            System.out.println(newData);
+        if (!newArray.isEmpty()) {
+            System.out.printf("These are the data that is not found in %s", filename);
+            System.out.println(newArray);
         }
+    }
+
+    public static void updateRowsById(String filename, List<List<String>> newArray) {
+        updateRows(filename, newArray, 0);
+    }
+
+    public static void updateSingleRow(String filename, List<String> newData, int columnNum) {
+        List<List<String>> oldArray = readFile(filename);
+        String content = "";
+        boolean found = false;
+        int i = 0;
+        for (List<String> oldRow : oldArray) {
+            if (oldRow.get(columnNum).equals(newData.get(columnNum))) {
+                oldArray.set(i, newData);
+                found = true;
+            }
+            content += String.join(";", oldArray.get(i)) + "\n";
+            i++;
+        }
+
+        if (found) {
+            modifyFile(filename, content, false);
+        } else {
+            System.out.printf("Data {%s} of column{%d} is not found in %s", newData, columnNum, filename);
+        }
+    }
+
+    public static void updateSingleRowById(String filename, List<String> newData) {
+        updateSingleRow(filename, newData, 0);
     }
 
     public static boolean duplicationExist(List<String> array) {
-        for (String a : array) {
-            for (String b : array) {
-                if (a.equals(b)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        Set<String> set = Set.copyOf(array);
+        return set.size() != array.size();
     }
 
-//    public static void deleteRowsById(String filename, List<String> arrayId) {
-//        List<List<String>> array = readFile(filename);
-//        String content = "";
-//        int i = 0;
-//        for (List<String> oldRow : array) {
-//            for (List<String> newRow : newData) {
-//                if (oldRow.get(0).equals(newRow.get(0))) {
-//                    newData.remove(array.set(i, newRow));
-//                    break;
-//                }
-//            }
-//            content += String.join(";", array.get(i)) + "\n";
-//            i++;
-//        }
-//        modifyFile(filename, content, false);
-//    }
+    public static void deleteRowsById(String filename, List<List<String>> arrayData) {
+        List<String> arrayId = arrayData.stream().map(array -> array.get(0)).toList();
+        List<List<String>> array = readFile(filename);
+        String content = "";
+        boolean remain;
+        int i = 0;
+        for (List<String> row : array) {
+            remain = true;
+            for (String id : arrayId) {
+                if (row.get(0).equals(id)) {
+                    remain = false;
+                    break;
+                }
+            }
+            if (remain) {
+                content += String.join(";", array.get(i)) + "\n";
+            }
+            i++;
+        }
+        modifyFile(filename, content, false);
+    }
 }
