@@ -5,16 +5,9 @@
 package com.mycompany.oodms;
 
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.io.*;
-import java.util.*;
 
-/**
- *
- * @author Wong Chi Jian
- */
 public class OODMS extends JFrame{
     // main frame
     static JFrame frame;
