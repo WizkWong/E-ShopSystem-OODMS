@@ -1,5 +1,7 @@
 package com.mycompany.oodms.user;
 
+import java.util.List;
+
 public abstract class User implements UserAuthn {
     public static final String USER_FILENAME = "user";
 
@@ -16,6 +18,8 @@ public abstract class User implements UserAuthn {
         this.staff = staff;
         this.admin = admin;
     }
+
+    abstract public List<String> toList();
 
     @Override
     public User login() {
@@ -51,7 +55,7 @@ public abstract class User implements UserAuthn {
         this.password = password;
     }
 
-    public Boolean isStaff() {
+    public Boolean getStaff() {
         return staff;
     }
 
@@ -59,7 +63,7 @@ public abstract class User implements UserAuthn {
         this.staff = staff;
     }
 
-    public Boolean isAdmin() {
+    public Boolean getAdmin() {
         return admin;
     }
 
