@@ -5,12 +5,16 @@
 package com.mycompany.oodms;
 
 
+import com.mycompany.oodms.customer.Customer;
+import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.user.User;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class OODMS extends JFrame{
     // main frame
-    static JFrame frame;
+    public static JFrame frame;
 
     public OODMS(JPanel startingPanel) {
         this.add(startingPanel); // start up JPanel
@@ -26,7 +30,15 @@ public class OODMS extends JFrame{
         this.repaint();
     }
 
+    public static void initialize() {
+        FileServices.createFile(User.USER_FILENAME);
+        FileServices.createFile(Customer.FILENAME);
+        FileServices.createFile(Item.FILENAME);
+        FileServices.createFile(Customer.CART_FILENAME);
+    }
+
     public static void main(String[] args) {
+        initialize();
         frame = new OODMS(new TestJPanel());
     }
 }
