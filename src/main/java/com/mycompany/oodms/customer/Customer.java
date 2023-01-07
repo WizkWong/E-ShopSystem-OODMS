@@ -1,5 +1,6 @@
 package com.mycompany.oodms.customer;
 
+import com.mycompany.oodms.FileServices;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.user.User;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 public class Customer extends User {
     public static final String FILENAME = "customer";
+    public static final String CART_FILENAME = "cart";
 
     private String phoneNo;
     private List<CartItem> cart;
@@ -15,20 +17,42 @@ public class Customer extends User {
     public Customer(Long id, String username, String password, Boolean staff, Boolean admin, String phoneNo) {
         super(id, username, password, staff, admin);
         this.phoneNo = phoneNo;
-        this.cart = new ArrayList<>();
+        this.cart = CartItem.getCartItem(id);
+    }
+
+    public Customer(List<String> customerData) {
+        this(
+                Long.valueOf(customerData.get(0)),
+                customerData.get(1),
+                customerData.get(2),
+                Boolean.valueOf(customerData.get(3)),
+                Boolean.valueOf(customerData.get(4)),
+                customerData.get(5)
+        );
     }
 
     public Customer() {
         this(null, null,null, null, null, null);
     }
 
-    static class CartItem {
+    public static class CartItem {
         private Item item;
         private Integer quantity;
 
         public CartItem(Item item, Integer quantity) {
             this.item = item;
             this.quantity = quantity;
+        }
+
+        public static List<CartItem> getCartItem(Long customerId) {
+            List<List<String>> cartItem = FileServices.getMultipleSpecificData(CART_FILENAME, 0, String.valueOf(customerId));
+            List<CartItem> cart = new ArrayList<>();
+            for (List<String> itemRow : cartItem) {
+                // get from item file, there is no duplicate id of item so get(0)
+                List<String> item = FileServices.getOneSpecificData(Item.FILENAME, 0, itemRow.get(1));
+                cart.add(new CartItem(new Item(item), Integer.valueOf(itemRow.get(2))));
+            }
+            return cart;
         }
 
         public Item getItem() {
@@ -46,6 +70,14 @@ public class Customer extends User {
         public void setQuantity(Integer quantity) {
             this.quantity = quantity;
         }
+
+        @Override
+        public String toString() {
+            return "\n\tCartItem{" +
+                    " item = " + item +
+                    ", quantity=" + quantity +
+                    '}';
+        }
     }
 
     public List<String> toList() {
@@ -57,17 +89,6 @@ public class Customer extends User {
                 String.valueOf(this.getAdmin()),
                 String.valueOf(this.getPhoneNo())
         ));
-    }
-
-    public static Customer listToCustomer(List<String> customerData) {
-        return new Customer(
-                Long.parseLong(customerData.get(0)),
-                customerData.get(1),
-                customerData.get(2),
-                Boolean.parseBoolean(customerData.get(3)),
-                Boolean.parseBoolean(customerData.get(4)),
-                customerData.get(5)
-        );
     }
 
     public static List<String> joinWithUser(List<String> customerData, List<String> userData) {
@@ -101,7 +122,7 @@ public class Customer extends User {
         return "Customer{ " +
                 super.toString() + ", " +
                 "phoneNo='" + phoneNo + '\'' +
-                ", cart=" + cart +
-                '}';
+                ",\ncart=" + cart +
+                "\n}";
     }
 }

@@ -22,13 +22,13 @@ public class Item {
         this.stock = stock;
     }
 
-    public static Item listToItem(List<String> itemData) {
-        return new Item(
-                Long.parseLong(itemData.get(0)),
+    public Item(List<String> itemData) {
+        this(
+                Long.valueOf(itemData.get(0)),
                 itemData.get(1),
                 itemData.get(2),
-                Double.parseDouble(itemData.get(3)),
-                Integer.parseInt(itemData.get(4))
+                Double.valueOf(itemData.get(3)),
+                Integer.valueOf(itemData.get(4))
         );
     }
 
@@ -70,5 +70,16 @@ public class Item {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                '}';
     }
 }
