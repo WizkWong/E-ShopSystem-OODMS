@@ -45,11 +45,14 @@ public class Customer extends User {
         }
 
         public static List<CartItem> getCartItem(Long customerId) {
+            // get all cart item
             List<List<String>> cartItem = FileServices.getMultipleSpecificData(CART_FILENAME, 0, String.valueOf(customerId));
+            // create new array to store cart item
             List<CartItem> cart = new ArrayList<>();
             for (List<String> itemRow : cartItem) {
-                // get from item file, there is no duplicate id of item so get(0)
+                // get from item file
                 List<String> item = FileServices.getOneSpecificData(Item.FILENAME, 0, itemRow.get(1));
+                // create new CartItem object then added into array
                 cart.add(new CartItem(new Item(item), Integer.valueOf(itemRow.get(2))));
             }
             return cart;
