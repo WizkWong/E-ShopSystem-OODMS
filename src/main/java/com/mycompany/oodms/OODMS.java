@@ -31,10 +31,10 @@ public class OODMS extends JFrame{
     }
 
     public static void initialize() {
-        FileServices.createFile(User.USER_FILENAME);
-        FileServices.createFile(Customer.FILENAME);
-        FileServices.createFile(Item.FILENAME);
-        FileServices.createFile(Customer.CART_FILENAME);
+        FileService.createFile(User.USER_FILENAME);
+        FileService.createFile(Customer.FILENAME);
+        FileService.createFile(Item.FILENAME);
+        FileService.createFile(Customer.CART_FILENAME);
     }
 
     public static void main(String[] args) {
