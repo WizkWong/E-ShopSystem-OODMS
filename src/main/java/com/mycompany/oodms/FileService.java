@@ -1,5 +1,7 @@
 package com.mycompany.oodms;
 
+import com.mycompany.oodms.item.Item;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -7,6 +9,8 @@ import java.util.stream.Collectors;
 public class FileService {
     public static final String FILE_DIRECTORY = "src\\file\\";
     public static final char ID_COLUMN = 0;
+    public static final List<String> ALLOWED_DELETED_DATA_FILE = List.of(Item.FILENAME);
+
 
     public static void createFile(String filename) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
@@ -36,7 +40,7 @@ public class FileService {
         }
     }
 
-    public static List<List<String>> readFile(String filename) {
+    public static List<List<String>> readFile(String filename, boolean includeDeleted) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
         List<List<String>> array = new ArrayList<>();
@@ -50,10 +54,27 @@ public class FileService {
             fr = new FileReader(file);
             br = new BufferedReader(fr);
             String line;
-            while ((line = br.readLine()) != null) {
-                if (line.length() > 0) {
-                    // split ";" into array then add into array
-                    array.add(new ArrayList<>(Arrays.asList(line.split(";"))));
+            String[] tempArray;
+
+            if (includeDeleted) {
+                while ((line = br.readLine()) != null) {
+                    if (line.length() > 0) {
+                        // split ";" into array then add into array
+                        tempArray = line.split(";");
+                        array.add(new ArrayList<>(Arrays.asList(tempArray)));
+                    }
+                }
+
+            } else {
+                while ((line = br.readLine()) != null) {
+                    if (line.length() > 0) {
+                        // split ";" into array then add into array
+                        tempArray = line.split(";");
+                        if (tempArray[tempArray.length - 1].equals("D")) {
+                            continue;
+                        }
+                        array.add(new ArrayList<>(Arrays.asList(tempArray)));
+                    }
                 }
             }
 
@@ -212,7 +233,7 @@ public class FileService {
             return;
         }
         // read file to get all the data
-        List<List<String>> oldArray = readFile(filename);
+        List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         int i = 0;
         for (List<String> oldRow : oldArray) {
@@ -237,7 +258,7 @@ public class FileService {
 
     public static void updateMultipleRows(String filename, List<List<String>> newArray, int column1, int column2) {
         // read file to get all the data
-        List<List<String>> oldArray = readFile(filename);
+        List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         int i = 0;
         for (List<String> oldRow : oldArray) {
@@ -262,7 +283,7 @@ public class FileService {
 
     public static void updateSingleRow(String filename, List<String> newData, int column1) {
         // only update single row by matching one column
-        List<List<String>> oldArray = readFile(filename);
+        List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         boolean found = false;
         int i = 0;
@@ -285,7 +306,7 @@ public class FileService {
 
     public static void updateSingleRow(String filename, List<String> newData, int column1, int column2) {
         // only update single row by matching two column
-        List<List<String>> oldArray = readFile(filename);
+        List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         boolean found = false;
         int i = 0;
@@ -312,24 +333,24 @@ public class FileService {
     }
 
     public static void deleteById(String filename, List<List<String>> arrayData) {
+        if (!ALLOWED_DELETED_DATA_FILE.contains(filename)) {
+            System.out.printf("%s file does not allow any deleted data to store in !\n", filename);
+            return;
+        }
         // get all id and convert into set array to remove duplication
         Set<String> arrayId = arrayData.stream().map(array -> array.get(0)).collect(Collectors.toSet());
-        List<List<String>> array = readFile(filename);
+        List<List<String>> array = readFile(filename, true);
         String content = "";
-        boolean remain;
+        int lastIndex = array.get(0).toArray().length - 1;
         int i = 0;
         for (List<String> row : array) {
-            remain = true;
             for (String id : arrayId) {
                 if (row.get(0).equals(id)) {
-                    remain = false;
+                    array.get(i).set(lastIndex, "D");
                     break;
                 }
             }
-            // if id match then will not add into content
-            if (remain) {
-                content += String.join(";", array.get(i)) + "\n";
-            }
+            content += String.join(";", array.get(i)) + "\n";
             i++;
         }
         modifyFile(filename, content, false);
