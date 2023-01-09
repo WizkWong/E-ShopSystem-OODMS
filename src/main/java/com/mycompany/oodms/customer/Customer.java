@@ -1,7 +1,6 @@
 package com.mycompany.oodms.customer;
 
-import com.mycompany.oodms.FileServices;
-import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.user.User;
 
 import java.util.ArrayList;
@@ -35,54 +34,6 @@ public class Customer extends User {
         this(null, null,null, null, null, null);
     }
 
-    public static class CartItem {
-        private Item item;
-        private Integer quantity;
-
-        public CartItem(Item item, Integer quantity) {
-            this.item = item;
-            this.quantity = quantity;
-        }
-
-        public static List<CartItem> getCartItem(Long customerId) {
-            // get all cart item
-            List<List<String>> cartItem = FileServices.getMultipleSpecificData(CART_FILENAME, 0, String.valueOf(customerId));
-            // create new array to store cart item
-            List<CartItem> cart = new ArrayList<>();
-            for (List<String> itemRow : cartItem) {
-                // get from item file
-                List<String> item = FileServices.getOneSpecificData(Item.FILENAME, 0, itemRow.get(1));
-                // create new CartItem object then added into array
-                cart.add(new CartItem(new Item(item), Integer.valueOf(itemRow.get(2))));
-            }
-            return cart;
-        }
-
-        public Item getItem() {
-            return item;
-        }
-
-        public void setItem(Item item) {
-            this.item = item;
-        }
-
-        public Integer getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(Integer quantity) {
-            this.quantity = quantity;
-        }
-
-        @Override
-        public String toString() {
-            return "\n\tCartItem{" +
-                    " item = " + item +
-                    ", quantity=" + quantity +
-                    '}';
-        }
-    }
-
     public List<String> toList() {
         return new ArrayList<>(List.of(
                 String.valueOf(this.getId()),
@@ -92,6 +43,42 @@ public class Customer extends User {
                 String.valueOf(this.getAdmin()),
                 String.valueOf(this.getPhoneNo())
         ));
+    }
+
+    public static String register(String name, String password, String phoneNo) {
+        String errorMessage = "";
+
+        if (name.length() < 3) {
+            errorMessage += "The total character of name must be more than or equal 4";
+        }
+
+        if (password.length() < 7) {
+            errorMessage += "Minimum password length must be 8";
+        }
+
+        if (phoneNo.length() < 11) {
+            errorMessage += "Phone number is not valid";
+        }
+
+        if (!errorMessage.isEmpty()) {
+            return errorMessage;
+        }
+
+        Long id = FileService.getLastId(Customer.FILENAME);
+        if (id == null) {
+            return "File error, Customer file does not exist, please restart this system"; // add id also
+        }
+        if (id == 2) {
+            return "ID error, file has invalid id, please delete or fix the file";
+        }
+
+        String userContent = String.format("%d;%s;%s;0;0", ++id, name, password);
+        FileService.modifyFile(User.USER_FILENAME, userContent, true);
+
+        String customerContent = String.format("%d;%s", ++id, phoneNo);
+        FileService.modifyFile(Customer.FILENAME, customerContent, true);
+
+        return "";
     }
 
     public static List<String> joinWithUser(List<String> customerData, List<String> userData) {
@@ -122,10 +109,10 @@ public class Customer extends User {
 
     @Override
     public String toString() {
-        return "Customer{ " +
-                super.toString() + ", " +
-                "phoneNo='" + phoneNo + '\'' +
-                ",\ncart=" + cart +
+        return "\nCustomer{\n\t" +
+                super.toString() + ",\n" +
+                "\tphoneNo='" + phoneNo + "',\n" +
+                "\tcart=" + cart +
                 "\n}";
     }
 }
