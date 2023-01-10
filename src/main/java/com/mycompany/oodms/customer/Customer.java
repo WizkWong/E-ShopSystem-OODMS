@@ -64,18 +64,18 @@ public class Customer extends User {
             return errorMessage;
         }
 
-        Long id = FileService.getLastId(Customer.FILENAME);
+        Long id = FileService.getNewId(Customer.FILENAME);
         if (id == null) {
             return "File error, Customer file does not exist, please restart this system"; // add id also
         }
-        if (id == 2) {
+        if (id == -1) {
             return "ID error, file has invalid id, please delete or fix the file";
         }
 
-        String userContent = String.format("%d;%s;%s;0;0", ++id, name, password);
+        String userContent = String.format("%d;%s;%s;0;0\n", id, name, password);
         FileService.modifyFile(User.USER_FILENAME, userContent, true);
 
-        String customerContent = String.format("%d;%s", ++id, phoneNo);
+        String customerContent = String.format("%d;%s\n", id, phoneNo);
         FileService.modifyFile(Customer.FILENAME, customerContent, true);
 
         return "";

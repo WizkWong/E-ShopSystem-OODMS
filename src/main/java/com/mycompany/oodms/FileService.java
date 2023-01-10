@@ -86,7 +86,7 @@ public class FileService {
         return array;
     }
 
-    public static Long getLastId(String filename) {
+    public static Long getNewId(String filename) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
         if (!file.exists()) {
@@ -95,31 +95,33 @@ public class FileService {
         }
         FileReader fr;
         BufferedReader br = null;
-        String line = null;
+        String lastLine = null;
         try {
             fr = new FileReader(file);
             br = new BufferedReader(fr);
-
-            do {
-                line = br.readLine();
-            } while (line != null);
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.length() > 0) {
+                    lastLine = line;
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             closeFile(br);
         }
-        if (line == null) {
-            return -1L;
+        if (lastLine == null) {
+            return 0L;
         }
         long id;
         try {
-            id = Long.parseLong(line.split(";")[0]);
+            id = Long.parseLong(lastLine.split(";")[0]);
         } catch (Exception e) {
             e.printStackTrace();
-            return -2L;
+            return -1L;
         }
-        return id;
+        return id + 1;
     }
 
     public static void modifyFile(String filename, String content, Boolean append) {
