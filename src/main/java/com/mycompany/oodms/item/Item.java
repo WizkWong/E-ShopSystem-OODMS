@@ -1,7 +1,6 @@
 package com.mycompany.oodms.item;
 
-import com.mycompany.oodms.user.User;
-import com.mycompany.oodms.user.UserAuthn;
+import com.mycompany.oodms.FileService;
 
 import java.util.List;
 
@@ -30,6 +29,10 @@ public class Item {
                 Double.valueOf(itemData.get(3)),
                 Integer.valueOf(itemData.get(4))
         );
+    }
+
+    public static Item searchId(int id) {
+        return new Item(FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(id)));
     }
 
     public Long getId() {
