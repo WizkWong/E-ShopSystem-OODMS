@@ -43,8 +43,11 @@ public class Customer extends User {
     @Override
     public boolean addNew() {
         if (super.addNew()) {
-            String customerContent = String.format("%d;%s\n", this.getId(), phoneNo);
-            return FileService.modifyFile(FILENAME, customerContent, true);
+            List<String> customerData = List.of(
+                    String.valueOf(getId()),
+                    phoneNo
+            );
+            return FileService.insertData(FILENAME, customerData);
         }
         return false;
     }
@@ -52,8 +55,11 @@ public class Customer extends User {
     @Override
     public boolean update() {
         if (super.update()) {
-            List<String> customerContent = List.of(String.valueOf(this.getId()), phoneNo);
-            return FileService.updateSingleRow(FILENAME, customerContent, FileService.ID_COLUMN);
+            List<String> customerData = List.of(
+                    String.valueOf(getId()),
+                    phoneNo
+            );
+            return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
         }
         return false;
     }

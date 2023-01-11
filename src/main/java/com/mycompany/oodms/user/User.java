@@ -38,12 +38,28 @@ public abstract class User implements FileService {
 
     @Override
     public boolean addNew() {
-        return FileService.insertData(USER_FILENAME, toList());
+        /* reason not using toList() method because only need superclass of toList, but it uses subclass of toList
+           while saving customer, staff or admin */
+        List<String> userData = List.of(
+                String.valueOf(id),
+                username,
+                password,
+                String.valueOf(staff),
+                String.valueOf(admin)
+        );
+        return FileService.insertData(USER_FILENAME, userData);
     }
 
     @Override
     public boolean update() {
-        return FileService.updateSingleRow(USER_FILENAME, toList(), FileService.ID_COLUMN);
+        List<String> userData = List.of(
+                String.valueOf(id),
+                username,
+                password,
+                String.valueOf(staff),
+                String.valueOf(admin)
+        );
+        return FileService.updateSingleRow(USER_FILENAME, userData, FileService.ID_COLUMN);
     }
 
     public static User verify(String username, String password) {
