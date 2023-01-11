@@ -5,7 +5,10 @@
 package com.mycompany.oodms;
 
 
+import com.mycompany.oodms.admin.Admin;
+import com.mycompany.oodms.customer.CartItem;
 import com.mycompany.oodms.customer.Customer;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.user.User;
 
@@ -33,8 +36,10 @@ public class OODMS extends JFrame{
     public static void initialize() {
         FileService.createFile(User.USER_FILENAME);
         FileService.createFile(Customer.FILENAME);
+        FileService.createFile(DeliveryStaff.FILENAME);
+        FileService.createFile(Admin.FILENAME);
         FileService.createFile(Item.FILENAME);
-        FileService.createFile(Customer.CART_FILENAME);
+        FileService.createFile(CartItem.FILENAME);
     }
 
     public static void main(String[] args) {
