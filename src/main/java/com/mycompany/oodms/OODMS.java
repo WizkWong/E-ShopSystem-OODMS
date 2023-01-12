@@ -4,7 +4,6 @@
 
 package com.mycompany.oodms;
 
-
 import com.mycompany.oodms.admin.Admin;
 import com.mycompany.oodms.customer.CartItem;
 import com.mycompany.oodms.customer.Customer;
@@ -12,28 +11,16 @@ import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.user.User;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+public class OODMS {
 
-public class OODMS extends JFrame{
-    // main frame
-    public static JFrame frame;
+    public static MainFrame frame;
 
-    public OODMS(JPanel startingPanel) {
-        this.add(startingPanel); // start up JPanel
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setVisible(true);
-        this.pack();
+    public OODMS() {
+        initialize();
+        frame = new MainFrame(new TestJPanel());
     }
 
-    public void refresh(JPanel oldPanel, JPanel newPanel) {
-        this.remove(oldPanel);
-        this.add(newPanel);
-        this.revalidate();
-        this.repaint();
-    }
-
-    public static void initialize() {
+    public void initialize() {
         FileService.createFile(User.USER_FILENAME);
         FileService.createFile(Customer.FILENAME);
         FileService.createFile(DeliveryStaff.FILENAME);
@@ -43,7 +30,6 @@ public class OODMS extends JFrame{
     }
 
     public static void main(String[] args) {
-        initialize();
-        frame = new OODMS(new TestJPanel());
+        new OODMS();
     }
 }
