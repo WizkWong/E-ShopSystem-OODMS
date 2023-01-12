@@ -29,6 +29,8 @@ public class TestJPanel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(1000, 301));
+
         jButton1.setText("jButton1");
         jButton1.setBorder(null);
         jButton1.setFocusable(false);
