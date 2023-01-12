@@ -8,12 +8,12 @@ package com.mycompany.oodms.admin;
  *
  * @author USER
  */
-public class AddCategory extends javax.swing.JPanel {
+public class AddCategoryForm extends javax.swing.JPanel {
 
     /**
-     * Creates new form AddCategory
+     * Creates new form AddCategoryForm
      */
-    public AddCategory() {
+    public AddCategoryForm() {
         initComponents();
     }
 

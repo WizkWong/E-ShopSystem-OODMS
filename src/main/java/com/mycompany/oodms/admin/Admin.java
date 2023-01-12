@@ -9,7 +9,7 @@ public class Admin extends User {
     public static final String FILENAME = "admin";
     private Boolean superuser;
 
-    public Admin(Long id, String username, String password, Boolean staff, Boolean admin, Boolean superuser) {
+    public Admin(Long id, String username, String password, Boolean staff, Boolean admin) {
         super(id, username, password, staff, admin);
         this.superuser = superuser;
     }
@@ -20,13 +20,12 @@ public class Admin extends User {
                 adminData.get(1),
                 adminData.get(2),
                 Boolean.valueOf(adminData.get(3)),
-                Boolean.valueOf(adminData.get(4)),
-                Boolean.valueOf(adminData.get(5))
+                Boolean.valueOf(adminData.get(4))
         );
     }
 
     public Admin() {
-        this(null, null,null, null, null, null);
+        this(null, null,null, null, null);
     }
 
     @Override
@@ -34,13 +33,5 @@ public class Admin extends User {
         List<String> list = super.toList();
         list.add(String.valueOf(superuser));
         return list;
-    }
-
-    public Boolean getSuperuser() {
-        return superuser;
-    }
-
-    public void setSuperuser(Boolean superuser) {
-        this.superuser = superuser;
     }
 }
