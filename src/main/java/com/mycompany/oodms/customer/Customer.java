@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Customer extends User {
     public static final String FILENAME = "customer";
-    public static final String CART_FILENAME = "cart";
 
     private String phoneNo;
     private List<CartItem> cart;
@@ -34,15 +33,35 @@ public class Customer extends User {
         this(null, null,null, null, null, null);
     }
 
+    @Override
     public List<String> toList() {
-        return new ArrayList<>(List.of(
-                String.valueOf(this.getId()),
-                this.getUsername(),
-                this.getPassword(),
-                String.valueOf(this.getStaff()),
-                String.valueOf(this.getAdmin()),
-                String.valueOf(this.getPhoneNo())
-        ));
+        List<String> list = super.toList();
+        list.add(phoneNo);
+        return list;
+    }
+
+    @Override
+    public boolean addNew() {
+        if (super.addNew()) {
+            List<String> customerData = List.of(
+                    String.valueOf(getId()),
+                    phoneNo
+            );
+            return FileService.insertData(FILENAME, customerData);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean update() {
+        if (super.update()) {
+            List<String> customerData = List.of(
+                    String.valueOf(getId()),
+                    phoneNo
+            );
+            return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
+        }
+        return false;
     }
 
     public static String register(String name, String password, String phoneNo) {
@@ -72,23 +91,10 @@ public class Customer extends User {
             return "ID error, file has invalid id, please delete or fix the file";
         }
 
-        String userContent = String.format("%d;%s;%s;0;0\n", id, name, password);
-        FileService.modifyFile(User.USER_FILENAME, userContent, true);
-
-        String customerContent = String.format("%d;%s\n", id, phoneNo);
-        FileService.modifyFile(Customer.FILENAME, customerContent, true);
+        Customer customer = new Customer(id, name, password, false, false, phoneNo);
+        customer.addNew();
 
         return "";
-    }
-
-    public static List<String> joinWithUser(List<String> customerData, List<String> userData) {
-        if (customerData.get(0).equals(userData.get(0))) {
-            customerData.remove(0);
-            userData.addAll(customerData);
-            return userData;
-        }
-        System.out.println("Id does not match, fail to join list");
-        return null;
     }
 
     public String getPhoneNo() {

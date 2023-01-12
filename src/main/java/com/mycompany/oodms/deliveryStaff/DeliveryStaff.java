@@ -6,12 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveryStaff extends User {
+    public static final String FILENAME = "delivery staff";
 
     private String phoneNo;
 
     public DeliveryStaff(Long id, String username, String password, Boolean staff, Boolean admin, String phoneNo) {
         super(id, username, password, staff, admin);
         this.phoneNo = phoneNo;
+    }
+
+    public DeliveryStaff(List<String> deliveryStaffData) {
+        this(
+                Long.valueOf(deliveryStaffData.get(0)),
+                deliveryStaffData.get(1),
+                deliveryStaffData.get(2),
+                Boolean.valueOf(deliveryStaffData.get(3)),
+                Boolean.valueOf(deliveryStaffData.get(4)),
+                deliveryStaffData.get(5)
+        );
     }
 
     public DeliveryStaff() {

@@ -6,15 +6,25 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FileService {
-    public static final String FILE_DIRECTORY = "src\\file\\";
-    public static final char ID_COLUMN = 0;
-    public static final List<String> ALLOWED_DELETED_DATA_FILE = List.of(Item.FILENAME);
+public interface FileService {
 
+    String FILE_DIRECTORY = "src\\file\\";
 
-    public static void createFile(String filename) {
+    char ID_COLUMN = 0;
+
+    List<String> ALLOWED_DELETED_DATA_FILE = List.of(Item.FILENAME);
+
+    List<String> toList();
+
+    boolean addNew();
+
+    boolean update();
+
+    // create the txt file. If file directory does not exist, create new directory
+    static void createFile(String filename) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
+        // check file exist
         if (file.exists()) {
             return;
         }
@@ -40,10 +50,12 @@ public class FileService {
         }
     }
 
-    public static List<List<String>> readFile(String filename, boolean includeDeleted) {
+    // read all the data then split ";" into array then convert it to ArrayList
+    static List<List<String>> readFile(String filename, boolean includeDeleted) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
         List<List<String>> array = new ArrayList<>();
+        // check file exist or not
         if (!file.exists()) {
             System.out.printf("Cannot find the \"%s\" file\n", textFile);
             return array;
@@ -56,11 +68,14 @@ public class FileService {
             String line;
             String[] tempArray;
 
-            if (includeDeleted) {
+            if (includeDeleted && ALLOWED_DELETED_DATA_FILE.contains(filename)) {
                 while ((line = br.readLine()) != null) {
                     if (line.length() > 0) {
                         // split ";" into array then add into array
                         tempArray = line.split(";");
+                        if (tempArray[tempArray.length - 1].equals("D")) {
+                            continue;
+                        }
                         array.add(new ArrayList<>(Arrays.asList(tempArray)));
                     }
                 }
@@ -70,9 +85,6 @@ public class FileService {
                     if (line.length() > 0) {
                         // split ";" into array then add into array
                         tempArray = line.split(";");
-                        if (tempArray[tempArray.length - 1].equals("D")) {
-                            continue;
-                        }
                         array.add(new ArrayList<>(Arrays.asList(tempArray)));
                     }
                 }
@@ -86,9 +98,16 @@ public class FileService {
         return array;
     }
 
-    public static Long getNewId(String filename) {
+    // read all the data excluding the data in deleted status
+    static List<List<String>> readFile(String filename) {
+        return readFile(filename, false);
+    }
+
+    // get the id from file then increment, use for insert new data
+    static Long getNewId(String filename) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
+        // check file exist or not
         if (!file.exists()) {
             System.out.printf("Cannot find the \"%s\" file\n", textFile);
             return null;
@@ -124,13 +143,15 @@ public class FileService {
         return id + 1;
     }
 
-    public static void modifyFile(String filename, String content, Boolean append) {
+    // replace the file with new content
+    static boolean modifyFile(String filename, String content, Boolean append) {
         // replace the file
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
+        // check file exist or not
         if (!file.exists()) {
             System.out.printf("Cannot find the \"%s\" file\n", textFile);
-            return;
+            return false;
         }
         FileWriter fw;
         BufferedWriter bw = null;
@@ -141,12 +162,15 @@ public class FileService {
 
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             closeFile(bw);
         }
+        return true;
     }
 
-    public static void closeFile(Closeable file) {
+    // close file, use for read and write file
+    static void closeFile(Closeable file) {
         // close the file
         if (file != null) {
             try {
@@ -157,11 +181,23 @@ public class FileService {
         }
     }
 
-    public static List<List<String>> getMultipleSpecificData(String filename, int column, String matchData) {
-        // get all the match data
+    // insert a new data into the file
+    static boolean insertData(String filename, List<String> data) {
+        String content;
+        if (ALLOWED_DELETED_DATA_FILE.contains(filename)) {
+            content = String.join(";", data) + ";E\n";
+        } else {
+            content = String.join(";", data) + "\n";
+        }
+        return modifyFile(filename, content, true);
+    }
+
+    // get all the match data by specific column
+    static List<List<String>> getMultipleSpecificData(String filename, int column, String matchData) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
         List<List<String>> array = new ArrayList<>();
+        // check file exist or not
         if (!file.exists()) {
             System.out.printf("Cannot find the \"%s\" file\n", textFile);
             return array;
@@ -191,12 +227,13 @@ public class FileService {
         return array;
     }
 
-    public static List<String> getOneSpecificData(String filename, int column, String matchData) {
-        // get one match data
-        // only use for unique data
+    // get one match data by specific column, only use for unique id
+    static List<String> getOneSpecificData(String filename, int column, String matchData) {
+
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
         List<String> array = new ArrayList<>();
+        // check file exist or not
         if (!file.exists()) {
             System.out.printf("Cannot find the \"%s\" file\n", textFile);
             return array;
@@ -226,13 +263,14 @@ public class FileService {
         return array;
     }
 
-    public static void updateMultipleRows(String filename, List<List<String>> newArray, int column1) {
-        /* NEVER USE THIS METHOD WHEN THERE ARE MULTIPLE SAME ID IN MORE THAN ONE COLUMN
-           check duplication exist, if true then stop execute */
+    /* NEVER USE THIS METHOD WHEN THERE ARE MULTIPLE SAME ID IN MORE THAN ONE COLUMN
+       check duplication exist, if true then stop execute */
+    // get all the data by one column
+    static boolean updateMultipleRows(String filename, List<List<String>> newArray, int column1) {
         List<String> check = newArray.stream().map(array -> array.get(0)).toList();
         if (duplicationExist(check)) {
             System.out.println("Cannot update the file cause duplication exist");
-            return;
+            return false;
         }
         // read file to get all the data
         List<List<String>> oldArray = readFile(filename, true);
@@ -250,16 +288,16 @@ public class FileService {
             content += String.join(";", oldArray.get(i)) + "\n";
             i++;
         }
-        modifyFile(filename, content, false);
 
         if (!newArray.isEmpty()) {
             System.out.printf("These are the data that is not found in %s\n", filename);
             System.out.println(newArray);
         }
+        return modifyFile(filename, content, false);
     }
 
-    public static void updateMultipleRows(String filename, List<List<String>> newArray, int column1, int column2) {
-        // read file to get all the data
+    // get all the data by two column
+    static boolean updateMultipleRows(String filename, List<List<String>> newArray, int column1, int column2) {
         List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         int i = 0;
@@ -275,16 +313,16 @@ public class FileService {
             content += String.join(";", oldArray.get(i)) + "\n";
             i++;
         }
-        modifyFile(filename, content, false);
 
         if (!newArray.isEmpty()) {
             System.out.printf("These are the data that is not found in %s\n", filename);
             System.out.println(newArray);
         }
+        return modifyFile(filename, content, false);
     }
 
-    public static void updateSingleRow(String filename, List<String> newData, int column1) {
-        // only update single row by matching one column
+    // only update single row by matching one column
+    static boolean updateSingleRow(String filename, List<String> newData, int column1) {
         List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         boolean found = false;
@@ -300,14 +338,15 @@ public class FileService {
         }
         // if data got replace then execute to replace the file
         if (found) {
-            modifyFile(filename, content, false);
-        } else {
-            System.out.printf("Data {%s} of column{%d} is not found in %s\n", newData, column1, filename);
+            return modifyFile(filename, content, false);
         }
+
+        System.out.printf("Data {%s} of column{%d} is not found in %s\n", newData, column1, filename);
+        return true;
     }
 
-    public static void updateSingleRow(String filename, List<String> newData, int column1, int column2) {
-        // only update single row by matching two column
+    // only update single row by matching two column
+    static boolean updateSingleRow(String filename, List<String> newData, int column1, int column2) {
         List<List<String>> oldArray = readFile(filename, true);
         String content = "";
         boolean found = false;
@@ -323,21 +362,25 @@ public class FileService {
         }
         // if data got replace then execute to replace the file
         if (found) {
-            modifyFile(filename, content, false);
-        } else {
-            System.out.printf("Data {%s} of column{%d} & column{%d} is not found in %s\n", newData, column1, column2, filename);
+            return modifyFile(filename, content, false);
         }
+
+        System.out.printf("Data {%s} of column{%d} is not found in %s\n", newData, column1, filename);
+        return true;
     }
 
-    public static boolean duplicationExist(List<String> array) {
+    // check any duplication, if exist return true else false
+    static boolean duplicationExist(List<String> array) {
         Set<String> set = Set.copyOf(array); // copy into set array to remove duplication
         return set.size() != array.size(); // check size
     }
 
-    public static void deleteById(String filename, List<List<String>> arrayData) {
+    // change the data status to deleted, only allow some file
+    static boolean deleteById(String filename, List<List<String>> arrayData) {
+        // check the file have right to execute this method or not
         if (!ALLOWED_DELETED_DATA_FILE.contains(filename)) {
             System.out.printf("%s file does not allow any deleted data to store in !\n", filename);
-            return;
+            return false;
         }
         // get all id and convert into set array to remove duplication
         Set<String> arrayId = arrayData.stream().map(array -> array.get(0)).collect(Collectors.toSet());
@@ -355,6 +398,6 @@ public class FileService {
             content += String.join(";", array.get(i)) + "\n";
             i++;
         }
-        modifyFile(filename, content, false);
+        return modifyFile(filename, content, false);
     }
 }

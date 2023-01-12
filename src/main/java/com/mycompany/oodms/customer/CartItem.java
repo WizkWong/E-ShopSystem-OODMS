@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartItem {
+    public static final String FILENAME = "cart";
     private Item item;
     private Integer quantity;
 
@@ -17,7 +18,7 @@ public class CartItem {
 
     public static List<CartItem> getCartItem(Long customerId) {
         // get all cart item
-        List<List<String>> cartItem = FileService.getMultipleSpecificData(Customer.CART_FILENAME, 0, String.valueOf(customerId));
+        List<List<String>> cartItem = FileService.getMultipleSpecificData(FILENAME, 0, String.valueOf(customerId));
         // create new array to store cart item
         List<CartItem> cart = new ArrayList<>();
         for (List<String> itemRow : cartItem) {
