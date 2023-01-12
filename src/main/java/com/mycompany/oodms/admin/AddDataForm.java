@@ -120,7 +120,7 @@ public class AddDataForm extends javax.swing.JPanel {
     }//GEN-LAST:event_AddItemButActionPerformed
 
     private void BackButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButActionPerformed
-        // TODO add your handling code here:
+        OODMS.frame.refresh(new AdminPanelForm());
     }//GEN-LAST:event_BackButActionPerformed
 
     private void ExitButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButActionPerformed
