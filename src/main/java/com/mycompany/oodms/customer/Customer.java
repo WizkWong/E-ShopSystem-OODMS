@@ -66,37 +66,37 @@ public class Customer extends User {
         return true;
     }
 
-    public void addCartItem(Item item, int quantity) {
-        Customer customer = (Customer) OODMS.currentUser;
-        Optional<CartItem> existCartItem = customer.getCart().stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+    public boolean addCartItem(Item item, int quantity) {
+        Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
         if (existCartItem.isPresent()) {
             System.out.println("Item is already exist in cart, cannot add in it");
-            return;
+            return false;
         }
         CartItem cartItem = new CartItem(item, quantity);
         this.cart.add(cartItem);
-        if (!cartItem.fileAddNewRow(customer.getId())) {
-            System.out.println("Add failed");
-        }
+        return cartItem.fileAddNewRow(this.getId());
     }
 
-    public void deleteCartItem(CartItem cartItem) {
-        this.cart.remove(cartItem);
-        // delete the file
-    }
-
-    public void updateCartItem(Item item, int quantity) {
-        Customer customer = (Customer) OODMS.currentUser;
-        Optional<CartItem> existCartItem = customer.getCart().stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+    public boolean updateCartItem(Item item, int quantity) {
+        Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
         if (existCartItem.isEmpty()) {
             System.out.println("Item is not exist in cart");
-            return;
+            return false;
         }
         CartItem cartItem = existCartItem.get();
         cartItem.setQuantity(quantity);
-        if (cartItem.fileUpdate(customer.getId())) {
-            System.out.println("Update failed");
+        return cartItem.fileUpdate(this.getId());
+    }
+
+    public boolean deleteCartItem(Item item) {
+        Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+        if (existCartItem.isEmpty()) {
+            System.out.println("Item is not exist in cart");
+            return false;
         }
+        CartItem cartItem = existCartItem.get();
+        this.cart.remove(cartItem);
+        return cartItem.fileDeleteRow(this.getId());
     }
 
     public static String register(String name, String password, String phoneNo) {

@@ -41,6 +41,12 @@ public class CartItem implements ForeignKey {
         return FileService.updateSingleRow(FILENAME, cartItemData, 0, 1);
     }
 
+    public boolean fileDeleteRow(long foreignKeyId) {
+        List<String> cartItemData = toList();
+        cartItemData.add(0, String.valueOf(foreignKeyId));
+        return FileService.deleteByTwoId(FILENAME, List.of(cartItemData));
+    }
+
     public static List<CartItem> getCartItem(Long customerId) {
         // get all cart item
         List<List<String>> cartItem = FileService.getMultipleSpecificData(FILENAME, 0, String.valueOf(customerId));
