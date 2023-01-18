@@ -1,5 +1,6 @@
 package com.mycompany.oodms;
 
+import com.mycompany.oodms.customer.CartItem;
 import com.mycompany.oodms.item.Item;
 
 import java.io.*;
@@ -12,7 +13,11 @@ public interface FileService {
 
     char ID_COLUMN = 0;
 
-    List<String> ALLOWED_DELETED_DATA_FILE = List.of(Item.FILENAME);
+    // allow the data remain as deleted status
+    List<String> ALLOWED_REMOVE = List.of(Item.FILENAME);
+
+    // allow to delete the data
+    List<String> ALLOWED_DELETE = List.of(CartItem.FILENAME);
 
     List<String> toList();
 
@@ -68,7 +73,7 @@ public interface FileService {
             String line;
             String[] tempArray;
 
-            if (includeDeleted && ALLOWED_DELETED_DATA_FILE.contains(filename)) {
+            if (includeDeleted && ALLOWED_REMOVE.contains(filename)) {
                 while ((line = br.readLine()) != null) {
                     if (line.length() > 0) {
                         // split ";" into array then add into array
@@ -184,7 +189,7 @@ public interface FileService {
     // insert a new data into the file
     static boolean insertData(String filename, List<String> data) {
         String content;
-        if (ALLOWED_DELETED_DATA_FILE.contains(filename)) {
+        if (ALLOWED_REMOVE.contains(filename)) {
             content = String.join(";", data) + ";E\n";
         } else {
             content = String.join(";", data) + "\n";
@@ -376,26 +381,56 @@ public interface FileService {
     }
 
     // change the data status to deleted, only allow some file
-    static boolean deleteById(String filename, List<List<String>> arrayData) {
+    static boolean removeById(String filename, List<List<String>> arrayData) {
         // check the file have right to execute this method or not
-        if (!ALLOWED_DELETED_DATA_FILE.contains(filename)) {
-            System.out.printf("%s file does not allow any deleted data to store in !\n", filename);
+        if (!ALLOWED_REMOVE.contains(filename)) {
+            System.out.printf("%s file does not allow remove the data!\n", filename);
             return false;
         }
         // get all id and convert into set array to remove duplication
-        Set<String> arrayId = arrayData.stream().map(array -> array.get(0)).collect(Collectors.toSet());
+        Set<String> setId = arrayData.stream().map(array -> array.get(0)).collect(Collectors.toSet());
         List<List<String>> array = readFile(filename, true);
         String content = "";
         int lastIndex = array.get(0).toArray().length - 1;
         int i = 0;
         for (List<String> row : array) {
-            for (String id : arrayId) {
+            for (String id : setId) {
                 if (row.get(0).equals(id)) {
                     array.get(i).set(lastIndex, "D");
                     break;
                 }
             }
             content += String.join(";", array.get(i)) + "\n";
+            i++;
+        }
+        return modifyFile(filename, content, false);
+    }
+
+    // delete the data completely, only allow some file
+    static boolean deleteByTwoId(String filename, List<List<String>> arrayData) {
+        // check the file have right to execute this method or not
+        if (!ALLOWED_DELETE.contains(filename)) {
+            System.out.printf("%s file does not allow to delete the data!\n", filename);
+            return false;
+        }
+        // get all id and convert into set array to remove duplication
+        Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(0), array.get(1))).collect(Collectors.toSet());
+        List<List<String>> array = readFile(filename);
+        String content = "";
+        boolean remain;
+        int i = 0;
+        for (List<String> row : array) {
+            remain = true;
+            for (List<String> listId : setId) {
+                if (row.get(0).equals(listId.get(0)) && row.get(1).equals(listId.get(1))) {
+                    remain = false;
+                    break;
+                }
+            }
+            // if id match then will not add into content
+            if (remain) {
+                content += String.join(";", array.get(i)) + "\n";
+            }
             i++;
         }
         return modifyFile(filename, content, false);
