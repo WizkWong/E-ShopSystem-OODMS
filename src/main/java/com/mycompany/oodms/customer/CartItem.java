@@ -1,12 +1,15 @@
 package com.mycompany.oodms.customer;
 
 import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.ForeignKey;
 import com.mycompany.oodms.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartItem {
+public class CartItem implements ForeignKey {
+    // columns order in file: Customer ID, Item ID, quantity
+
     public static final String FILENAME = "cart";
     private Item item;
     private Integer quantity;
@@ -14,6 +17,28 @@ public class CartItem {
     public CartItem(Item item, Integer quantity) {
         this.item = item;
         this.quantity = quantity;
+    }
+
+    @Override
+    public List<String> toList() {
+        return new ArrayList<>(List.of(
+                String.valueOf(item.getId()),
+                String.valueOf(quantity)
+        ));
+    }
+
+    @Override
+    public boolean fileAddNewRow(long foreignKeyId) {
+        List<String> cartItemData = toList();
+        cartItemData.add(0, String.valueOf(foreignKeyId));
+        return FileService.insertData(FILENAME, cartItemData);
+    }
+
+    @Override
+    public boolean fileUpdate(long foreignKeyId) {
+        List<String> cartItemData = toList();
+        cartItemData.add(0, String.valueOf(foreignKeyId));
+        return FileService.updateSingleRow(FILENAME, cartItemData, 0, 1);
     }
 
     public static List<CartItem> getCartItem(Long customerId) {
