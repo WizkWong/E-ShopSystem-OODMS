@@ -16,9 +16,9 @@ public interface FileService {
 
     List<String> toList();
 
-    boolean addNew();
+    boolean fileAddNewRow();
 
-    boolean update();
+    boolean fileUpdate();
 
     // create the txt file. If file directory does not exist, create new directory
     static void createFile(String filename) {

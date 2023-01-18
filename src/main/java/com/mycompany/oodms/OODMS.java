@@ -14,6 +14,7 @@ import com.mycompany.oodms.user.User;
 public class OODMS {
 
     public static MainFrame frame;
+    public static User currentUser;
 
     public OODMS() {
         initialize();

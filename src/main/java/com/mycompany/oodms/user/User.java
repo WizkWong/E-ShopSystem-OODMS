@@ -37,7 +37,7 @@ public abstract class User implements FileService {
     }
 
     @Override
-    public boolean addNew() {
+    public boolean fileAddNewRow() {
         /* reason not using toList() method because only need superclass of toList, but it uses subclass of toList
            while saving customer, staff or admin */
         List<String> userData = List.of(
@@ -51,7 +51,7 @@ public abstract class User implements FileService {
     }
 
     @Override
-    public boolean update() {
+    public boolean fileUpdate() {
         List<String> userData = List.of(
                 String.valueOf(id),
                 username,
@@ -59,7 +59,7 @@ public abstract class User implements FileService {
                 String.valueOf(staff),
                 String.valueOf(admin)
         );
-        return FileService.updateSingleRow(USER_FILENAME, userData, FileService.ID_COLUMN);
+        return !FileService.updateSingleRow(USER_FILENAME, userData, FileService.ID_COLUMN);
     }
 
     public static User verify(String username, String password) {

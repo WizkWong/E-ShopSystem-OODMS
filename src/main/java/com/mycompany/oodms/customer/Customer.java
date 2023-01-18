@@ -1,10 +1,12 @@
 package com.mycompany.oodms.customer;
 
 import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Customer extends User {
     public static final String FILENAME = "customer";
@@ -41,8 +43,8 @@ public class Customer extends User {
     }
 
     @Override
-    public boolean addNew() {
-        if (super.addNew()) {
+    public boolean fileAddNewRow() {
+        if (super.fileAddNewRow()) {
             List<String> customerData = List.of(
                     String.valueOf(getId()),
                     phoneNo
@@ -53,15 +55,48 @@ public class Customer extends User {
     }
 
     @Override
-    public boolean update() {
-        if (super.update()) {
+    public boolean fileUpdate() {
+        if (!super.fileUpdate()) {
             List<String> customerData = List.of(
                     String.valueOf(getId()),
                     phoneNo
             );
-            return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
+            return !FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
         }
-        return false;
+        return true;
+    }
+
+    public void addCartItem(Item item, int quantity) {
+        Customer customer = (Customer) OODMS.currentUser;
+        Optional<CartItem> existCartItem = customer.getCart().stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+        if (existCartItem.isPresent()) {
+            System.out.println("Item is already exist in cart, cannot add in it");
+            return;
+        }
+        CartItem cartItem = new CartItem(item, quantity);
+        this.cart.add(cartItem);
+        if (!cartItem.fileAddNewRow(customer.getId())) {
+            System.out.println("Add failed");
+        }
+    }
+
+    public void deleteCartItem(CartItem cartItem) {
+        this.cart.remove(cartItem);
+        // delete the file
+    }
+
+    public void updateCartItem(Item item, int quantity) {
+        Customer customer = (Customer) OODMS.currentUser;
+        Optional<CartItem> existCartItem = customer.getCart().stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+        if (existCartItem.isEmpty()) {
+            System.out.println("Item is not exist in cart");
+            return;
+        }
+        CartItem cartItem = existCartItem.get();
+        cartItem.setQuantity(quantity);
+        if (cartItem.fileUpdate(customer.getId())) {
+            System.out.println("Update failed");
+        }
     }
 
     public static String register(String name, String password, String phoneNo) {
@@ -92,7 +127,7 @@ public class Customer extends User {
         }
 
         Customer customer = new Customer(id, name, password, false, false, phoneNo);
-        customer.addNew();
+        customer.fileAddNewRow();
 
         return "";
     }
