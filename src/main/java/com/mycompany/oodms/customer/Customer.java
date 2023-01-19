@@ -56,14 +56,14 @@ public class Customer extends User {
 
     @Override
     public boolean fileUpdate() {
-        if (!super.fileUpdate()) {
+        if (super.fileUpdate()) {
             List<String> customerData = List.of(
                     String.valueOf(getId()),
                     phoneNo
             );
-            return !FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
+            return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
         }
-        return true;
+        return false;
     }
 
     public boolean addCartItem(Item item, int quantity) {

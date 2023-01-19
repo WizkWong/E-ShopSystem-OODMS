@@ -59,7 +59,7 @@ public abstract class User implements FileService {
                 String.valueOf(staff),
                 String.valueOf(admin)
         );
-        return !FileService.updateSingleRow(USER_FILENAME, userData, FileService.ID_COLUMN);
+        return FileService.updateSingleRow(USER_FILENAME, userData, FileService.ID_COLUMN);
     }
 
     public static User verify(String username, String password) {
