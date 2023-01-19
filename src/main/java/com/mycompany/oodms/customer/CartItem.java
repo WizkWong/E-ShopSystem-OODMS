@@ -11,6 +11,7 @@ public class CartItem implements ForeignKey {
     // columns order in file: Customer ID, Item ID, quantity
 
     public static final String FILENAME = "cart";
+
     private Item item;
     private Integer quantity;
 
@@ -49,12 +50,12 @@ public class CartItem implements ForeignKey {
 
     public static List<CartItem> getCartItem(Long customerId) {
         // get all cart item
-        List<List<String>> cartItem = FileService.getMultipleSpecificData(FILENAME, 0, String.valueOf(customerId));
-        // create new array to store cart item
+        List<List<String>> cartItemList = FileService.getMultipleSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(customerId));
+        // create new array list to store cart item
         List<CartItem> cart = new ArrayList<>();
-        for (List<String> itemRow : cartItem) {
+        for (List<String> itemRow : cartItemList) {
             // get from item file
-            List<String> item = FileService.getOneSpecificData(Item.FILENAME, 0, itemRow.get(1));
+            List<String> item = FileService.getOneSpecificData(Item.FILENAME, FileService.ID_COLUMN, itemRow.get(1));
             // create new CartItem object then added into array
             cart.add(new CartItem(new Item(item), Integer.valueOf(itemRow.get(2))));
         }
