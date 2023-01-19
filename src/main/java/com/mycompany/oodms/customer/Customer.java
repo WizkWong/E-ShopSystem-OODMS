@@ -1,7 +1,6 @@
 package com.mycompany.oodms.customer;
 
 import com.mycompany.oodms.FileService;
-import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.user.User;
 
@@ -100,27 +99,21 @@ public class Customer extends User {
     }
 
     public static String register(String name, String password, String phoneNo) {
-        String errorMessage = "";
-
-        if (name.length() < 3) {
-            errorMessage += "The total character of name must be more than or equal 4";
-        }
-
-        if (password.length() < 7) {
-            errorMessage += "Minimum password length must be 8";
-        }
-
-        if (phoneNo.length() < 11) {
-            errorMessage += "Phone number is not valid";
-        }
+        String errorMessage = validate(name, password, phoneNo);
 
         if (!errorMessage.isEmpty()) {
             return errorMessage;
         }
 
-        Long id = FileService.getNewId(Customer.FILENAME);
+        List<String> checkUsername = FileService.getOneSpecificData(USER_FILENAME, 1, name);
+
+        if (!checkUsername.isEmpty()) {
+            return "Username has been taken";
+        }
+
+        Long id = FileService.getNewId(USER_FILENAME);
         if (id == null) {
-            return "File error, Customer file does not exist, please restart this system"; // add id also
+            return "File error, User file does not exist, please restart this system";
         }
         if (id == -1) {
             return "ID error, file has invalid id, please delete or fix the file";
@@ -130,6 +123,16 @@ public class Customer extends User {
         customer.fileAddNewRow();
 
         return "";
+    }
+
+    public static String validate(String name, String password, String phoneNo) {
+        String errorMessage = User.validate(name, password);
+
+        if (phoneNo.length() < 11) {
+            errorMessage += "Phone number is not valid";
+        }
+
+        return errorMessage;
     }
 
     public String getPhoneNo() {
