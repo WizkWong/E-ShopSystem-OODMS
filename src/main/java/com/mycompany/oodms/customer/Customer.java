@@ -4,6 +4,7 @@ import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,15 +77,29 @@ public class Customer extends User {
         return cartItem.fileAddNewRow(this.getId());
     }
 
-    public boolean updateCartItem(Item item, int quantity) {
-        Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
-        if (existCartItem.isEmpty()) {
-            System.out.println("Item is not exist in cart");
+    public boolean updateCartItem(List<CartItem> cart) {
+        List<Long> cartItemId = cart.stream().map(cartItem -> cartItem.getItem().getId()).toList();
+        int match = 0;
+        for (CartItem cartItem : this.cart) {
+            for (Long id : cartItemId) {
+                if (cartItem.getItem().getId().equals(id)) {
+                    match++;
+                    break;
+                }
+            }
+        }
+        if (this.cart.size() != match) {
+            System.out.println("New cart item does not match with current cart item");
             return false;
         }
-        CartItem cartItem = existCartItem.get();
-        cartItem.setQuantity(quantity);
-        return cartItem.fileUpdate(this.getId());
+        this.cart = cart;
+        List<List<String>> newStringCart = new ArrayList<>(cart.stream()
+                .map(cartItem -> {
+                    List<String> cartItemList = cartItem.toList();
+                    cartItemList.add(0, String.valueOf(this.getId()));
+                    return cartItemList;
+                }).toList());
+        return FileService.updateMultipleRows(CartItem.FILENAME, newStringCart, 0, 1);
     }
 
     public boolean deleteCartItem(Item item) {
@@ -145,10 +160,6 @@ public class Customer extends User {
 
     public List<CartItem> getCart() {
         return cart;
-    }
-
-    public void setCart(List<CartItem> cart) {
-        this.cart = cart;
     }
 
     @Override
