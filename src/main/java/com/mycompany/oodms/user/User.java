@@ -37,7 +37,7 @@ public abstract class User implements FileService {
     }
 
     @Override
-    public boolean addNew() {
+    public boolean fileAddNewRow() {
         /* reason not using toList() method because only need superclass of toList, but it uses subclass of toList
            while saving customer, staff or admin */
         List<String> userData = List.of(
@@ -51,7 +51,7 @@ public abstract class User implements FileService {
     }
 
     @Override
-    public boolean update() {
+    public boolean fileUpdate() {
         List<String> userData = List.of(
                 String.valueOf(id),
                 username,
@@ -73,15 +73,41 @@ public abstract class User implements FileService {
         // check is staff
         if (user.get(3).equals("1")) {
             userSubClassData = FileService.getOneSpecificData(DeliveryStaff.FILENAME, FileService.ID_COLUMN, user.get(0));
-            return new Admin(joinWithUser(userSubClassData, user));
+            List<String> staffData = joinWithUser(userSubClassData, user);
+            if (staffData != null) {
+                return new DeliveryStaff(staffData);
+            }
         }
         // check is admin
-        if ((user.get(4).equals("1"))) {
+        else if ((user.get(4).equals("1"))) {
             userSubClassData = FileService.getOneSpecificData(Admin.FILENAME, FileService.ID_COLUMN, user.get(0));
-            return new DeliveryStaff(joinWithUser(userSubClassData, user));
+            List<String> adminData = joinWithUser(userSubClassData, user);
+            if (adminData != null) {
+                return new Admin(adminData);
+            }
         }
-        userSubClassData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, user.get(0));
-        return new Customer(joinWithUser(userSubClassData, user));
+        else {
+            userSubClassData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, user.get(0));
+            List<String> customerData = joinWithUser(userSubClassData, user);
+            if (customerData != null) {
+                return new Customer(customerData);
+            }
+        }
+        return null;
+    }
+
+    public static String validate(String name, String password) {
+        String errorMessage = "";
+
+        if (name.length() < 3) {
+            errorMessage += "The total character of name must be more than or equal 4";
+        }
+
+        if (password.length() < 7) {
+            errorMessage += "Minimum password length must be 8";
+        }
+
+        return errorMessage;
     }
 
     public static List<String> joinWithUser(List<String> subclassData, List<String> userData) {
