@@ -188,12 +188,8 @@ public interface FileService {
 
     // insert a new data into the file
     static boolean insertData(String filename, List<String> data) {
-        String content;
-        if (ALLOWED_REMOVE.contains(filename)) {
-            content = String.join(";", data) + ";E\n";
-        } else {
-            content = String.join(";", data) + "\n";
-        }
+        String content = ALLOWED_REMOVE.contains(filename) ?
+                String.join(";", data) + ";E\n" : String.join(";", data) + "\n";
         return modifyFile(filename, content, true);
     }
 
