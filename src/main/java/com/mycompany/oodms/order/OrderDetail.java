@@ -1,15 +1,16 @@
 package com.mycompany.oodms.order;
 
 import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.ForeignKey;
 import com.mycompany.oodms.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDetail {
-    // columns order in file: Order ID, Item ID, order price, quantity
+public class OrderDetail implements ForeignKey {
+    // columns order in file: Order-ID, Item-ID, order-price, quantity
 
-    private static final String FILENAME = "order detail";
+    public static final String FILENAME = "order detail";
 
     private Item item;
     private Double orderPrice;
@@ -19,6 +20,27 @@ public class OrderDetail {
         this.item = item;
         this.orderPrice = orderPrice;
         this.quantity = quantity;
+    }
+
+    @Override
+    public List<String> toList() {
+        return new ArrayList<>(List.of(
+           String.valueOf(item.getId()),
+           String.valueOf(orderPrice),
+           String.valueOf(quantity)
+        ));
+    }
+
+    @Override
+    public boolean fileAddNewRow(long ForeignKeyId) {
+        List<String> orderDetailData = toList();
+        orderDetailData.add(0, String.valueOf(ForeignKeyId));
+        return FileService.insertData(FILENAME, orderDetailData);
+    }
+
+    @Override
+    public boolean fileUpdate(long ForeignKeyId) {
+        return false;
     }
 
     public static List<OrderDetail> getOrderDetail(Long orderId) {
