@@ -24,25 +24,25 @@ public class CustomerOrder implements FileService {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = orderDateTime;
-        this.orderDetail = OrderDetail.getOrderDetail(id);
-        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPayment(this);
+        this.orderDetail = OrderDetail.getOrderDetailByOrderId(id);
+        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPaymentById(this);
     }
 
     public CustomerOrder(Long id, Customer customer, String orderDateTime) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = LocalDateTime.parse(orderDateTime, formatDateTime);
-        this.orderDetail = OrderDetail.getOrderDetail(id);
-        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPayment(this);
+        this.orderDetail = OrderDetail.getOrderDetailByOrderId(id);
+        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPaymentById(this);
     }
 
-//    public CustomerOrder(List<String> customerOrderData) {
-//        this(
-//                Long.valueOf(customerOrderData.get(0)),
-//                customerOrderData.get(1),
-//                customerOrderData.get(2)
-//        )
-//    }
+    public CustomerOrder(List<String> customerOrderData) {
+        this(
+                Long.valueOf(customerOrderData.get(0)),
+                Customer.getCustomerById(Long.parseLong(customerOrderData.get(1))),
+                customerOrderData.get(2)
+        );
+    }
 
     @Override
     public List<String> toList() {

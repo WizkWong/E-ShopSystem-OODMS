@@ -43,7 +43,7 @@ public class OrderDetail implements ForeignKey {
         return false;
     }
 
-    public static List<OrderDetail> getOrderDetail(Long orderId) {
+    public static List<OrderDetail> getOrderDetailByOrderId(Long orderId) {
         // get all the order item
         List<List<String>> orderDetailList = FileService.getMultipleSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
         // create a new array list to store order item

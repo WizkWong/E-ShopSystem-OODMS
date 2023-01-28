@@ -53,7 +53,7 @@ public class CustomerOrderPayment implements FileService {
         return false;
     }
 
-    public static CustomerOrderPayment getCustomerOrderPayment(CustomerOrder customerOrder) {
+    public static CustomerOrderPayment getCustomerOrderPaymentById(CustomerOrder customerOrder) {
         Long orderId = customerOrder.getId();
         List<String> customerOrderPaymentData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
         return new CustomerOrderPayment(
