@@ -150,6 +150,17 @@ public class Customer extends User {
         return errorMessage;
     }
 
+    public static Customer getCustomerById(long id) {
+        String idString = String.valueOf(id);
+        List<String> userData = FileService.getOneSpecificData(User.USER_FILENAME, FileService.ID_COLUMN, idString);
+        List<String> customerData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, idString);
+        customerData = User.joinWithUser(customerData, userData);
+        if (customerData == null) {
+            return null;
+        }
+        return new Customer(customerData);
+    }
+
     public String getPhoneNo() {
         return phoneNo;
     }
