@@ -96,6 +96,7 @@ public abstract class User implements FileService {
         return null;
     }
 
+    // validate the input
     public static String validate(String name, String password) {
         String errorMessage = "";
 
@@ -110,6 +111,7 @@ public abstract class User implements FileService {
         return errorMessage;
     }
 
+    // join List if user id match between two list
     public static List<String> joinWithUser(List<String> subclassData, List<String> userData) {
         if (subclassData.get(0).equals(userData.get(0))) {
             subclassData.remove(0);

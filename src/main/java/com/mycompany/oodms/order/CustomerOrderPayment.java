@@ -11,18 +11,18 @@ public class CustomerOrderPayment implements FileService {
     // columns order in file: CustomerOrder-ID, type-of-payment, total-price, payment-datetime
 
     public static final String FILENAME = "customer order payment";
-    private final DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     private CustomerOrder customerOrder;
     private String typeOfPayment;
     private Double totalPrice;
     private LocalDateTime paymentDateTime;
 
-    public CustomerOrderPayment(CustomerOrder customerOrder, String typeOfPayment, Double totalPrice, LocalDateTime paymentDateTime) {
+    public CustomerOrderPayment(CustomerOrder customerOrder, String typeOfPayment, Double totalPrice) {
         this.customerOrder = customerOrder;
         this.typeOfPayment = typeOfPayment;
         this.totalPrice = totalPrice;
-        this.paymentDateTime = paymentDateTime;
+        this.paymentDateTime = LocalDateTime.now();
     }
 
     public CustomerOrderPayment(CustomerOrder customerOrder, String typeOfPayment, Double totalPrice, String paymentDateTime) {

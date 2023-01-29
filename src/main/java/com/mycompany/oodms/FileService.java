@@ -193,6 +193,21 @@ public interface FileService {
         return modifyFile(filename, content, true);
     }
 
+    // insert multiple new data into the file
+    static boolean insertMultipleData(String filename, List<List<String>> dataList) {
+        String content = "";
+        if (ALLOWED_REMOVE.contains(filename)) {
+            for (List<String> data : dataList) {
+                content += String.join(";", data) + ";E\n";
+            }
+        } else {
+            for (List<String> data : dataList) {
+                content += String.join(";", data) + "\n";
+            }
+        }
+        return modifyFile(filename, content, true);
+    }
+
     // get all the match data by specific column
     static List<List<String>> getMultipleSpecificData(String filename, int column, String matchData) {
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
