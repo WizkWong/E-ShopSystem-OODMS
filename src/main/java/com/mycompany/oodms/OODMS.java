@@ -12,6 +12,7 @@ import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.order.CustomerOrder;
 import com.mycompany.oodms.order.CustomerOrderPayment;
 import com.mycompany.oodms.order.OrderDetail;
+import com.mycompany.oodms.user.GUI.HomePage;
 import com.mycompany.oodms.user.User;
 
 public class OODMS {
@@ -21,7 +22,7 @@ public class OODMS {
 
     public OODMS() {
         initialize();
-        frame = new MainFrame(new TestJPanel());
+        frame = new MainFrame(new HomePage());
     }
 
     public void initialize() {

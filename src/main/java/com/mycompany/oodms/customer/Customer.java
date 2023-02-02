@@ -128,21 +128,25 @@ public class Customer extends User {
     }
 
     // register a new account
-    public static String register(String name, String password, String email, String phoneNo) {
+    public static String register(String name, String password1, String password2, String email, String phoneNo) {
         // validate the name, password and phone number
-        String errorMessage = User.validate(name, password, email, phoneNo);
+        String errorMessage = User.validate(name, password1, password2, email, phoneNo);
+
+        if (name.length() >= 4) {
+            // get all user
+            List<List<String>> allUser = FileService.readFile(USER_FILENAME);
+            // find any username ignore case match
+            boolean usernameTaken = allUser.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(name));
+
+            // check username taken
+            if (usernameTaken) {
+                errorMessage += "Username taken";
+            }
+        }
 
         // if error message is not empty then return error message
         if (!errorMessage.isEmpty()) {
             return errorMessage;
-        }
-
-        // get any current taken username
-        List<String> checkUsername = FileService.getOneSpecificData(USER_FILENAME, 1, name);
-
-        // check username taken
-        if (!checkUsername.isEmpty()) {
-            return "Username has been taken";
         }
 
         // get new id
@@ -151,7 +155,7 @@ public class Customer extends User {
             return "The system had met an error, please contact the technical support";
         }
 
-        Customer customer = new Customer(id, name, password, email, phoneNo, false, false);
+        Customer customer = new Customer(id, name, password1, email, phoneNo, false, false);
         // save new customer data
         customer.fileAddNewRow();
 

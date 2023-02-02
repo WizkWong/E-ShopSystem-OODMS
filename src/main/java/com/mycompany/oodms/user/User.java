@@ -109,23 +109,26 @@ public abstract class User implements FileService {
     }
 
     // validate the input
-    public static String validate(String name, String password, String email, String phoneNo) {
+    public static String validate(String name, String password1, String password2, String email, String phoneNo) {
         String errorMessage = "";
 
-        if (name.length() < 3) {
-            errorMessage += "The total character of name must be more than or equal 4";
+        if (name.length() < 4) {
+            errorMessage += "Username character less than 4;";
         }
 
-        if (password.length() < 7) {
-            errorMessage += "Minimum password length must be 8";
+        if (password1.length() < 8) {
+            errorMessage += "Password length less than 8;";
+
+        } else if (!password1.equals(password2)) {
+            errorMessage += "Password length is not same;";
         }
 
         if (!VALID_EMAIL_ADDRESS.matcher(email).find()) {
-            errorMessage += "Email is not valid";
+            errorMessage += "Email is invalid;";
         }
 
-        if (phoneNo.length() < 11) {
-            errorMessage += "Phone number is not valid";
+        if (phoneNo.length() < 10) {
+            errorMessage += "Phone number is invalid;";
         }
 
         return errorMessage;
