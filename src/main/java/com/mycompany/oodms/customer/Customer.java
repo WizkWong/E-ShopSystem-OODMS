@@ -12,12 +12,10 @@ import java.util.Optional;
 public class Customer extends User {
     public static final String FILENAME = "customer";
 
-    private String phoneNo;
     private List<CartItem> cart;
 
-    public Customer(Long id, String username, String password, Boolean staff, Boolean admin, String phoneNo) {
-        super(id, username, password, staff, admin);
-        this.phoneNo = phoneNo;
+    public Customer(Long id, String username, String password, String email, String phoneNo, Boolean staff, Boolean admin) {
+        super(id, username, password, email, phoneNo, staff, admin);
         this.cart = CartItem.getCartItem(id);
     }
 
@@ -26,29 +24,22 @@ public class Customer extends User {
                 Long.valueOf(customerData.get(0)),
                 customerData.get(1),
                 customerData.get(2),
-                Boolean.valueOf(customerData.get(3)),
-                Boolean.valueOf(customerData.get(4)),
-                customerData.get(5)
+                customerData.get(3),
+                customerData.get(4),
+                Boolean.valueOf(customerData.get(5)),
+                Boolean.valueOf(customerData.get(6))
         );
     }
 
     public Customer() {
-        this(null, null,null, null, null, null);
-    }
-
-    @Override
-    public List<String> toList() {
-        List<String> list = super.toList();
-        list.add(phoneNo);
-        return list;
+        this(null, null,null, null, null, null, null);
     }
 
     @Override
     public boolean fileAddNewRow() {
         if (super.fileAddNewRow()) {
             List<String> customerData = List.of(
-                    String.valueOf(getId()),
-                    phoneNo
+                    String.valueOf(getId())
             );
             return FileService.insertData(FILENAME, customerData);
         }
@@ -59,8 +50,7 @@ public class Customer extends User {
     public boolean fileUpdate() {
         if (super.fileUpdate()) {
             List<String> customerData = List.of(
-                    String.valueOf(getId()),
-                    phoneNo
+                    String.valueOf(getId())
             );
             return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
         }
@@ -138,9 +128,9 @@ public class Customer extends User {
     }
 
     // register a new account
-    public static String register(String name, String password, String phoneNo) {
+    public static String register(String name, String password, String email, String phoneNo) {
         // validate the name, password and phone number
-        String errorMessage = validate(name, password, phoneNo);
+        String errorMessage = User.validate(name, password, email, phoneNo);
 
         // if error message is not empty then return error message
         if (!errorMessage.isEmpty()) {
@@ -161,22 +151,11 @@ public class Customer extends User {
             return "The system had met an error, please contact the technical support";
         }
 
-        Customer customer = new Customer(id, name, password, false, false, phoneNo);
+        Customer customer = new Customer(id, name, password, email, phoneNo, false, false);
         // save new customer data
         customer.fileAddNewRow();
 
         return "";
-    }
-
-    // validate the input
-    public static String validate(String name, String password, String phoneNo) {
-        String errorMessage = User.validate(name, password);
-
-        if (phoneNo.length() < 11) {
-            errorMessage += "Phone number is not valid";
-        }
-
-        return errorMessage;
     }
 
     // get the customer data by customer id
@@ -191,14 +170,6 @@ public class Customer extends User {
         return new Customer(customerData);
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
     public List<CartItem> getCart() {
         return cart;
     }
@@ -207,7 +178,6 @@ public class Customer extends User {
     public String toString() {
         return "\nCustomer{\n\t" +
                 super.toString() + ",\n" +
-                "\tphoneNo='" + phoneNo + "',\n" +
                 "\tcart=" + cart +
                 "\n}";
     }

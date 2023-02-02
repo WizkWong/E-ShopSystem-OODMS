@@ -7,20 +7,26 @@ import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class User implements FileService {
     public static final String USER_FILENAME = "user";
+    public static final Pattern VALID_EMAIL_ADDRESS = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private Long id;
     private String username;
     private String password;
+    private String email;
+    private String phoneNo;
     private Boolean staff;
     private Boolean admin;
 
-    public User(Long id, String username, String password, Boolean staff, Boolean admin) {
+    public User(Long id, String username, String password, String email, String phoneNo, Boolean staff, Boolean admin) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.phoneNo = phoneNo;
         this.staff = staff;
         this.admin = admin;
     }
@@ -31,6 +37,8 @@ public abstract class User implements FileService {
                 String.valueOf(id),
                 username,
                 password,
+                email,
+                phoneNo,
                 String.valueOf(staff),
                 String.valueOf(admin)
         ));
@@ -44,6 +52,8 @@ public abstract class User implements FileService {
                 String.valueOf(id),
                 username,
                 password,
+                email,
+                phoneNo,
                 String.valueOf(staff),
                 String.valueOf(admin)
         );
@@ -56,6 +66,8 @@ public abstract class User implements FileService {
                 String.valueOf(id),
                 username,
                 password,
+                email,
+                phoneNo,
                 String.valueOf(staff),
                 String.valueOf(admin)
         );
@@ -97,7 +109,7 @@ public abstract class User implements FileService {
     }
 
     // validate the input
-    public static String validate(String name, String password) {
+    public static String validate(String name, String password, String email, String phoneNo) {
         String errorMessage = "";
 
         if (name.length() < 3) {
@@ -106,6 +118,14 @@ public abstract class User implements FileService {
 
         if (password.length() < 7) {
             errorMessage += "Minimum password length must be 8";
+        }
+
+        if (!VALID_EMAIL_ADDRESS.matcher(email).find()) {
+            errorMessage += "Email is not valid";
+        }
+
+        if (phoneNo.length() < 11) {
+            errorMessage += "Phone number is not valid";
         }
 
         return errorMessage;
@@ -146,6 +166,22 @@ public abstract class User implements FileService {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
     public Boolean getStaff() {
         return staff;
     }
@@ -168,6 +204,8 @@ public abstract class User implements FileService {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
                 ", staff=" + staff +
                 ", admin=" + admin +
                 '}';
