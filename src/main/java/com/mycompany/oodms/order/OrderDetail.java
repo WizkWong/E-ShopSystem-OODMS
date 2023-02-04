@@ -2,12 +2,13 @@ package com.mycompany.oodms.order;
 
 import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.ForeignKey;
+import com.mycompany.oodms.customer.CartItem;
 import com.mycompany.oodms.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDetail implements ForeignKey {
+public class OrderDetail {
     // columns order in file: Order-ID, Item-ID, order-price, quantity
 
     public static final String FILENAME = "order detail";
@@ -22,29 +23,17 @@ public class OrderDetail implements ForeignKey {
         this.quantity = quantity;
     }
 
-    @Override
-    public List<String> toList() {
+    public List<String> toList(long orderId) {
         return new ArrayList<>(List.of(
+           String.valueOf(orderId),
            String.valueOf(item.getId()),
            String.valueOf(orderPrice),
            String.valueOf(quantity)
         ));
     }
 
-    @Override
-    public boolean fileAddNewRow(long ForeignKeyId) {
-        List<String> orderDetailData = toList();
-        orderDetailData.add(0, String.valueOf(ForeignKeyId));
-        return FileService.insertData(FILENAME, orderDetailData);
-    }
-
-    @Override
-    public boolean fileUpdate(long ForeignKeyId) {
-        return false;
-    }
-
-    public static List<OrderDetail> getOrderDetail(Long orderId) {
-        // get all the order item
+    // get all the order item
+    public static List<OrderDetail> getOrderDetailByOrderId(Long orderId) {
         List<List<String>> orderDetailList = FileService.getMultipleSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
         // create a new array list to store order item
         List<OrderDetail> orderDetail = new ArrayList<>();
@@ -55,6 +44,15 @@ public class OrderDetail implements ForeignKey {
             orderDetail.add(new OrderDetail(new Item(item), Double.valueOf(itemRow.get(2)), Integer.valueOf(itemRow.get(3))));
         }
         return orderDetail;
+    }
+
+    // calculated total price = item price had order * quantity
+    public static double calculateTotalPrice(List<OrderDetail> orderDetailList) {
+        double total = 0.0;
+        for (OrderDetail orderDetail : orderDetailList) {
+            total += orderDetail.orderPrice * orderDetail.quantity;
+        }
+        return total;
     }
 
     public Item getItem() {

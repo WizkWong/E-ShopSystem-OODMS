@@ -10,8 +10,8 @@ public class DeliveryStaff extends User {
 
     private String phoneNo;
 
-    public DeliveryStaff(Long id, String username, String password, Boolean staff, Boolean admin, String phoneNo) {
-        super(id, username, password, staff, admin);
+    public DeliveryStaff(Long id, String username, String password, String email, String phoneNo, Boolean staff, Boolean admin) {
+        super(id, username, password, email, phoneNo, staff, admin);
         this.phoneNo = phoneNo;
     }
 
@@ -20,14 +20,15 @@ public class DeliveryStaff extends User {
                 Long.valueOf(deliveryStaffData.get(0)),
                 deliveryStaffData.get(1),
                 deliveryStaffData.get(2),
-                Boolean.valueOf(deliveryStaffData.get(3)),
-                Boolean.valueOf(deliveryStaffData.get(4)),
-                deliveryStaffData.get(5)
+                deliveryStaffData.get(3),
+                deliveryStaffData.get(4),
+                Boolean.valueOf(deliveryStaffData.get(5)),
+                Boolean.valueOf(deliveryStaffData.get(6))
         );
     }
 
     public DeliveryStaff() {
-        this(null, null,null, null, null, null);
+        this(null, null, null, null, null, null, null);
     }
 
     public List<String> toList() {

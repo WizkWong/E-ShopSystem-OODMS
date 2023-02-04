@@ -3,6 +3,7 @@ package com.mycompany.oodms.customer;
 import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.ForeignKey;
 import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.order.OrderDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +49,12 @@ public class CartItem implements ForeignKey {
         return FileService.deleteByTwoId(FILENAME, List.of(cartItemData));
     }
 
+    public OrderDetail convertToOrderDetail() {
+        return new OrderDetail(item, item.getPrice(), quantity);
+    }
+
+    // get all cart item
     public static List<CartItem> getCartItem(Long customerId) {
-        // get all cart item
         List<List<String>> cartItemList = FileService.getMultipleSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(customerId));
         // create new array list to store cart item
         List<CartItem> cart = new ArrayList<>();
@@ -60,6 +65,15 @@ public class CartItem implements ForeignKey {
             cart.add(new CartItem(new Item(item), Integer.valueOf(itemRow.get(2))));
         }
         return cart;
+    }
+
+    // calculated total price = item price * quantity
+    public static double calculateTotalPrice(List<CartItem> cartItemList) {
+        double total = 0.0;
+        for (CartItem cartItem : cartItemList) {
+            total += cartItem.item.getPrice() * cartItem.quantity;
+        }
+        return total;
     }
 
     public Item getItem() {

@@ -1,6 +1,7 @@
 package com.mycompany.oodms.order;
 
 import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.customer.CartItem;
 import com.mycompany.oodms.customer.Customer;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public class CustomerOrder implements FileService {
     // columns order in file: CustomerOrder ID, Customer ID, Datetime
 
     public static final String FILENAME = "customer order";
-    private final DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     private Long id;
     private Customer customer;
@@ -20,29 +21,37 @@ public class CustomerOrder implements FileService {
     private List<OrderDetail> orderDetail;
     private CustomerOrderPayment customerOrderPayment;
 
+    public CustomerOrder(Long id, String typeOfPayment, Customer customer) {
+        this.id = id;
+        this.customer = customer;
+        this.orderDateTime = LocalDateTime.now();
+        this.orderDetail = customer.getCart().stream().map(CartItem::convertToOrderDetail).toList();
+        this.customerOrderPayment = new CustomerOrderPayment(this, typeOfPayment, OrderDetail.calculateTotalPrice(this.orderDetail));
+    }
+
     public CustomerOrder(Long id, Customer customer, LocalDateTime orderDateTime) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = orderDateTime;
-        this.orderDetail = OrderDetail.getOrderDetail(id);
-        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPayment(this);
+        this.orderDetail = OrderDetail.getOrderDetailByOrderId(id);
+        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPaymentById(this);
     }
 
     public CustomerOrder(Long id, Customer customer, String orderDateTime) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = LocalDateTime.parse(orderDateTime, formatDateTime);
-        this.orderDetail = OrderDetail.getOrderDetail(id);
-        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPayment(this);
+        this.orderDetail = OrderDetail.getOrderDetailByOrderId(id);
+        this.customerOrderPayment = CustomerOrderPayment.getCustomerOrderPaymentById(this);
     }
 
-//    public CustomerOrder(List<String> customerOrderData) {
-//        this(
-//                Long.valueOf(customerOrderData.get(0)),
-//                customerOrderData.get(1),
-//                customerOrderData.get(2)
-//        )
-//    }
+    public CustomerOrder(List<String> customerOrderData) {
+        this(
+                Long.valueOf(customerOrderData.get(0)),
+                Customer.getCustomerById(Long.parseLong(customerOrderData.get(1))),
+                customerOrderData.get(2)
+        );
+    }
 
     @Override
     public List<String> toList() {
@@ -56,12 +65,26 @@ public class CustomerOrder implements FileService {
     @Override
     public boolean fileAddNewRow() {
         List<String> customerOrderData = toList();
-        return FileService.insertData(FILENAME, customerOrderData);
+        // save customer order
+        if (!FileService.insertData(FILENAME, customerOrderData)) {
+            return false;
+        }
+        // save customer order payment
+        if (!customerOrderPayment.fileAddNewRow()) {
+            return false;
+        }
+        // save order detail
+        return fileSaveOrderDetail();
     }
 
     @Override
     public boolean fileUpdate() {
         return false;
+    }
+
+    private boolean fileSaveOrderDetail() {
+        List<List<String>> orderDetailStringList = orderDetail.stream().map(orderD -> orderD.toList(id)).toList();
+        return FileService.insertMultipleData(OrderDetail.FILENAME, orderDetailStringList);
     }
 
     public Long getId() {
