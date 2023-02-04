@@ -5,6 +5,11 @@
 package com.mycompany.oodms.user.GUI;
 
 import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.admin.Admin;
+import com.mycompany.oodms.admin.GUI.AdminPanelForm;
+import com.mycompany.oodms.customer.Customer;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
+import com.mycompany.oodms.user.User;
 
 /**
  *
@@ -17,6 +22,7 @@ public class LoginPage extends javax.swing.JPanel {
      */
     public LoginPage() {
         initComponents();
+        loginMsgLb.setVisible(false);
     }
 
     /**
@@ -30,10 +36,11 @@ public class LoginPage extends javax.swing.JPanel {
 
         titleLb = new javax.swing.JLabel();
         formPn = new javax.swing.JPanel();
-        nameLb = new javax.swing.JLabel();
-        nameField = new javax.swing.JTextField();
+        usernameLb = new javax.swing.JLabel();
+        usernameField = new javax.swing.JTextField();
         pssLb = new javax.swing.JLabel();
-        pssField1 = new javax.swing.JPasswordField();
+        pssField = new javax.swing.JPasswordField();
+        loginMsgLb = new javax.swing.JLabel();
         backBtt = new javax.swing.JButton();
         loginBtt = new javax.swing.JButton();
 
@@ -50,21 +57,25 @@ public class LoginPage extends javax.swing.JPanel {
         formPn.setMinimumSize(new java.awt.Dimension(540, 120));
         formPn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        nameLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        nameLb.setText("Username:");
-        formPn.add(nameLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 150, 30));
+        usernameLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        usernameLb.setText("Username:");
+        formPn.add(usernameLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 150, 30));
 
-        nameField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        nameField.setToolTipText("");
-        nameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, 340, 30));
+        usernameField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        usernameField.setToolTipText("");
+        usernameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
+        formPn.add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, 340, 30));
 
         pssLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         pssLb.setText("Password:");
         formPn.add(pssLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 150, 30));
 
-        pssField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(pssField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 340, 30));
+        pssField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
+        formPn.add(pssField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 340, 30));
+
+        loginMsgLb.setForeground(java.awt.Color.red);
+        loginMsgLb.setText("Incorrect username and password");
+        formPn.add(loginMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 340, 20));
 
         add(formPn, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 520, 160));
 
@@ -99,7 +110,23 @@ public class LoginPage extends javax.swing.JPanel {
     }//GEN-LAST:event_backBttActionPerformed
 
     private void loginBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBttActionPerformed
-        
+        loginMsgLb.setVisible(false);
+
+        String username = usernameField.getText();
+        String pss = new String(pssField.getPassword());
+        User user = User.verify(username, pss);
+        if (user != null) {
+            OODMS.currentUser = user;
+            if (user instanceof Customer) {
+                System.out.println("customer");
+            } else if (user instanceof Admin) {
+                OODMS.frame.refresh(new AdminPanelForm());
+            } else if (user instanceof DeliveryStaff) {
+                System.out.println("delivery staff");
+            }
+            return;
+        }
+        loginMsgLb.setVisible(true);
     }//GEN-LAST:event_loginBttActionPerformed
 
 
@@ -107,10 +134,11 @@ public class LoginPage extends javax.swing.JPanel {
     private javax.swing.JButton backBtt;
     private javax.swing.JPanel formPn;
     private javax.swing.JButton loginBtt;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JLabel nameLb;
-    private javax.swing.JPasswordField pssField1;
+    private javax.swing.JLabel loginMsgLb;
+    private javax.swing.JPasswordField pssField;
     private javax.swing.JLabel pssLb;
     private javax.swing.JLabel titleLb;
+    private javax.swing.JTextField usernameField;
+    private javax.swing.JLabel usernameLb;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,6 +7,7 @@ import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public abstract class User implements FileService {
@@ -76,14 +77,15 @@ public abstract class User implements FileService {
 
     public static User verify(String username, String password) {
         List<List<String>> allUser = FileService.readFile(USER_FILENAME);
-        List<String> user = allUser.stream().filter(list -> list.get(1).equals(username) && list.get(2).equals(password)).toList().get(0);
+        Optional<List<String>> userExist = allUser.stream().filter(list -> list.get(1).equals(username) && list.get(2).equals(password)).findFirst();
         // if no match
-        if (user.isEmpty()) {
+        if (userExist.isEmpty()) {
             return null;
         }
+        List<String> user = userExist.get();
         List<String> userSubClassData;
         // check is staff
-        if (user.get(3).equals("1")) {
+        if (user.get(5).equals("true")) {
             userSubClassData = FileService.getOneSpecificData(DeliveryStaff.FILENAME, FileService.ID_COLUMN, user.get(0));
             List<String> staffData = joinWithUser(userSubClassData, user);
             if (staffData != null) {
@@ -91,7 +93,7 @@ public abstract class User implements FileService {
             }
         }
         // check is admin
-        else if ((user.get(4).equals("1"))) {
+        else if ((user.get(6).equals("true"))) {
             userSubClassData = FileService.getOneSpecificData(Admin.FILENAME, FileService.ID_COLUMN, user.get(0));
             List<String> adminData = joinWithUser(userSubClassData, user);
             if (adminData != null) {

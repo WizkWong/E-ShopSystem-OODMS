@@ -39,8 +39,8 @@ public class RegisterPage extends javax.swing.JPanel {
         titleLb = new javax.swing.JLabel();
         registerBtt = new javax.swing.JButton();
         formPn = new javax.swing.JPanel();
-        nameLb = new javax.swing.JLabel();
-        nameField = new javax.swing.JTextField();
+        usernameLb = new javax.swing.JLabel();
+        usernameField = new javax.swing.JTextField();
         pssLb = new javax.swing.JLabel();
         pssField1 = new javax.swing.JPasswordField();
         cfPssLb = new javax.swing.JLabel();
@@ -49,7 +49,7 @@ public class RegisterPage extends javax.swing.JPanel {
         emailField = new javax.swing.JTextField();
         PhoneNoLb = new javax.swing.JLabel();
         phoneNoField = new javax.swing.JTextField();
-        nameMsgLb = new javax.swing.JLabel();
+        usernameMsgLb = new javax.swing.JLabel();
         pssMsgLb = new javax.swing.JLabel();
         cfPssMsgLb = new javax.swing.JLabel();
         emailMsgLb = new javax.swing.JLabel();
@@ -94,14 +94,14 @@ public class RegisterPage extends javax.swing.JPanel {
         formPn.setPreferredSize(new java.awt.Dimension(540, 320));
         formPn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        nameLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        nameLb.setText("Username:");
-        formPn.add(nameLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 150, 30));
+        usernameLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        usernameLb.setText("Username:");
+        formPn.add(usernameLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 150, 30));
 
-        nameField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        nameField.setToolTipText("");
-        nameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 340, 30));
+        usernameField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        usernameField.setToolTipText("");
+        usernameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
+        formPn.add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 340, 30));
 
         pssLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         pssLb.setText("Password:");
@@ -135,8 +135,8 @@ public class RegisterPage extends javax.swing.JPanel {
         phoneNoField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
         formPn.add(phoneNoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 340, 30));
 
-        nameMsgLb.setText("Username must be at least 4 characters");
-        formPn.add(nameMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 340, 20));
+        usernameMsgLb.setText("Username must be at least 4 characters");
+        formPn.add(usernameMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 340, 20));
 
         pssMsgLb.setText("Password length must be at least 8");
         formPn.add(pssMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 110, 340, 20));
@@ -161,13 +161,13 @@ public class RegisterPage extends javax.swing.JPanel {
     }//GEN-LAST:event_backBttActionPerformed
 
     private void registerBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBttActionPerformed
-        String name = nameField.getText();
+        String username = usernameField.getText();
         String pss1 = new String(pssField1.getPassword());
         String pss2 = new String(pssField2.getPassword());
         String email = emailField.getText();
         String phoneNo = phoneNoField.getText();
 
-        String errMsg = Customer.register(name, pss1, pss2, email, phoneNo);
+        String errMsg = Customer.register(username, pss1, pss2, email, phoneNo);
 
         resetRegisterFormUI();
 
@@ -178,14 +178,14 @@ public class RegisterPage extends javax.swing.JPanel {
         }
 
         if (errMsg.contains("Username character less than 4")) {
-            nameMsgLb.setText("Username invalid, username must be at least 4 characters!");
-            nameMsgLb.setForeground(Color.RED);
-            nameField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+            usernameMsgLb.setText("Username invalid, username must be at least 4 characters!");
+            usernameMsgLb.setForeground(Color.RED);
+            usernameField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
 
         } else if (errMsg.contains("Username taken")) {
-            nameMsgLb.setText("Username has been taken!");
-            nameMsgLb.setForeground(Color.RED);
-            nameField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+            usernameMsgLb.setText("Username has been taken!");
+            usernameMsgLb.setForeground(Color.RED);
+            usernameField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
         }
 
         if (errMsg.contains("Password length less than 8")) {
@@ -210,9 +210,9 @@ public class RegisterPage extends javax.swing.JPanel {
     }//GEN-LAST:event_registerBttActionPerformed
 
     private void resetRegisterFormUI() {
-        nameMsgLb.setText("Username must be at least 4 characters");
-        nameMsgLb.setForeground(Color.BLACK);
-        nameField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+        usernameMsgLb.setText("Username must be at least 4 characters");
+        usernameMsgLb.setForeground(Color.BLACK);
+        usernameField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
 
         pssMsgLb.setText("Password length must be at least 8");
         pssMsgLb.setForeground(Color.BLACK);
@@ -237,9 +237,6 @@ public class RegisterPage extends javax.swing.JPanel {
     private javax.swing.JLabel emailLb;
     private javax.swing.JLabel emailMsgLb;
     private javax.swing.JPanel formPn;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JLabel nameLb;
-    private javax.swing.JLabel nameMsgLb;
     private javax.swing.JTextField phoneNoField;
     private javax.swing.JLabel phoneNoMsgLb;
     private javax.swing.JPasswordField pssField1;
@@ -248,5 +245,8 @@ public class RegisterPage extends javax.swing.JPanel {
     private javax.swing.JLabel pssMsgLb;
     private javax.swing.JButton registerBtt;
     private javax.swing.JLabel titleLb;
+    private javax.swing.JTextField usernameField;
+    private javax.swing.JLabel usernameLb;
+    private javax.swing.JLabel usernameMsgLb;
     // End of variables declaration//GEN-END:variables
 }
