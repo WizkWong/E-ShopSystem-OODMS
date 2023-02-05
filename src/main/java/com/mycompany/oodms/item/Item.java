@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Item {
     public static final String FILENAME = "item";
+    public static final String CATEGORY_FILENAME = "category";
 
     private Long id;
     private String name;
@@ -31,8 +32,41 @@ public class Item {
         );
     }
 
+    public boolean checkStockAvailable() {
+        return this.stock > 0;
+    }
+
     public static Item searchId(int id) {
         return new Item(FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(id)));
+    }
+
+    public static boolean addNewCategory(String categoryName) {
+        return FileService.insertData(CATEGORY_FILENAME, List.of(categoryName));
+    }
+
+    public static boolean modifyCategory(String oldCategoryName, String newCategoryName) {
+        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
+        String content = "";
+        for (List<String> category : allCategory) {
+            if (category.get(0).equals(oldCategoryName)) {
+                content += newCategoryName + "\n";
+                continue;
+            }
+            content += category.get(0) + "\n";
+        }
+        return FileService.modifyFile(CATEGORY_FILENAME, content, false);
+    }
+
+    public static boolean deleteCategory(String categoryName) {
+        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
+        String content = "";
+        for (List<String> category : allCategory) {
+            if (category.get(0).equals(categoryName)) {
+                continue;
+            }
+            content += category.get(0) + "\n";
+        }
+        return FileService.modifyFile(CATEGORY_FILENAME, content, false);
     }
 
     public Long getId() {
