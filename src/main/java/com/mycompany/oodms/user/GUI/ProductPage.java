@@ -4,17 +4,51 @@
  */
 package com.mycompany.oodms.user.GUI;
 
+import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.item.Item;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.util.List;
+
 /**
  *
  * @author Wong Chi Jian
  */
 public class ProductPage extends javax.swing.JPanel {
 
+    DefaultTableModel productTableModel;
+    DefaultTableModel categoryTableModel;
+    List<Item> currentItemList;
+
     /**
      * Creates new form ProductPage
      */
     public ProductPage() {
         initComponents();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+
+        categoryTableModel = (DefaultTableModel) categoryTable.getModel();
+        categoryTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+        TableColumnModel productTableColumnModel = productTable.getColumnModel();
+        productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
+        productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
+        productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
+        productTableModel = (DefaultTableModel) productTable.getModel();
+        productTable.removeColumn(productTableColumnModel.getColumn(0));
+
+        List<String> categoryList = Item.readCategory();
+        for (String category : categoryList) {
+            categoryTableModel.addRow(new Object[] {category});
+        }
+
     }
 
     /**
@@ -26,6 +60,7 @@ public class ProductPage extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        noticeLb = new javax.swing.JLabel();
         addToCartBtt = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         categoryTable = new javax.swing.JTable();
@@ -33,10 +68,17 @@ public class ProductPage extends javax.swing.JPanel {
         productTable = new javax.swing.JTable();
         titleLb = new javax.swing.JLabel();
         despLb = new javax.swing.JLabel();
+        backBtt = new javax.swing.JButton();
+        despTitleLb = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1200, 800));
         setPreferredSize(new java.awt.Dimension(1200, 800));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        noticeLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        noticeLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        noticeLb.setText("<html>Please select a Category <br>from the left Category Table<html>");
+        add(noticeLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 320, -1, -1));
 
         addToCartBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         addToCartBtt.setText("Add To Cart");
@@ -49,6 +91,7 @@ public class ProductPage extends javax.swing.JPanel {
         });
         add(addToCartBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 730, -1, 40));
 
+        categoryTable.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         categoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -72,16 +115,22 @@ public class ProductPage extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        categoryTable.setColumnSelectionAllowed(true);
+        categoryTable.setRowHeight(30);
+        categoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         categoryTable.getTableHeader().setReorderingAllowed(false);
+        categoryTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                categoryTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(categoryTable);
-        categoryTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (categoryTable.getColumnModel().getColumnCount() > 0) {
             categoryTable.getColumnModel().getColumn(0).setResizable(false);
         }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 180, 690));
 
+        productTable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         productTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -105,10 +154,15 @@ public class ProductPage extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        productTable.setColumnSelectionAllowed(true);
+        productTable.setRowHeight(25);
+        productTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         productTable.getTableHeader().setReorderingAllowed(false);
+        productTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                productTableMouseClicked(evt);
+            }
+        });
         JScrollPane2.setViewportView(productTable);
-        productTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (productTable.getColumnModel().getColumnCount() > 0) {
             productTable.getColumnModel().getColumn(0).setResizable(false);
             productTable.getColumnModel().getColumn(1).setResizable(false);
@@ -123,24 +177,74 @@ public class ProductPage extends javax.swing.JPanel {
         titleLb.setText("Product");
         add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 20, -1, -1));
 
+        despLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        despLb.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         despLb.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         despLb.setOpaque(true);
-        add(despLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 80, 380, 630));
+        add(despLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 110, 380, 600));
+
+        backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        backBtt.setText("Back");
+        backBtt.setFocusable(false);
+        backBtt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backBtt.setInheritsPopupMenu(true);
+        backBtt.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        backBtt.setPreferredSize(new java.awt.Dimension(200, 50));
+        backBtt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backBttActionPerformed(evt);
+            }
+        });
+        add(backBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 40));
+
+        despTitleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        despTitleLb.setText("Description");
+        despTitleLb.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        despTitleLb.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        add(despTitleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 80, 380, 20));
     }// </editor-fold>//GEN-END:initComponents
 
     private void addToCartBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToCartBttActionPerformed
         
     }//GEN-LAST:event_addToCartBttActionPerformed
 
+    private void categoryTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_categoryTableMouseClicked
+        int select = categoryTable.getSelectedRow();
+        noticeLb.setVisible(false);
+        String category = (String) categoryTableModel.getValueAt(select, 0);
+        int itemRow = productTableModel.getRowCount();
+        for (int i = itemRow - 1; i >= 0 ; i--) {
+            productTableModel.removeRow(i);
+        }
+        currentItemList = FileService.getMultipleSpecificData(Item.FILENAME, Item.CATEGORY_COLUMN_NUM, category).stream().map(Item::new).toList();
+        currentItemList.forEach(item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
+    }//GEN-LAST:event_categoryTableMouseClicked
+
+    private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
+        OODMS.frame.refresh(new HomePage());
+    }//GEN-LAST:event_backBttActionPerformed
+
+    private void productTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMouseClicked
+        int select = productTable.getSelectedRow();
+        long id = (long) productTableModel.getValueAt(select, 0);
+        for (Item item : currentItemList) {
+            if (item.getId() == id) {
+                despLb.setText(item.getDescription());
+                break;
+            }
+        }
+    }//GEN-LAST:event_productTableMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane JScrollPane2;
     private javax.swing.JButton addToCartBtt;
+    private javax.swing.JButton backBtt;
     private javax.swing.JTable categoryTable;
     private javax.swing.JLabel despLb;
+    private javax.swing.JLabel despTitleLb;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton loginBtt;
-    private javax.swing.JButton loginBtt1;
+    private javax.swing.JLabel noticeLb;
     private javax.swing.JTable productTable;
     private javax.swing.JLabel titleLb;
     // End of variables declaration//GEN-END:variables
