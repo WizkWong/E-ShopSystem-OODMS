@@ -94,6 +94,7 @@ public class ProductPage extends javax.swing.JPanel {
 
         addToCartBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         addToCartBtt.setText("Add To Cart");
+        addToCartBtt.setEnabled(false);
         addToCartBtt.setFocusable(false);
         addToCartBtt.setPreferredSize(new java.awt.Dimension(200, 50));
         addToCartBtt.addActionListener(new java.awt.event.ActionListener() {
@@ -277,6 +278,7 @@ public class ProductPage extends javax.swing.JPanel {
 
     private void categoryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_categoryTableMousePressed
         int select = categoryTable.getSelectedRow();
+        addToCartBtt.setEnabled(false);
         noticeLb.setVisible(false);
         despLb.setText("Please select any product from product table");
         searchFd.setText("");
@@ -317,7 +319,7 @@ public class ProductPage extends javax.swing.JPanel {
         if (select < 0) {
             return;
         }
-        addToCartBtt.setEnabled(true);
+        addToCartBtt.setEnabled(false);
         despLb.setText("Please select any product from product table");
         String category = (String) categoryTableModel.getValueAt(select, 0);
         int itemRow = productTableModel.getRowCount();
