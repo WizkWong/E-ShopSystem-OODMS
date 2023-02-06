@@ -4,14 +4,17 @@
  */
 package com.mycompany.oodms.user.GUI;
 
+import com.mycompany.oodms.Component.JNumberField;
 import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.item.Item;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -22,13 +25,15 @@ public class ProductPage extends javax.swing.JPanel {
 
     DefaultTableModel productTableModel;
     DefaultTableModel categoryTableModel;
-    List<Item> currentItemList;
 
     /**
      * Creates new form ProductPage
      */
     public ProductPage() {
         initComponents();
+        if (!(OODMS.currentUser instanceof Customer)) {
+            addToCartBtt.setVisible(false);
+        }
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
@@ -119,8 +124,8 @@ public class ProductPage extends javax.swing.JPanel {
         categoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         categoryTable.getTableHeader().setReorderingAllowed(false);
         categoryTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                categoryTableMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                categoryTableMousePressed(evt);
             }
         });
         jScrollPane1.setViewportView(categoryTable);
@@ -158,8 +163,8 @@ public class ProductPage extends javax.swing.JPanel {
         productTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         productTable.getTableHeader().setReorderingAllowed(false);
         productTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                productTableMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                productTableMousePressed(evt);
             }
         });
         JScrollPane2.setViewportView(productTable);
@@ -178,6 +183,7 @@ public class ProductPage extends javax.swing.JPanel {
         add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 20, -1, -1));
 
         despLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        despLb.setText("Please select any product from product table");
         despLb.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         despLb.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         despLb.setOpaque(true);
@@ -205,35 +211,89 @@ public class ProductPage extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addToCartBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToCartBttActionPerformed
-        
-    }//GEN-LAST:event_addToCartBttActionPerformed
-
-    private void categoryTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_categoryTableMouseClicked
-        int select = categoryTable.getSelectedRow();
-        noticeLb.setVisible(false);
-        String category = (String) categoryTableModel.getValueAt(select, 0);
-        int itemRow = productTableModel.getRowCount();
-        for (int i = itemRow - 1; i >= 0 ; i--) {
-            productTableModel.removeRow(i);
+        int select = productTable.getSelectedRow();
+        if (select < 0) {
+            return;
         }
-        currentItemList = FileService.getMultipleSpecificData(Item.FILENAME, Item.CATEGORY_COLUMN_NUM, category).stream().map(Item::new).toList();
-        currentItemList.forEach(item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
-    }//GEN-LAST:event_categoryTableMouseClicked
+        long id = (long) productTableModel.getValueAt(select, 0);
+        Item item = Item.searchId(id);
+        if (item == null) {
+            JOptionPane.showMessageDialog(null, "Error", "Product does not exist", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        JLabel itemLb = new JLabel("Product Name: " + item.getName());
+        itemLb.setPreferredSize(new Dimension(250, 20));
+
+        JLabel priceLb = new JLabel("Price: RM " + item.getPrice());
+        priceLb.setPreferredSize(new Dimension(200, 20));
+
+        JLabel stockLb = new JLabel("Stock Left: " + item.getStock());
+        stockLb.setPreferredSize(new Dimension(200, 20));
+
+        JLabel qtyLb = new JLabel("Quantity: ");
+        qtyLb.setPreferredSize(new Dimension(65, 20));
+
+        JNumberField quantityFd = new JNumberField(8);
+
+        JPanel box = new JPanel();
+        box.setPreferredSize(new Dimension(220, 100));
+        box.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+
+        box.add(itemLb);
+        box.add(priceLb);
+        box.add(stockLb);
+        box.add(qtyLb);
+        box.add(quantityFd);
+
+        int option = JOptionPane.showConfirmDialog(null, box, "Add to Cart", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            Customer customer = (Customer) OODMS.currentUser;
+            if (customer.addCartItem(item, quantityFd.getInteger())) {
+                JOptionPane.showMessageDialog(null, "Successfully added into cart", "Success", JOptionPane.PLAIN_MESSAGE);
+            }
+        }
+
+    }//GEN-LAST:event_addToCartBttActionPerformed
 
     private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
         OODMS.frame.refresh(new HomePage());
     }//GEN-LAST:event_backBttActionPerformed
 
-    private void productTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMouseClicked
+    private void categoryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_categoryTableMousePressed
+        int select = categoryTable.getSelectedRow();
+        noticeLb.setVisible(false);
+        despLb.setText("Please select any product from product table");
+        String category = (String) categoryTableModel.getValueAt(select, 0);
+        int itemRow = productTableModel.getRowCount();
+        for (int i = itemRow - 1; i >= 0 ; i--) {
+            productTableModel.removeRow(i);
+        }
+        List<Item> currentItemList = FileService.getMultipleSpecificData(Item.FILENAME, Item.CATEGORY_COLUMN_NUM, category)
+                .stream().map(Item::new).toList();
+        currentItemList.forEach(
+                item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
+    }//GEN-LAST:event_categoryTableMousePressed
+
+    private void productTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMousePressed
+        addToCartBtt.setText("Add To Cart");
+        addToCartBtt.setEnabled(true);
         int select = productTable.getSelectedRow();
         long id = (long) productTableModel.getValueAt(select, 0);
-        for (Item item : currentItemList) {
-            if (item.getId() == id) {
-                despLb.setText(item.getDescription());
-                break;
-            }
+        Item item = Item.searchId(id);
+        if (item == null) {
+            despLb.setText("Error, selected product cannot be found");
+            return;
         }
-    }//GEN-LAST:event_productTableMouseClicked
+        despLb.setText(item.getDescription());
+        Customer customer = (Customer) OODMS.currentUser;
+        if (customer.checkItemExistInCart(item)) {
+            addToCartBtt.setEnabled(false);
+            addToCartBtt.setText("Item Added In Cart");
+        }
+        if (!item.checkStockAvailable()) {
+            addToCartBtt.setEnabled(false);
+        }
+    }//GEN-LAST:event_productTableMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
