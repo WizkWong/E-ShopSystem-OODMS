@@ -73,7 +73,7 @@ public interface FileService {
             String line;
             String[] tempArray;
 
-            if (includeDeleted && ALLOWED_REMOVE.contains(filename)) {
+            if (!includeDeleted && ALLOWED_REMOVE.contains(filename)) {
                 while ((line = br.readLine()) != null) {
                     if (line.length() > 0) {
                         // split ";" into array then add into array

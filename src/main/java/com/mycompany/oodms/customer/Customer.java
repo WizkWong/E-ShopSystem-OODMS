@@ -57,6 +57,11 @@ public class Customer extends User {
         return false;
     }
 
+    public boolean checkItemExistInCart(Item item) {
+        Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+        return existCartItem.isPresent();
+    }
+
     // adding new cart item
     public boolean addCartItem(Item item, int quantity) {
         Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();

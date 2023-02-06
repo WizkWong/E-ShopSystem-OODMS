@@ -8,6 +8,7 @@ import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.admin.Admin;
 import com.mycompany.oodms.admin.GUI.AdminPanelForm;
 import com.mycompany.oodms.customer.Customer;
+import com.mycompany.oodms.customer.GUI.CustomerHomePage;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 import com.mycompany.oodms.user.User;
 
@@ -118,7 +119,7 @@ public class LoginPage extends javax.swing.JPanel {
         if (user != null) {
             OODMS.currentUser = user;
             if (user instanceof Customer) {
-                System.out.println("customer");
+                OODMS.frame.refresh(new CustomerHomePage());
             } else if (user instanceof Admin) {
                 OODMS.frame.refresh(new AdminPanelForm());
             } else if (user instanceof DeliveryStaff) {

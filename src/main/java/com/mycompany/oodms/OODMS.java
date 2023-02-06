@@ -31,6 +31,7 @@ public class OODMS {
         FileService.createFile(DeliveryStaff.FILENAME);
         FileService.createFile(Admin.FILENAME);
         FileService.createFile(Item.FILENAME);
+        FileService.createFile(Item.CATEGORY_FILENAME);
         FileService.createFile(CartItem.FILENAME);
         FileService.createFile(CustomerOrder.FILENAME);
         FileService.createFile(CustomerOrderPayment.FILENAME);
