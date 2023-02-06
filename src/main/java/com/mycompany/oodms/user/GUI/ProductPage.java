@@ -65,6 +65,7 @@ public class ProductPage extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        searchLb = new javax.swing.JLabel();
         noticeLb = new javax.swing.JLabel();
         addToCartBtt = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -75,10 +76,16 @@ public class ProductPage extends javax.swing.JPanel {
         despLb = new javax.swing.JLabel();
         backBtt = new javax.swing.JButton();
         despTitleLb = new javax.swing.JLabel();
+        searchFd = new javax.swing.JTextField();
 
         setMinimumSize(new java.awt.Dimension(1200, 800));
         setPreferredSize(new java.awt.Dimension(1200, 800));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        searchLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        searchLb.setText("Search Product:");
+        add(searchLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 120, 40));
 
         noticeLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         noticeLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -133,7 +140,7 @@ public class ProductPage extends javax.swing.JPanel {
             categoryTable.getColumnModel().getColumn(0).setResizable(false);
         }
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 180, 690));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 660));
 
         productTable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         productTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -175,7 +182,7 @@ public class ProductPage extends javax.swing.JPanel {
             productTable.getColumnModel().getColumn(3).setResizable(false);
         }
 
-        add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, 560, 690));
+        add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 560, 660));
 
         titleLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         titleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -203,11 +210,20 @@ public class ProductPage extends javax.swing.JPanel {
         });
         add(backBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 40));
 
+        despTitleLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         despTitleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         despTitleLb.setText("Description");
         despTitleLb.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         despTitleLb.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        add(despTitleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 80, 380, 20));
+        add(despTitleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 70, 380, 30));
+
+        searchFd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchFd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchEngine(evt);
+            }
+        });
+        add(searchFd, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 640, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void addToCartBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToCartBttActionPerformed
@@ -263,14 +279,15 @@ public class ProductPage extends javax.swing.JPanel {
         int select = categoryTable.getSelectedRow();
         noticeLb.setVisible(false);
         despLb.setText("Please select any product from product table");
+        searchFd.setText("");
         String category = (String) categoryTableModel.getValueAt(select, 0);
         int itemRow = productTableModel.getRowCount();
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
         }
-        List<Item> currentItemList = FileService.getMultipleSpecificData(Item.FILENAME, Item.CATEGORY_COLUMN_NUM, category)
-                .stream().map(Item::new).toList();
-        currentItemList.forEach(
+        List<Item> itemList = FileService.readFile(Item.FILENAME).stream().map(Item::new).toList();
+        itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
+        itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
     }//GEN-LAST:event_categoryTableMousePressed
 
@@ -295,6 +312,31 @@ public class ProductPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_productTableMousePressed
 
+    private void searchEngine(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchEngine
+        int select = categoryTable.getSelectedRow();
+        if (select < 0) {
+            return;
+        }
+        addToCartBtt.setEnabled(true);
+        despLb.setText("Please select any product from product table");
+        String category = (String) categoryTableModel.getValueAt(select, 0);
+        int itemRow = productTableModel.getRowCount();
+        for (int i = itemRow - 1; i >= 0 ; i--) {
+            productTableModel.removeRow(i);
+        }
+        String searchTxt = searchFd.getText().toLowerCase();
+        List<Item> itemList = FileService.readFile(Item.FILENAME).stream().map(Item::new).toList();
+        if (searchTxt.equals("")) {
+            itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
+            itemList.forEach(
+                    item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
+            return;
+        }
+        itemList = itemList.stream().filter(item -> item.getCategory().equals(category) && item.getName().toLowerCase().startsWith(searchTxt)).toList();
+        itemList.forEach(
+                item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
+    }//GEN-LAST:event_searchEngine
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane JScrollPane2;
@@ -306,6 +348,8 @@ public class ProductPage extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel noticeLb;
     private javax.swing.JTable productTable;
+    private javax.swing.JTextField searchFd;
+    private javax.swing.JLabel searchLb;
     private javax.swing.JLabel titleLb;
     // End of variables declaration//GEN-END:variables
 }
