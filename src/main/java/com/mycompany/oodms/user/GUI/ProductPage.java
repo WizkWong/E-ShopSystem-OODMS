@@ -8,6 +8,7 @@ import com.mycompany.oodms.Component.JNumberField;
 import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.customer.Customer;
+import com.mycompany.oodms.customer.GUI.CustomerHomePage;
 import com.mycompany.oodms.item.Item;
 
 import javax.swing.*;
@@ -250,7 +251,8 @@ public class ProductPage extends javax.swing.JPanel {
         JLabel qtyLb = new JLabel("Quantity: ");
         qtyLb.setPreferredSize(new Dimension(65, 20));
 
-        JNumberField quantityFd = new JNumberField(8);
+        JNumberField quantityFd = new JNumberField();
+        quantityFd.setColumns(8);
 
         JPanel box = new JPanel();
         box.setPreferredSize(new Dimension(220, 100));
@@ -273,6 +275,10 @@ public class ProductPage extends javax.swing.JPanel {
     }//GEN-LAST:event_addToCartBttActionPerformed
 
     private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
+        if (OODMS.currentUser instanceof Customer) {
+            OODMS.frame.refresh(new CustomerHomePage());
+            return;
+        }
         OODMS.frame.refresh(new HomePage());
     }//GEN-LAST:event_backBttActionPerformed
 
@@ -304,6 +310,9 @@ public class ProductPage extends javax.swing.JPanel {
             return;
         }
         despLb.setText(item.getDescription());
+        if (!(OODMS.currentUser instanceof Customer)) {
+            return;
+        }
         Customer customer = (Customer) OODMS.currentUser;
         if (customer.checkItemExistInCart(item)) {
             addToCartBtt.setEnabled(false);

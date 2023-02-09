@@ -48,7 +48,7 @@ public class RegisterPage extends javax.swing.JPanel {
         emailLb = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
         PhoneNoLb = new javax.swing.JLabel();
-        phoneNoField = new javax.swing.JTextField();
+        phoneNoField = new com.mycompany.oodms.Component.JNumberField();
         usernameMsgLb = new javax.swing.JLabel();
         pssMsgLb = new javax.swing.JLabel();
         cfPssMsgLb = new javax.swing.JLabel();
@@ -130,8 +130,6 @@ public class RegisterPage extends javax.swing.JPanel {
         PhoneNoLb.setText("Phone Number:");
         formPn.add(PhoneNoLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 150, 30));
 
-        phoneNoField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        phoneNoField.setToolTipText("");
         phoneNoField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
         formPn.add(phoneNoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 340, 30));
 
@@ -237,7 +235,7 @@ public class RegisterPage extends javax.swing.JPanel {
     private javax.swing.JLabel emailLb;
     private javax.swing.JLabel emailMsgLb;
     private javax.swing.JPanel formPn;
-    private javax.swing.JTextField phoneNoField;
+    private com.mycompany.oodms.Component.JNumberField phoneNoField;
     private javax.swing.JLabel phoneNoMsgLb;
     private javax.swing.JPasswordField pssField1;
     private javax.swing.JPasswordField pssField2;

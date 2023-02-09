@@ -44,6 +44,8 @@ public class LoginPage extends javax.swing.JPanel {
         loginMsgLb = new javax.swing.JLabel();
         backBtt = new javax.swing.JButton();
         loginBtt = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        registerLb = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(600, 300));
         setPreferredSize(new java.awt.Dimension(600, 300));
@@ -103,7 +105,20 @@ public class LoginPage extends javax.swing.JPanel {
                 loginBttActionPerformed(evt);
             }
         });
-        add(loginBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 240, -1, 40));
+        add(loginBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 250, -1, 40));
+
+        jLabel1.setText("Don’t have an Account?");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, -1, -1));
+
+        registerLb.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        registerLb.setForeground(new java.awt.Color(51, 51, 255));
+        registerLb.setText("<html><u>Register here</u></html>");
+        registerLb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                registerLbMousePressed(evt);
+            }
+        });
+        add(registerLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 220, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
@@ -130,14 +145,20 @@ public class LoginPage extends javax.swing.JPanel {
         loginMsgLb.setVisible(true);
     }//GEN-LAST:event_loginBttActionPerformed
 
+    private void registerLbMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerLbMousePressed
+        OODMS.frame.refresh(new RegisterPage());
+    }//GEN-LAST:event_registerLbMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtt;
     private javax.swing.JPanel formPn;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loginBtt;
     private javax.swing.JLabel loginMsgLb;
     private javax.swing.JPasswordField pssField;
     private javax.swing.JLabel pssLb;
+    private javax.swing.JLabel registerLb;
     private javax.swing.JLabel titleLb;
     private javax.swing.JTextField usernameField;
     private javax.swing.JLabel usernameLb;

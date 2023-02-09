@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 
 public class JNumberField extends JTextField {
 
-    public JNumberField(int columns) {
-        super(columns);
+    public JNumberField() {
+        super();
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
