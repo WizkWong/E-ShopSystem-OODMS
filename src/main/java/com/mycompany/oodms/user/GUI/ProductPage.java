@@ -177,12 +177,6 @@ public class ProductPage extends javax.swing.JPanel {
             }
         });
         JScrollPane2.setViewportView(productTable);
-        if (productTable.getColumnModel().getColumnCount() > 0) {
-            productTable.getColumnModel().getColumn(0).setResizable(false);
-            productTable.getColumnModel().getColumn(1).setResizable(false);
-            productTable.getColumnModel().getColumn(2).setResizable(false);
-            productTable.getColumnModel().getColumn(3).setResizable(false);
-        }
 
         add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 560, 660));
 
