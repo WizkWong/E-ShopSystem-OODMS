@@ -1,17 +1,10 @@
 package com.mycompany.oodms.order;
 
-import com.mycompany.oodms.FileService;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
-public class CustomerOrderPayment implements FileService {
-    // columns order in file: CustomerOrder-ID, type-of-payment, total-price, payment-datetime
-
-    public static final String FILENAME = "customer order payment";
-    private final DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+public class CustomerOrderPayment {
+    private static final DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     private CustomerOrder customerOrder;
     private String typeOfPayment;
@@ -30,38 +23,6 @@ public class CustomerOrderPayment implements FileService {
         this.typeOfPayment = typeOfPayment;
         this.totalPrice = totalPrice;
         this.paymentDateTime = LocalDateTime.parse(paymentDateTime, formatDateTime);
-    }
-
-    @Override
-    public List<String> toList() {
-        return new ArrayList<>(List.of(
-                String.valueOf(customerOrder.getId()),
-                typeOfPayment,
-                String.valueOf(totalPrice),
-                getStringPaymentDateTime()
-        ));
-    }
-
-    @Override
-    public boolean fileAddNewRow() {
-        List<String> customerOrderPaymentData = toList();
-        return FileService.insertData(FILENAME, customerOrderPaymentData);
-    }
-
-    @Override
-    public boolean fileUpdate() {
-        return false;
-    }
-
-    public static CustomerOrderPayment getCustomerOrderPaymentById(CustomerOrder customerOrder) {
-        Long orderId = customerOrder.getId();
-        List<String> customerOrderPaymentData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
-        return new CustomerOrderPayment(
-                customerOrder,
-                customerOrderPaymentData.get(1),
-                Double.valueOf(customerOrderPaymentData.get(2)),
-                customerOrderPaymentData.get(3)
-        );
     }
 
     public CustomerOrder getCustomerOrder() {

@@ -1,11 +1,13 @@
 package com.mycompany.oodms.customer;
 
-import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.Dao.FileService;
+import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.order.CustomerOrder;
+import com.mycompany.oodms.order.CustomerOrderDao;
 import com.mycompany.oodms.user.User;
+import com.mycompany.oodms.user.UserDao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +16,14 @@ public class Customer extends User {
 
     private List<CartItem> cart;
 
+    private final CartItemDao cartItemDao;
+    private final CustomerOrderDao customerOrderDao;
+
     public Customer(Long id, String username, String password, String email, String phoneNo, Boolean staff, Boolean admin) {
         super(id, username, password, email, phoneNo, staff, admin);
-        this.cart = CartItem.getCartItem(id);
+        cartItemDao = OODMS.getCartItemDao();
+        this.cart = cartItemDao.getCartItem(id);
+        customerOrderDao = OODMS.getCustomerOrderDao();
     }
 
     public Customer(List<String> customerData) {
@@ -35,28 +42,6 @@ public class Customer extends User {
         this(null, null,null, null, null, null, null);
     }
 
-    @Override
-    public boolean fileAddNewRow() {
-        if (super.fileAddNewRow()) {
-            List<String> customerData = List.of(
-                    String.valueOf(getId())
-            );
-            return FileService.insertData(FILENAME, customerData);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean fileUpdate() {
-        if (super.fileUpdate()) {
-            List<String> customerData = List.of(
-                    String.valueOf(getId())
-            );
-            return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
-        }
-        return false;
-    }
-
     public boolean checkItemExistInCart(Item item) {
         Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
         return existCartItem.isPresent();
@@ -72,7 +57,7 @@ public class Customer extends User {
         CartItem cartItem = new CartItem(item, quantity);
         this.cart.add(cartItem);
         // add new cart item data into cart file
-        return cartItem.fileAddNewRow(this.getId());
+        return cartItemDao.fileAddNewRow(cartItem, this.getId());
     }
 
     // only use when cart item quantity is change
@@ -93,14 +78,7 @@ public class Customer extends User {
             return false;
         }
         this.cart = cart;
-        List<List<String>> newStringCart = new ArrayList<>(cart.stream()
-                .map(cartItem -> {
-                    List<String> cartItemList = cartItem.toList();
-                    cartItemList.add(0, String.valueOf(this.getId()));
-                    return cartItemList;
-                }).toList());
-        // update the file with new cart
-        return FileService.updateMultipleRows(CartItem.FILENAME, newStringCart, 0, 1);
+        return cartItemDao.updateCart(cart, getId());
     }
 
     // delete cart item
@@ -113,19 +91,19 @@ public class Customer extends User {
         CartItem cartItem = existCartItem.get();
         this.cart.remove(cartItem);
         // delete the cart data
-        return cartItem.fileDeleteRow(this.getId());
+        return cartItemDao.fileDeleteRow(cartItem, this.getId());
     }
 
     // create and save new customer order
     public boolean checkOut(String typeOfPayment) {
         // get new id
-        Long id = FileService.getNewId(CustomerOrder.FILENAME);
+        Long id = FileService.getNewId(CustomerOrderDao.FILENAME);
         if (id == null || id == -1) {
             return false;
         }
         CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this);
         // save the order including the order payment, delivery order and order detail
-        if (customerOrder.fileAddNewRow()) {
+        if (customerOrderDao.fileAddNewRow(customerOrder)) {
             this.cart.clear();
             return true;
         }
@@ -139,7 +117,7 @@ public class Customer extends User {
 
         if (name.length() >= 4) {
             // get all user
-            List<List<String>> allUser = FileService.readFile(USER_FILENAME);
+            List<List<String>> allUser = FileService.readFile(UserDao.FILENAME);
             // find any username ignore case match
             boolean usernameTaken = allUser.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(name));
 
@@ -155,14 +133,14 @@ public class Customer extends User {
         }
 
         // get new id
-        Long id = FileService.getNewId(USER_FILENAME);
+        Long id = FileService.getNewId(UserDao.FILENAME);
         if (id == null || id == -1) {
             return "The system had met an error, please contact the technical support";
         }
 
         Customer customer = new Customer(id, name, password1, email, phoneNo, false, false);
         // save new customer data
-        customer.fileAddNewRow();
+        OODMS.getCustomerDao().fileAddNewRow(customer);
 
         return "";
     }
@@ -170,7 +148,7 @@ public class Customer extends User {
     // get the customer data by customer id
     public static Customer getCustomerById(long id) {
         String idString = String.valueOf(id);
-        List<String> userData = FileService.getOneSpecificData(User.USER_FILENAME, FileService.ID_COLUMN, idString);
+        List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, idString);
         List<String> customerData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, idString);
         customerData = User.joinWithUser(customerData, userData);
         if (customerData == null) {

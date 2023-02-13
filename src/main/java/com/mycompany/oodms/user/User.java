@@ -1,18 +1,18 @@
 package com.mycompany.oodms.user;
 
-import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.admin.Admin;
+import com.mycompany.oodms.admin.AdminDao;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public abstract class User implements FileService {
-    public static final String USER_FILENAME = "user";
-    public static final Pattern VALID_EMAIL_ADDRESS = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+public abstract class User {
+    private static final Pattern VALID_EMAIL_ADDRESS = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private Long id;
     private String username;
@@ -32,51 +32,8 @@ public abstract class User implements FileService {
         this.admin = admin;
     }
 
-    @Override
-    public List<String> toList() {
-        return new ArrayList<>(List.of(
-                String.valueOf(id),
-                username,
-                password,
-                email,
-                phoneNo,
-                String.valueOf(staff),
-                String.valueOf(admin)
-        ));
-    }
-
-    @Override
-    public boolean fileAddNewRow() {
-        /* reason not using toList() method because only need superclass of toList, but it uses subclass of toList
-           while saving customer, staff or admin */
-        List<String> userData = List.of(
-                String.valueOf(id),
-                username,
-                password,
-                email,
-                phoneNo,
-                String.valueOf(staff),
-                String.valueOf(admin)
-        );
-        return FileService.insertData(USER_FILENAME, userData);
-    }
-
-    @Override
-    public boolean fileUpdate() {
-        List<String> userData = List.of(
-                String.valueOf(id),
-                username,
-                password,
-                email,
-                phoneNo,
-                String.valueOf(staff),
-                String.valueOf(admin)
-        );
-        return FileService.updateSingleRow(USER_FILENAME, userData, FileService.ID_COLUMN);
-    }
-
     public static User verify(String username, String password) {
-        List<List<String>> allUser = FileService.readFile(USER_FILENAME);
+        List<List<String>> allUser = FileService.readFile(UserDao.FILENAME);
         Optional<List<String>> userExist = allUser.stream().filter(list -> list.get(1).equals(username) && list.get(2).equals(password)).findFirst();
         // if no match
         if (userExist.isEmpty()) {
@@ -86,7 +43,7 @@ public abstract class User implements FileService {
         List<String> userSubClassData;
         // check is staff
         if (user.get(5).equals("true")) {
-            userSubClassData = FileService.getOneSpecificData(DeliveryStaff.FILENAME, FileService.ID_COLUMN, user.get(0));
+            userSubClassData = FileService.getOneSpecificData(DeliveryStaffDao.FILENAME, FileService.ID_COLUMN, user.get(0));
             List<String> staffData = joinWithUser(userSubClassData, user);
             if (staffData != null) {
                 return new DeliveryStaff(staffData);
@@ -94,7 +51,7 @@ public abstract class User implements FileService {
         }
         // check is admin
         else if ((user.get(6).equals("true"))) {
-            userSubClassData = FileService.getOneSpecificData(Admin.FILENAME, FileService.ID_COLUMN, user.get(0));
+            userSubClassData = FileService.getOneSpecificData(AdminDao.FILENAME, FileService.ID_COLUMN, user.get(0));
             List<String> adminData = joinWithUser(userSubClassData, user);
             if (adminData != null) {
                 return new Admin(adminData);

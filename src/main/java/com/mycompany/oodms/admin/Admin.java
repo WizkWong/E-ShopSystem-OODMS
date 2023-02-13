@@ -5,7 +5,6 @@ import com.mycompany.oodms.user.User;
 import java.util.List;
 
 public class Admin extends User {
-    public static final String FILENAME = "admin";
 
     public Admin(Long id, String username, String password, String email, String phoneNo, Boolean staff, Boolean admin) {
         super(id, username, password, email, phoneNo, staff, admin);
@@ -26,5 +25,4 @@ public class Admin extends User {
     public Admin() {
         this(null, null,null, null, null, null, null);
     }
-
 }

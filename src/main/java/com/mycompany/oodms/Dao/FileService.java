@@ -1,7 +1,7 @@
-package com.mycompany.oodms;
+package com.mycompany.oodms.Dao;
 
-import com.mycompany.oodms.customer.CartItem;
-import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.customer.CartItemDao;
+import com.mycompany.oodms.item.ItemDao;
 
 import java.io.*;
 import java.util.*;
@@ -14,16 +14,10 @@ public interface FileService {
     char ID_COLUMN = 0;
 
     // allow the data remain as deleted status
-    List<String> ALLOWED_REMOVE = List.of(Item.FILENAME);
+    List<String> ALLOWED_REMOVE = List.of(ItemDao.FILENAME);
 
     // allow to delete the data
-    List<String> ALLOWED_DELETE = List.of(CartItem.FILENAME);
-
-    List<String> toList();
-
-    boolean fileAddNewRow();
-
-    boolean fileUpdate();
+    List<String> ALLOWED_DELETE = List.of(CartItemDao.FILENAME);
 
     // create the txt file. If file directory does not exist, create new directory
     static void createFile(String filename) {

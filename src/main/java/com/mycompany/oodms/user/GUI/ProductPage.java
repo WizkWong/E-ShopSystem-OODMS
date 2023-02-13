@@ -5,11 +5,12 @@
 package com.mycompany.oodms.user.GUI;
 
 import com.mycompany.oodms.Component.JNumberField;
-import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.customer.GUI.CustomerHomePage;
 import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.item.ItemDao;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -287,7 +288,7 @@ public class ProductPage extends javax.swing.JPanel {
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
         }
-        List<Item> itemList = FileService.readFile(Item.FILENAME).stream().map(Item::new).toList();
+        List<Item> itemList = FileService.readFile(ItemDao.FILENAME).stream().map(Item::new).toList();
         itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
         itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
@@ -304,10 +305,9 @@ public class ProductPage extends javax.swing.JPanel {
             return;
         }
         despLb.setText(item.getDescription());
-        if (!(OODMS.currentUser instanceof Customer)) {
+        if (!(OODMS.currentUser instanceof Customer customer)) {
             return;
         }
-        Customer customer = (Customer) OODMS.currentUser;
         if (customer.checkItemExistInCart(item)) {
             addToCartBtt.setEnabled(false);
             addToCartBtt.setText("Item Added In Cart");
@@ -330,7 +330,7 @@ public class ProductPage extends javax.swing.JPanel {
             productTableModel.removeRow(i);
         }
         String searchTxt = searchFd.getText().toLowerCase();
-        List<Item> itemList = FileService.readFile(Item.FILENAME).stream().map(Item::new).toList();
+        List<Item> itemList = FileService.readFile(ItemDao.FILENAME).stream().map(Item::new).toList();
         if (searchTxt.equals("")) {
             itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
             itemList.forEach(

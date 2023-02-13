@@ -1,14 +1,10 @@
 package com.mycompany.oodms.item;
 
-import com.mycompany.oodms.FileService;
+import com.mycompany.oodms.Dao.FileService;
 
 import java.util.List;
 
 public class Item {
-    public static final String FILENAME = "item";
-    public static final String CATEGORY_FILENAME = "category";
-    public static final int CATEGORY_COLUMN_NUM = 2;
-
     private Long id;
     private String name;
     private String category;
@@ -41,7 +37,7 @@ public class Item {
     }
 
     public static Item searchId(long id) {
-        List<String> itemData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(id));
+        List<String> itemData = FileService.getOneSpecificData(ItemDao.FILENAME, FileService.ID_COLUMN, String.valueOf(id));
         if (itemData.isEmpty()) {
             return null;
         }
@@ -49,15 +45,15 @@ public class Item {
     }
 
     public static List<String> readCategory() {
-        return FileService.readFile(CATEGORY_FILENAME).stream().map(list -> list.get(0)).toList();
+        return FileService.readFile(ItemDao.CATEGORY_FILENAME).stream().map(list -> list.get(0)).toList();
     }
 
     public static boolean addNewCategory(String categoryName) {
-        return FileService.insertData(CATEGORY_FILENAME, List.of(categoryName));
+        return FileService.insertData(ItemDao.CATEGORY_FILENAME, List.of(categoryName));
     }
 
     public static boolean modifyCategory(String oldCategoryName, String newCategoryName) {
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
+        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
         String content = "";
         for (List<String> category : allCategory) {
             if (category.get(0).equals(oldCategoryName)) {
@@ -66,11 +62,11 @@ public class Item {
             }
             content += category.get(0) + "\n";
         }
-        return FileService.modifyFile(CATEGORY_FILENAME, content, false);
+        return FileService.modifyFile(ItemDao.CATEGORY_FILENAME, content, false);
     }
 
     public static boolean deleteCategory(String categoryName) {
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
+        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
         String content = "";
         for (List<String> category : allCategory) {
             if (category.get(0).equals(categoryName)) {
@@ -78,7 +74,7 @@ public class Item {
             }
             content += category.get(0) + "\n";
         }
-        return FileService.modifyFile(CATEGORY_FILENAME, content, false);
+        return FileService.modifyFile(ItemDao.CATEGORY_FILENAME, content, false);
     }
 
     public Long getId() {
