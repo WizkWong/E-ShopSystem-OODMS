@@ -18,23 +18,23 @@ public class CustomerDao implements ObjectDao<Customer> {
     }
 
     @Override
-    public List<String> toList(Customer object) {
+    public List<String> toList(Customer customer) {
         return new ArrayList<>(List.of(
-                String.valueOf(object.getId()),
-                object.getUsername(),
-                object.getPassword(),
-                object.getEmail(),
-                object.getPhoneNo(),
-                String.valueOf(object.getStaff()),
-                String.valueOf(object.getAdmin())
+                String.valueOf(customer.getId()),
+                customer.getUsername(),
+                customer.getPassword(),
+                customer.getEmail(),
+                customer.getPhoneNo(),
+                String.valueOf(customer.getStaff()),
+                String.valueOf(customer.getAdmin())
         ));
     }
 
     @Override
-    public boolean fileAddNewRow(Customer user) {
-        if (userDao.fileAddNewRow(user)) {
+    public boolean fileAddNewRow(Customer customer) {
+        if (userDao.fileAddNewRow(customer)) {
             List<String> customerData = List.of(
-                    String.valueOf(user.getId())
+                    String.valueOf(customer.getId())
             );
             return FileService.insertData(FILENAME, customerData);
         }
@@ -42,10 +42,10 @@ public class CustomerDao implements ObjectDao<Customer> {
     }
 
     @Override
-    public boolean fileUpdate(Customer user) {
-        if (userDao.fileUpdate(user)) {
+    public boolean fileUpdate(Customer customer) {
+        if (userDao.fileUpdate(customer)) {
             List<String> customerData = List.of(
-                    String.valueOf(user.getId())
+                    String.valueOf(customer.getId())
             );
             return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
         }
