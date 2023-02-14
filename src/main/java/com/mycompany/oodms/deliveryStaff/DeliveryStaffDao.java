@@ -51,4 +51,9 @@ public class DeliveryStaffDao implements ObjectDao<DeliveryStaff> {
         }
         return false;
     }
+
+    public List<DeliveryStaff> getAll() {
+        List<List<String>> array = FileService.readFile(UserDao.FILENAME);
+        return array.stream().filter(list -> list.get(5).equals("true")).map(DeliveryStaff::new).toList();
+    }
 }
