@@ -2,9 +2,13 @@ package com.mycompany.oodms.Dao;
 
 import com.mycompany.oodms.customer.CartItemDao;
 import com.mycompany.oodms.item.ItemDao;
+import com.mycompany.oodms.user.UserDao;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface FileService {
@@ -14,7 +18,7 @@ public interface FileService {
     char ID_COLUMN = 0;
 
     // allow the data remain as deleted status
-    List<String> ALLOWED_REMOVE = List.of(ItemDao.FILENAME);
+    List<String> ALLOWED_REMOVE = List.of(ItemDao.FILENAME, UserDao.FILENAME);
 
     // allow to delete the data
     List<String> ALLOWED_DELETE = List.of(CartItemDao.FILENAME);
@@ -190,14 +194,8 @@ public interface FileService {
     // insert multiple new data into the file
     static boolean insertMultipleData(String filename, List<List<String>> dataList) {
         String content = "";
-        if (ALLOWED_REMOVE.contains(filename)) {
-            for (List<String> data : dataList) {
-                content += String.join(";", data) + ";E\n";
-            }
-        } else {
-            for (List<String> data : dataList) {
-                content += String.join(";", data) + "\n";
-            }
+        for (List<String> data : dataList) {
+            content += ALLOWED_REMOVE.contains(filename) ? String.join(";", data) + ";E\n" : String.join(";", data) + "\n";
         }
         return modifyFile(filename, content, true);
     }
@@ -273,6 +271,13 @@ public interface FileService {
         return array;
     }
 
+    private static String convertToContent(String filename, List<String> data) {
+        int lastIndex = data.size() - 1;
+        return ALLOWED_REMOVE.contains(filename) && !(data.get(lastIndex).equals("E") || data.get(lastIndex).equals("D")) ?
+                String.join(";", data) + ";E\n" :
+                String.join(";", data) + "\n";
+    }
+
     /* NEVER USE THIS METHOD WHEN THERE ARE MULTIPLE SAME ID IN MORE THAN ONE COLUMN
        check duplication exist, if true then stop execute */
     // get all the data by one column
@@ -295,7 +300,7 @@ public interface FileService {
                     break;
                 }
             }
-            content += String.join(";", oldArray.get(i)) + "\n";
+            content += convertToContent(filename, oldArray.get(i));
             i++;
         }
 
@@ -320,7 +325,7 @@ public interface FileService {
                     break;
                 }
             }
-            content += String.join(";", oldArray.get(i)) + "\n";
+            content += convertToContent(filename, oldArray.get(i));
             i++;
         }
 
@@ -343,7 +348,7 @@ public interface FileService {
                 oldArray.set(i, newData);
                 found = true;
             }
-            content += String.join(";", oldArray.get(i)) + "\n";
+            content += convertToContent(filename, oldArray.get(i));
             i++;
         }
         // if data got replace then execute to replace the file
@@ -367,7 +372,7 @@ public interface FileService {
                 oldArray.set(i, newData);
                 found = true;
             }
-            content += String.join(";", oldArray.get(i)) + "\n";
+            content += convertToContent(filename, oldArray.get(i));
             i++;
         }
         // if data got replace then execute to replace the file
