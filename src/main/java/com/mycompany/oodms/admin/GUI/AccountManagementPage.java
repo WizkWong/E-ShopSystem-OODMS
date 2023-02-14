@@ -1,16 +1,20 @@
 package com.mycompany.oodms.admin.GUI;
 
 import com.mycompany.oodms.Component.CreateAccountForm;
+import com.mycompany.oodms.Component.EditAccountForm;
 import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.admin.Admin;
 import com.mycompany.oodms.admin.AdminDao;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
 import com.mycompany.oodms.user.User;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class AccountManagementPage extends javax.swing.JPanel {
     
@@ -211,12 +215,60 @@ public class AccountManagementPage extends javax.swing.JPanel {
         OODMS.frame.refresh(new AdminPanelForm());
     }//GEN-LAST:event_backBttActionPerformed
 
+    private User checkUserExist() {
+        int select = accountTable.getSelectedRow();
+        long id = (long) accountTableModel.getValueAt(select, 0);
+        User user = null;
+        if (adminSection) {
+            user = adminDao.getId(id);
+        } else if (deliveryStaffSection) {
+            user = deliveryStaffDao.getId(id);
+        }
+        if (user == null) {
+            JOptionPane.showMessageDialog(null, "This user is not Delivery Staff or Admin, please refresh the page!", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        return user;
+    }
+
     private void editBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBttActionPerformed
-        // TODO add your handling code here:
+        User user = checkUserExist();
+        if (user == null) {
+            return;
+        }
+        EditAccountForm form = new EditAccountForm(user);
+        while (true) {
+            int option = JOptionPane.showConfirmDialog(null, form, "Edit Account", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (option != JOptionPane.OK_OPTION) {
+                break;
+            }
+            if (form.formValidate()) {
+                JOptionPane.showMessageDialog(null, "Successfully Update Account", "Success", JOptionPane.INFORMATION_MESSAGE);
+                OODMS.frame.refresh(new AccountManagementPage());
+                break;
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to update account", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_editBttActionPerformed
 
     private void removeBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBttActionPerformed
-        // TODO add your handling code here:
+        User user = checkUserExist();
+        if (user == null) {
+            return;
+        }
+        boolean removed = false;
+        if (user instanceof Admin admin) {
+            removed = adminDao.remove(admin);
+        } else if (user instanceof DeliveryStaff deliveryStaff) {
+            removed = deliveryStaffDao.remove(deliveryStaff);
+        }
+        if (removed) {
+            JOptionPane.showMessageDialog(null, "Successfully Removed Account", "Success", JOptionPane.INFORMATION_MESSAGE);
+            OODMS.frame.refresh(new AccountManagementPage());
+        } else {
+            JOptionPane.showMessageDialog(null, "Failed to removed account", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_removeBttActionPerformed
 
     private void createBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBttActionPerformed
@@ -230,12 +282,30 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Successfully Created Account", "Success", JOptionPane.INFORMATION_MESSAGE);
                 OODMS.frame.refresh(new AccountManagementPage());
                 break;
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to create account", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_createBttActionPerformed
 
-    private void searchEngine(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchEngine
+    private void searchEngine(KeyEvent evt) {//GEN-FIRST:event_searchEngine
+        String searchTxt = searchFd.getText().toLowerCase();
+        List<User> userList = List.of();
+        if (adminSection) {
+            userList = adminDao.getAll().stream().map(admin -> (User) admin).toList();
 
+        } else if (deliveryStaffSection) {
+            userList = deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList();
+        }
+        if (!searchTxt.equals("")) {
+            userList = userList.stream().filter(user ->
+                    user.getId().toString().contains(searchTxt) ||
+                    user.getUsername().toLowerCase().contains(searchTxt) ||
+                    user.getEmail().toLowerCase().contains(searchTxt) ||
+                    user.getPhoneNo().contains(searchTxt)
+            ).toList();
+        }
+        loadTable(userList);
     }//GEN-LAST:event_searchEngine
 
     private void accountTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountTableMousePressed
