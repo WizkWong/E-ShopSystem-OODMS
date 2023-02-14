@@ -1,16 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.mycompany.oodms.admin.GUI;
 
 import com.mycompany.oodms.OODMS;
-import java.awt.Dimension;
+import com.mycompany.oodms.user.GUI.HomePage;
 
-/**
- *
- * @author USER
- */
 public class AdminPanelForm extends javax.swing.JPanel {
 
     /**
@@ -30,7 +22,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
     private void initComponents() {
 
         TitleLab = new javax.swing.JLabel();
-        CreateAccBut = new javax.swing.JButton();
+        ManageAccBut = new javax.swing.JButton();
         AddDataBut = new javax.swing.JButton();
         ViewRecBut = new javax.swing.JButton();
         LogoutBut = new javax.swing.JButton();
@@ -42,16 +34,18 @@ public class AdminPanelForm extends javax.swing.JPanel {
         TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
         TitleLab.setText("Admin Panel");
 
-        CreateAccBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
-        CreateAccBut.setText("Create Account");
-        CreateAccBut.addActionListener(new java.awt.event.ActionListener() {
+        ManageAccBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        ManageAccBut.setText("Account Management");
+        ManageAccBut.setFocusable(false);
+        ManageAccBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CreateAccButActionPerformed(evt);
+                ManageAccButActionPerformed(evt);
             }
         });
 
         AddDataBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         AddDataBut.setText("Add Data");
+        AddDataBut.setFocusable(false);
         AddDataBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddDataButActionPerformed(evt);
@@ -60,6 +54,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
 
         ViewRecBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ViewRecBut.setText("View Records");
+        ViewRecBut.setFocusable(false);
         ViewRecBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewRecButActionPerformed(evt);
@@ -68,6 +63,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
 
         LogoutBut.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         LogoutBut.setText("Logout");
+        LogoutBut.setFocusable(false);
         LogoutBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LogoutButActionPerformed(evt);
@@ -76,6 +72,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
 
         ExitBut.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         ExitBut.setText("Exit");
+        ExitBut.setFocusable(false);
         ExitBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ExitButActionPerformed(evt);
@@ -87,14 +84,13 @@ public class AdminPanelForm extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
-                .addComponent(CreateAccBut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
-                .addComponent(AddDataBut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(94, 94, 94))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(88, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(ManageAccBut)
+                        .addGap(79, 79, 79)
+                        .addComponent(AddDataBut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(TitleLab)
                         .addGap(225, 225, 225))
@@ -112,9 +108,9 @@ public class AdminPanelForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addComponent(TitleLab)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CreateAccBut)
+                    .addComponent(ManageAccBut)
                     .addComponent(AddDataBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -130,13 +126,11 @@ public class AdminPanelForm extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void CreateAccButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccButActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_CreateAccButActionPerformed
+    private void ManageAccButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageAccButActionPerformed
+        OODMS.frame.refresh(new AccountManagementPage());
+    }//GEN-LAST:event_ManageAccButActionPerformed
 
     private void AddDataButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddDataButActionPerformed
-        // TODO add your handling code here:
         OODMS.frame.refresh(new AddDataForm());
     }//GEN-LAST:event_AddDataButActionPerformed
 
@@ -145,19 +139,20 @@ public class AdminPanelForm extends javax.swing.JPanel {
     }//GEN-LAST:event_ViewRecButActionPerformed
 
     private void LogoutButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButActionPerformed
-        // TODO add your handling code here:
+        OODMS.currentUser = null;
+        OODMS.frame.refresh(new HomePage());
     }//GEN-LAST:event_LogoutButActionPerformed
 
     private void ExitButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButActionPerformed
-        // TODO add your handling code here:
+        OODMS.frame.dispose();
     }//GEN-LAST:event_ExitButActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddDataBut;
-    private javax.swing.JButton CreateAccBut;
     private javax.swing.JButton ExitBut;
     private javax.swing.JButton LogoutBut;
+    private javax.swing.JButton ManageAccBut;
     private javax.swing.JLabel TitleLab;
     private javax.swing.JButton ViewRecBut;
     // End of variables declaration//GEN-END:variables

@@ -113,19 +113,7 @@ public class Customer extends User {
     // register a new account
     public static String register(String name, String password1, String password2, String email, String phoneNo) {
         // validate the name, password and phone number
-        String errorMessage = User.validate(name, password1, password2, email, phoneNo);
-
-        if (name.length() >= 4) {
-            // get all user
-            List<List<String>> allUser = FileService.readFile(UserDao.FILENAME);
-            // find any username ignore case match
-            boolean usernameTaken = allUser.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(name));
-
-            // check username taken
-            if (usernameTaken) {
-                errorMessage += "Username taken";
-            }
-        }
+        String errorMessage = User.validate(name, password1, password2, email, phoneNo) + User.checkUserExist(name);
 
         // if error message is not empty then return error message
         if (!errorMessage.isEmpty()) {
@@ -135,7 +123,7 @@ public class Customer extends User {
         // get new id
         Long id = FileService.getNewId(UserDao.FILENAME);
         if (id == null || id == -1) {
-            return "The system had met an error, please contact the technical support";
+            return "System Error";
         }
 
         Customer customer = new Customer(id, name, password1, email, phoneNo, false, false);

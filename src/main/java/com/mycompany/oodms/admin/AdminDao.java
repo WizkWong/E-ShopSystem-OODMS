@@ -51,4 +51,21 @@ public class AdminDao implements ObjectDao<Admin> {
         }
         return false;
     }
+
+    public List<Admin> getAll() {
+        List<List<String>> array = FileService.readFile(UserDao.FILENAME);
+        return array.stream().filter(list -> list.get(6).equals("true")).map(Admin::new).toList();
+    }
+
+    public Admin getId(long id) {
+        List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, String.valueOf(id));
+        if (userData.get(6).equals("true")) {
+            return new Admin(userData);
+        }
+        return null;
+    }
+
+    public boolean remove(Admin admin) {
+        return FileService.removeById(UserDao.FILENAME, List.of(toList(admin)));
+    }
 }

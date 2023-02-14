@@ -1,29 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-package com.mycompany.oodms.user.GUI;
+package com.mycompany.oodms.Component;
 
 import com.mycompany.oodms.OODMS;
-import com.mycompany.oodms.customer.Customer;
+import com.mycompany.oodms.admin.Admin;
+import com.mycompany.oodms.admin.AdminDao;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
+import com.mycompany.oodms.user.User;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- *
- * @author Wong Chi Jian
- */
-public class RegisterPage extends javax.swing.JPanel {
-
+public class EditAccountForm extends javax.swing.JPanel {
+    
+    private User user;
+    private final AdminDao adminDao;
+    private final DeliveryStaffDao deliveryStaffDao;
     /**
-     * Creates new form RegisterPage
+     * Creates new form AddAccountForm
      */
-    public RegisterPage() {
+    public EditAccountForm(User user) {
+        this.user = user;
+        this.adminDao = OODMS.getAdminDao();
+        this.deliveryStaffDao = OODMS.getDeliveryStaffDao();
         initComponents();
         cfPssMsgLb.setVisible(false);
         emailMsgLb.setVisible(false);
         phoneNoMsgLb.setVisible(false);
+        usernameField.setText(user.getUsername());
+        pssField1.setText(user.getPassword());
+        pssField2.setText(user.getPassword());
+        emailField.setText(user.getEmail());
+        phoneNoField.setText(user.getPhoneNo());
     }
 
     /**
@@ -35,10 +42,6 @@ public class RegisterPage extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        backBtt = new javax.swing.JButton();
-        titleLb = new javax.swing.JLabel();
-        registerBtt = new javax.swing.JButton();
-        formPn = new javax.swing.JPanel();
         usernameLb = new javax.swing.JLabel();
         usernameField = new javax.swing.JTextField();
         pssLb = new javax.swing.JLabel();
@@ -55,129 +58,114 @@ public class RegisterPage extends javax.swing.JPanel {
         emailMsgLb = new javax.swing.JLabel();
         phoneNoMsgLb = new javax.swing.JLabel();
 
-        setMinimumSize(new java.awt.Dimension(600, 450));
-        setName(""); // NOI18N
-        setPreferredSize(new java.awt.Dimension(600, 450));
+        setMinimumSize(new java.awt.Dimension(540, 330));
+        setPreferredSize(new java.awt.Dimension(540, 330));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        backBtt.setText("Back");
-        backBtt.setFocusable(false);
-        backBtt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        backBtt.setInheritsPopupMenu(true);
-        backBtt.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        backBtt.setPreferredSize(new java.awt.Dimension(200, 50));
-        backBtt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backBttActionPerformed(evt);
-            }
-        });
-        add(backBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 70, 30));
-
-        titleLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        titleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titleLb.setText("Register");
-        add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 240, -1));
-
-        registerBtt.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        registerBtt.setText("Register");
-        registerBtt.setFocusable(false);
-        registerBtt.setPreferredSize(new java.awt.Dimension(200, 50));
-        registerBtt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerBttActionPerformed(evt);
-            }
-        });
-        add(registerBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, -1, 40));
-
-        formPn.setBackground(new java.awt.Color(255, 255, 255));
-        formPn.setPreferredSize(new java.awt.Dimension(540, 320));
-        formPn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         usernameLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         usernameLb.setText("Username:");
-        formPn.add(usernameLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 150, 30));
+        add(usernameLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 150, 30));
 
         usernameField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         usernameField.setToolTipText("");
         usernameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 340, 30));
+        add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, 340, 30));
 
         pssLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         pssLb.setText("Password:");
-        formPn.add(pssLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 150, 30));
+        add(pssLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 150, 30));
 
         pssField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(pssField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 340, 30));
+        add(pssField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 340, 30));
 
         cfPssLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cfPssLb.setText("Confirm Password:");
-        formPn.add(cfPssLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 160, 30));
+        add(cfPssLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 160, 30));
 
         pssField2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(pssField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 340, 30));
+        add(pssField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, 340, 30));
 
         emailLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         emailLb.setText("Email:");
-        formPn.add(emailLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 150, 30));
+        add(emailLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 150, 30));
 
         emailField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         emailField.setToolTipText("");
         emailField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(emailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 340, 30));
+        add(emailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, 340, 30));
 
         PhoneNoLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         PhoneNoLb.setText("Phone Number:");
-        formPn.add(PhoneNoLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 150, 30));
+        add(PhoneNoLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 250, 150, 30));
 
         phoneNoField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        formPn.add(phoneNoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 340, 30));
+        add(phoneNoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 250, 340, 30));
 
         usernameMsgLb.setText("Username must be at least 4 characters");
-        formPn.add(usernameMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 340, 20));
+        add(usernameMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 340, 20));
 
         pssMsgLb.setText("Password length must be at least 8");
-        formPn.add(pssMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 110, 340, 20));
+        add(pssMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 340, 20));
 
         cfPssMsgLb.setForeground(java.awt.Color.red);
         cfPssMsgLb.setText("Confirm Password is not same as Password!");
-        formPn.add(cfPssMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, 340, 20));
+        add(cfPssMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 340, 20));
 
         emailMsgLb.setForeground(java.awt.Color.red);
         emailMsgLb.setText("Email is invalid!");
-        formPn.add(emailMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 230, 340, 20));
+        add(emailMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 340, 20));
 
         phoneNoMsgLb.setForeground(java.awt.Color.red);
         phoneNoMsgLb.setText("Phone Number is invalid!");
-        formPn.add(phoneNoMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 290, 340, 20));
-
-        add(formPn, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 540, 320));
+        add(phoneNoMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 280, 340, 20));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
-        OODMS.frame.refresh(new HomePage());
-    }//GEN-LAST:event_backBttActionPerformed
-
-    private void registerBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBttActionPerformed
+    public boolean formValidate() {
         String username = usernameField.getText();
         String pss1 = new String(pssField1.getPassword());
         String pss2 = new String(pssField2.getPassword());
         String email = emailField.getText();
         String phoneNo = phoneNoField.getText();
 
-        String errMsg = Customer.register(username, pss1, pss2, email, phoneNo);
+        String errMsg = User.validate(username, pss1, pss2, email, phoneNo);
 
-        if (errMsg.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Account has successfully created", "Success", JOptionPane.INFORMATION_MESSAGE);
-            OODMS.frame.refresh(new HomePage());
-            return;
+        if (!user.getUsername().equals(username)) {
+            errMsg += User.checkUserExist(username);
         }
 
-        resetRegisterFormUI();
+        if (errMsg.isEmpty()) {
+            user.setUsername(username);
+            user.setPassword(pss1);
+            user.setEmail(email);
+            user.setPhoneNo(phoneNo);
+            if (user instanceof Admin admin) {
+                adminDao.fileUpdate(admin);
+            } else if (user instanceof DeliveryStaff deliveryStaff) {
+                deliveryStaffDao.fileUpdate(deliveryStaff);
+            }
+            return true;
+        }
+
+        usernameMsgLb.setText("Username must be at least 4 characters");
+        usernameMsgLb.setForeground(Color.BLACK);
+        usernameField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+
+        pssMsgLb.setText("Password length must be at least 8");
+        pssMsgLb.setForeground(Color.BLACK);
+        pssField1.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+
+        cfPssMsgLb.setVisible(false);
+        pssField2.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+
+        emailMsgLb.setVisible(false);
+        emailField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+
+        phoneNoMsgLb.setVisible(false);
+        phoneNoField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
 
         if (errMsg.contains("System Error")) {
             OODMS.showErrorMessage();
-            return;
+            return false;
         }
 
         if (errMsg.contains("Username character less than 4")) {
@@ -210,44 +198,22 @@ public class RegisterPage extends javax.swing.JPanel {
             phoneNoMsgLb.setVisible(true);
             phoneNoField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
         }
-    }//GEN-LAST:event_registerBttActionPerformed
-
-    private void resetRegisterFormUI() {
-        usernameMsgLb.setText("Username must be at least 4 characters");
-        usernameMsgLb.setForeground(Color.BLACK);
-        usernameField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
-
-        pssMsgLb.setText("Password length must be at least 8");
-        pssMsgLb.setForeground(Color.BLACK);
-        pssField1.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
-
-        cfPssMsgLb.setVisible(false);
-        pssField2.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
-
-        emailMsgLb.setVisible(false);
-        emailField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
-
-        phoneNoMsgLb.setVisible(false);
-        phoneNoField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PhoneNoLb;
-    private javax.swing.JButton backBtt;
     private javax.swing.JLabel cfPssLb;
     private javax.swing.JLabel cfPssMsgLb;
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel emailLb;
     private javax.swing.JLabel emailMsgLb;
-    private javax.swing.JPanel formPn;
     private com.mycompany.oodms.Component.JNumberField phoneNoField;
     private javax.swing.JLabel phoneNoMsgLb;
     private javax.swing.JPasswordField pssField1;
     private javax.swing.JPasswordField pssField2;
     private javax.swing.JLabel pssLb;
     private javax.swing.JLabel pssMsgLb;
-    private javax.swing.JButton registerBtt;
-    private javax.swing.JLabel titleLb;
     private javax.swing.JTextField usernameField;
     private javax.swing.JLabel usernameLb;
     private javax.swing.JLabel usernameMsgLb;

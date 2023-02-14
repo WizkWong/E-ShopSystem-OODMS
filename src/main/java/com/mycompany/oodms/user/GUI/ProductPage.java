@@ -334,12 +334,14 @@ public class ProductPage extends javax.swing.JPanel {
         if (searchTxt.equals("")) {
             itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
             itemList.forEach(
-                    item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
+                    item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()})
+            );
             return;
         }
-        itemList = itemList.stream().filter(item -> item.getCategory().equals(category) && item.getName().toLowerCase().startsWith(searchTxt)).toList();
+        itemList = itemList.stream().filter(item -> item.getCategory().equals(category) && item.getName().toLowerCase().contains(searchTxt)).toList();
         itemList.forEach(
-                item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
+                item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()})
+        );
     }//GEN-LAST:event_searchEngine
 
 

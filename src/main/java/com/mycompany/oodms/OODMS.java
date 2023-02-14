@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.oodms;
 
 import com.mycompany.oodms.Dao.FileService;
@@ -15,6 +11,8 @@ import com.mycompany.oodms.order.*;
 import com.mycompany.oodms.user.GUI.HomePage;
 import com.mycompany.oodms.user.User;
 import com.mycompany.oodms.user.UserDao;
+
+import javax.swing.JOptionPane;
 
 public class OODMS {
 
@@ -47,6 +45,10 @@ public class OODMS {
         FileService.createFile(CustomerOrderDao.FILENAME);
         FileService.createFile(CustomerOrderPaymentDao.FILENAME);
         FileService.createFile(OrderDetailDao.FILENAME);
+    }
+
+    public static void showErrorMessage() {
+        JOptionPane.showMessageDialog(null, "The system had met an error, please contact the technical support", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public static UserDao getUserDao() {

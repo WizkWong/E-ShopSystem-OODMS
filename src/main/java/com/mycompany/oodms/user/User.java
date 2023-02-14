@@ -93,6 +93,21 @@ public abstract class User {
         return errorMessage;
     }
 
+    public static String checkUserExist(String name) {
+        if (name.length() >= 4) {
+            // get all user
+            List<List<String>> allUser = FileService.readFile(UserDao.FILENAME);
+            // find any username ignore case match
+            boolean usernameTaken = allUser.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(name));
+
+            // check username taken
+            if (usernameTaken) {
+                return "Username taken;";
+            }
+        }
+        return "";
+    }
+
     // join List if user id match between two list
     public static List<String> joinWithUser(List<String> subclassData, List<String> userData) {
         if (subclassData.get(0).equals(userData.get(0))) {
