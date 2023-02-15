@@ -5,7 +5,6 @@
 package com.mycompany.oodms.user.GUI;
 
 import com.mycompany.oodms.Component.JNumberField;
-import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.customer.GUI.CustomerHomePage;
@@ -25,14 +24,16 @@ import java.util.List;
  */
 public class ProductPage extends javax.swing.JPanel {
 
-    DefaultTableModel productTableModel;
-    DefaultTableModel categoryTableModel;
+    private final DefaultTableModel productTableModel;
+    private final DefaultTableModel categoryTableModel;
+    private final ItemDao itemDao;
 
     /**
      * Creates new form ProductPage
      */
     public ProductPage() {
         initComponents();
+        itemDao = OODMS.getItemDao();
         if (!(OODMS.currentUser instanceof Customer)) {
             addToCartBtt.setVisible(false);
         }
@@ -48,10 +49,12 @@ public class ProductPage extends javax.swing.JPanel {
         productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
+
         productTableModel = (DefaultTableModel) productTable.getModel();
+        // hide Item ID column
         productTable.removeColumn(productTableColumnModel.getColumn(0));
 
-        List<String> categoryList = Item.readCategory();
+        List<String> categoryList = itemDao.readCategory();
         for (String category : categoryList) {
             categoryTableModel.addRow(new Object[] {category});
         }
@@ -229,7 +232,7 @@ public class ProductPage extends javax.swing.JPanel {
             return;
         }
         long id = (long) productTableModel.getValueAt(select, 0);
-        Item item = Item.searchId(id);
+        Item item = itemDao.searchId(id);
         if (item == null) {
             JOptionPane.showMessageDialog(null, "Error", "Product does not exist", JOptionPane.ERROR_MESSAGE);
             return;
@@ -260,10 +263,21 @@ public class ProductPage extends javax.swing.JPanel {
         box.add(quantityFd);
 
         int option = JOptionPane.showConfirmDialog(null, box, "Add to Cart", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int itemQuantity = quantityFd.getInteger();
         if (option == JOptionPane.OK_OPTION) {
+            if (itemQuantity > item.getStock()) {
+                JOptionPane.showMessageDialog(null, "Your chosen quantity had exceed the stock, please choose a valid quantity", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             Customer customer = (Customer) OODMS.currentUser;
-            if (customer.addCartItem(item, quantityFd.getInteger())) {
+            if (customer.addCartItem(item, itemQuantity)) {
+                // the item already updated so no need minus by quantity again
+                productTableModel.setValueAt(item.getStock(), select, 3);
+                addToCartBtt.setEnabled(false);
+                addToCartBtt.setText("Item Added In Cart");
                 JOptionPane.showMessageDialog(null, "Successfully added into cart", "Success", JOptionPane.PLAIN_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed add into cart", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -288,7 +302,7 @@ public class ProductPage extends javax.swing.JPanel {
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
         }
-        List<Item> itemList = FileService.readFile(ItemDao.FILENAME).stream().map(Item::new).toList();
+        List<Item> itemList = itemDao.getAll();
         itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
         itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
@@ -299,7 +313,7 @@ public class ProductPage extends javax.swing.JPanel {
         addToCartBtt.setEnabled(true);
         int select = productTable.getSelectedRow();
         long id = (long) productTableModel.getValueAt(select, 0);
-        Item item = Item.searchId(id);
+        Item item = itemDao.searchId(id);
         if (item == null) {
             despLb.setText("Error, selected product cannot be found");
             return;
@@ -330,7 +344,7 @@ public class ProductPage extends javax.swing.JPanel {
             productTableModel.removeRow(i);
         }
         String searchTxt = searchFd.getText().toLowerCase();
-        List<Item> itemList = FileService.readFile(ItemDao.FILENAME).stream().map(Item::new).toList();
+        List<Item> itemList = itemDao.getAll();
         if (searchTxt.equals("")) {
             itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
             itemList.forEach(

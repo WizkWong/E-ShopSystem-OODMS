@@ -3,6 +3,7 @@ package com.mycompany.oodms.customer;
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.item.ItemDao;
 import com.mycompany.oodms.order.CustomerOrder;
 import com.mycompany.oodms.order.CustomerOrderDao;
 import com.mycompany.oodms.user.User;
@@ -17,12 +18,14 @@ public class Customer extends User {
     private List<CartItem> cart;
 
     private final CartItemDao cartItemDao;
+    private final ItemDao itemDao;
     private final CustomerOrderDao customerOrderDao;
 
     public Customer(Long id, String username, String password, String email, String phoneNo, Boolean staff, Boolean admin) {
         super(id, username, password, email, phoneNo, staff, admin);
         cartItemDao = OODMS.getCartItemDao();
         this.cart = cartItemDao.getCartItem(id);
+        itemDao = OODMS.getItemDao();
         customerOrderDao = OODMS.getCustomerOrderDao();
     }
 
@@ -56,8 +59,9 @@ public class Customer extends User {
         }
         CartItem cartItem = new CartItem(item, quantity);
         this.cart.add(cartItem);
-        // add new cart item data into cart file
-        return cartItemDao.fileAddNewRow(cartItem, this.getId());
+        item.minusStock(cartItem);
+        // add new cart item data into cart file and update the item stock
+        return cartItemDao.fileAddNewRow(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
     // only use when cart item quantity is change
