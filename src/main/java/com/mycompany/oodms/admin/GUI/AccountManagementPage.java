@@ -20,7 +20,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
     
     private final AdminDao adminDao;
     private final DeliveryStaffDao deliveryStaffDao;
-    DefaultTableModel accountTableModel;
+    private final DefaultTableModel accountTableModel;
     
     private boolean adminSection;
     private boolean deliveryStaffSection;

@@ -1,6 +1,6 @@
 package com.mycompany.oodms.item;
 
-import com.mycompany.oodms.Dao.FileService;
+import com.mycompany.oodms.customer.CartItem;
 
 import java.util.List;
 
@@ -36,45 +36,16 @@ public class Item {
         return this.stock > 0;
     }
 
-    public static Item searchId(long id) {
-        List<String> itemData = FileService.getOneSpecificData(ItemDao.FILENAME, FileService.ID_COLUMN, String.valueOf(id));
-        if (itemData.isEmpty()) {
-            return null;
+    public void plusStock(CartItem cartItem) {
+        if (this.name.equals(cartItem.getItem().getName())) {
+            this.stock += cartItem.getQuantity();
         }
-        return new Item(itemData);
     }
 
-    public static List<String> readCategory() {
-        return FileService.readFile(ItemDao.CATEGORY_FILENAME).stream().map(list -> list.get(0)).toList();
-    }
-
-    public static boolean addNewCategory(String categoryName) {
-        return FileService.insertData(ItemDao.CATEGORY_FILENAME, List.of(categoryName));
-    }
-
-    public static boolean modifyCategory(String oldCategoryName, String newCategoryName) {
-        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
-        String content = "";
-        for (List<String> category : allCategory) {
-            if (category.get(0).equals(oldCategoryName)) {
-                content += newCategoryName + "\n";
-                continue;
-            }
-            content += category.get(0) + "\n";
+    public void minusStock(CartItem cartItem) {
+        if (this.name.equals(cartItem.getItem().getName())) {
+            this.stock -= cartItem.getQuantity();
         }
-        return FileService.modifyFile(ItemDao.CATEGORY_FILENAME, content, false);
-    }
-
-    public static boolean deleteCategory(String categoryName) {
-        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
-        String content = "";
-        for (List<String> category : allCategory) {
-            if (category.get(0).equals(categoryName)) {
-                continue;
-            }
-            content += category.get(0) + "\n";
-        }
-        return FileService.modifyFile(ItemDao.CATEGORY_FILENAME, content, false);
     }
 
     public Long getId() {
