@@ -40,7 +40,7 @@ public class CustomerOrder {
     public CustomerOrder(List<String> customerOrderData) {
         this(
                 Long.valueOf(customerOrderData.get(0)),
-                Customer.getCustomerById(Long.parseLong(customerOrderData.get(1))),
+                OODMS.getCustomerDao().getById(Long.parseLong(customerOrderData.get(1))),
                 customerOrderData.get(2)
         );
     }

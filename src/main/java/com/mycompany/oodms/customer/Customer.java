@@ -15,7 +15,7 @@ import java.util.Optional;
 public class Customer extends User {
     public static final String FILENAME = "customer";
 
-    private List<CartItem> cart;
+    private final List<CartItem> cart;
 
     private final CartItemDao cartItemDao;
     private final ItemDao itemDao;
@@ -54,7 +54,7 @@ public class Customer extends User {
     public boolean addCartItem(Item item, int quantity) {
         Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
         if (existCartItem.isPresent()) {
-            System.out.println("Item is already exist in cart, cannot add in it");
+            System.out.println("Item already exist in cart, cannot add in it");
             return false;
         }
         CartItem cartItem = new CartItem(item, quantity);
@@ -65,24 +65,18 @@ public class Customer extends User {
     }
 
     // only use when cart item quantity is change
-    public boolean updateCartItem(List<CartItem> cart) {
-        List<Long> cartItemId = cart.stream().map(cartItem -> cartItem.getItem().getId()).toList();
-        int match = 0;
-        for (CartItem cartItem : this.cart) {
-            for (Long id : cartItemId) {
-                if (cartItem.getItem().getId().equals(id)) {
-                    match++;
-                    break;
-                }
-            }
-        }
-        // check the current cart is same size as new cart
-        if (this.cart.size() != match) {
-            System.out.println("New cart item does not match with current cart item");
+    public boolean updateCartItem(Item item, int quantity) {
+        Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
+        if (existCartItem.isEmpty()) {
+            System.out.println("Cannot update the item does not exist in cart");
             return false;
         }
-        this.cart = cart;
-        return cartItemDao.updateCart(cart, getId());
+        CartItem cartItem = existCartItem.get();
+        item.plusStock(cartItem);
+        cartItem.setQuantity(quantity);
+        item.minusStock(cartItem);
+        // add new cart item data into cart file and update the item stock
+        return cartItemDao.fileUpdate(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
     // delete cart item
@@ -93,9 +87,10 @@ public class Customer extends User {
             return false;
         }
         CartItem cartItem = existCartItem.get();
+        item.plusStock(cartItem);
         this.cart.remove(cartItem);
         // delete the cart data
-        return cartItemDao.fileDeleteRow(cartItem, this.getId());
+        return cartItemDao.fileDeleteRow(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
     // create and save new customer order
@@ -135,18 +130,6 @@ public class Customer extends User {
         OODMS.getCustomerDao().fileAddNewRow(customer);
 
         return "";
-    }
-
-    // get the customer data by customer id
-    public static Customer getCustomerById(long id) {
-        String idString = String.valueOf(id);
-        List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, idString);
-        List<String> customerData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, idString);
-        customerData = User.joinWithUser(customerData, userData);
-        if (customerData == null) {
-            return null;
-        }
-        return new Customer(customerData);
     }
 
     public List<CartItem> getCart() {
