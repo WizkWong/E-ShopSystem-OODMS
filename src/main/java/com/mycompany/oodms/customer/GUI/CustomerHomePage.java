@@ -110,7 +110,7 @@ public class CustomerHomePage extends javax.swing.JPanel {
     }//GEN-LAST:event_productBttActionPerformed
 
     private void cartBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartBttActionPerformed
-//        OODMS.frame.refresh(new CustomerCartPage());
+        OODMS.frame.refresh(new CustomerCartPage());
     }//GEN-LAST:event_cartBttActionPerformed
 
     private void profileBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileBttActionPerformed
