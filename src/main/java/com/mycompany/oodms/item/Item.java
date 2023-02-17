@@ -1,21 +1,26 @@
 package com.mycompany.oodms.item;
 
+import com.mycompany.oodms.Dao.FileService;
+import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.customer.CartItem;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Item {
+    private static final Pattern Product_Validation = Pattern.compile("[0-9!@#$%&*()_+=|<>?{}\\\\[\\\\]~-]");
+
     private Long id;
     private String name;
-    private String category;
+    private Long categoryId;
     private Double price;
     private Integer stock;
     private String description;
 
-    public Item(Long id, String name, String category, Double price, Integer stock, String description) {
+    public Item(Long id, String name, Long categoryId, Double price, Integer stock, String description) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.categoryId = categoryId;
         this.price = price;
         this.stock = stock;
         this.description = description;
@@ -25,7 +30,7 @@ public class Item {
         this(
                 Long.valueOf(itemData.get(0)),
                 itemData.get(1),
-                itemData.get(2),
+                Long.valueOf(itemData.get(2)),
                 Double.valueOf(itemData.get(3)),
                 Integer.valueOf(itemData.get(4)),
                 itemData.get(5)
@@ -48,6 +53,96 @@ public class Item {
         }
     }
 
+    // Adding New Product
+    public static String addItem(String name, String category, double price, int stock, String description) {
+
+        // Get new id for product
+        Long id = FileService.getNewId(ItemDao.ITEM_FILENAME);
+        if (id == null || id == -1) {
+            return "The system had met an error, please contact the technical support";
+        }
+
+        // Validate data
+        String errorMessage = null;
+
+        // Check if category is an id that already exist
+        String CatIDExist = "no";
+        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
+
+        for (List<String> tempCategory : allCategory) {
+            if (tempCategory.get(0).equals(category)) {
+                CatIDExist = "yes";
+                break;
+            }
+        }
+
+        // If category is an id that already exist in category.txt, product category validation won't be needed
+        if (CatIDExist.equals("yes")) {
+            errorMessage = validateItem(name, "ProCatGood");
+        } else {
+            errorMessage = validateItem(name, category);
+        }
+
+        if (!errorMessage.isEmpty()) {
+            return errorMessage;
+        }
+
+        Long categoryID;
+        if (CatIDExist.equals("no")) {
+            // Get new id for category if category does not exist
+            categoryID = FileService.getNewId(ItemDao.CATEGORY_FILENAME);
+            if (categoryID == null || categoryID == -1) {
+                return "The system had met an error, please contact the technical support";
+            }
+
+            // Append category data into category.txt
+            OODMS.getItemDao().addNewCategory(categoryID, name);
+
+        } else {
+            categoryID = Long.valueOf(category);
+        }
+
+        // Save item as an object
+        Item item = new Item(id, name, categoryID, price, stock, description);
+
+        // Append product data into item.txt
+        OODMS.getItemDao().fileAddNewRow(item);
+
+        return "";
+    }
+
+    // Validation for Adding New Product
+    public static String validateItem(String ProName, String ProCat) {
+        String errorMessage = "";
+
+        // If product name or category contains character other than alphabet and space, there will be an error message
+        if (Product_Validation.matcher(ProName).find()) {
+            errorMessage += "ProName_Err";
+        }
+        if (Product_Validation.matcher(ProCat).find()) {
+            errorMessage += "ProCat_Err2";
+        }
+
+        // Getting all the category and append it into a list
+        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
+
+        // If product category exist, there will be an error message
+        boolean categoryExist = allCategory.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(ProCat));
+        if (categoryExist) {
+            errorMessage += "ProCat_Err1";
+        }
+
+        return errorMessage;
+    }
+
+    // Validate Empty Text Field
+    public static String validateEmpty(String ProName, String ProCat, String ProPrice, String ProStock, String ProDes) {
+        if (ProName.isEmpty() || ProCat.isEmpty() || ProPrice.isEmpty() || ProStock.isEmpty() || ProDes.isEmpty()) {
+            return "empty";
+        }
+        return "";
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,12 +159,12 @@ public class Item {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Double getPrice() {
@@ -101,7 +196,7 @@ public class Item {
         return "Item{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
+                ", category='" + categoryId + '\'' +
                 ", price=" + price +
                 ", stock=" + stock +
                 '}';

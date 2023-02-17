@@ -18,7 +18,7 @@ public interface FileService {
     char ID_COLUMN = 0;
 
     // allow the data remain as deleted status
-    List<String> ALLOWED_REMOVE = List.of(ItemDao.FILENAME, UserDao.FILENAME);
+    List<String> ALLOWED_REMOVE = List.of(ItemDao.ITEM_FILENAME, UserDao.FILENAME);
 
     // allow to delete the data
     List<String> ALLOWED_DELETE = List.of(CartItemDao.FILENAME);

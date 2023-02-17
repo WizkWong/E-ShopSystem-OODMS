@@ -55,7 +55,7 @@ public class ProductPage extends javax.swing.JPanel {
         // hide Item ID column
         productTable.removeColumn(productTableColumnModel.getColumn(0));
 
-        List<String> categoryList = itemDao.readCategory();
+        List<String> categoryList = itemDao.getAllCategory();
         for (String category : categoryList) {
             categoryTableModel.addRow(new Object[] {category});
         }
@@ -307,7 +307,7 @@ public class ProductPage extends javax.swing.JPanel {
             productTableModel.removeRow(i);
         }
         List<Item> itemList = itemDao.getAll();
-        itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
+        itemList = itemList.stream().filter(item -> item.getCategoryId().equals(category)).toList();
         itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
     }//GEN-LAST:event_categoryTableMousePressed
@@ -350,13 +350,13 @@ public class ProductPage extends javax.swing.JPanel {
         String searchTxt = searchFd.getText().toLowerCase();
         List<Item> itemList = itemDao.getAll();
         if (searchTxt.equals("")) {
-            itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
+            itemList = itemList.stream().filter(item -> item.getCategoryId().equals(category)).toList();
             itemList.forEach(
                     item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()})
             );
             return;
         }
-        itemList = itemList.stream().filter(item -> item.getCategory().equals(category) && item.getName().toLowerCase().contains(searchTxt)).toList();
+        itemList = itemList.stream().filter(item -> item.getCategoryId().equals(category) && item.getName().toLowerCase().contains(searchTxt)).toList();
         itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()})
         );

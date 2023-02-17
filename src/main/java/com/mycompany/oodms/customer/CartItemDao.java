@@ -47,7 +47,7 @@ public class CartItemDao implements ForeignKey<CartItem> {
         List<CartItem> cart = new ArrayList<>();
         for (List<String> itemRow : cartItemList) {
             // get from item file
-            List<String> item = FileService.getOneSpecificData(ItemDao.FILENAME, FileService.ID_COLUMN, itemRow.get(1));
+            List<String> item = FileService.getOneSpecificData(ItemDao.ITEM_FILENAME, FileService.ID_COLUMN, itemRow.get(1));
             // create new CartItem object then added into array
             cart.add(new CartItem(new Item(item), Integer.valueOf(itemRow.get(2))));
         }
