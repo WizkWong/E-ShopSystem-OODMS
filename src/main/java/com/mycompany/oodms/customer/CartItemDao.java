@@ -2,6 +2,7 @@ package com.mycompany.oodms.customer;
 
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.Dao.ForeignKey;
+import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.item.ItemDao;
 
@@ -13,31 +14,35 @@ public class CartItemDao implements ForeignKey<CartItem> {
     public static final String FILENAME = "cart";
 
     @Override
-    public List<String> toList(CartItem cartItem) {
+    public List<String> toList(CartItem cartItem, long customerId) {
         return new ArrayList<>(List.of(
+                String.valueOf(customerId),
                 String.valueOf(cartItem.getItem().getId()),
                 String.valueOf(cartItem.getQuantity())
         ));
     }
 
     @Override
-    public boolean fileAddNewRow(CartItem cartItem, long foreignKeyId) {
-        List<String> cartItemData = toList(cartItem);
-        cartItemData.add(0, String.valueOf(foreignKeyId));
+    public boolean fileAddNewRow(CartItem cartItem, long customerId) {
+        List<String> cartItemData = toList(cartItem, customerId);
         return FileService.insertData(FILENAME, cartItemData);
     }
 
     @Override
-    public boolean fileUpdate(CartItem cartItem, long foreignKeyId) {
-        List<String> cartItemData = toList(cartItem);
-        cartItemData.add(0, String.valueOf(foreignKeyId));
+    public boolean fileUpdate(CartItem cartItem, long customerId) {
+        List<String> cartItemData = toList(cartItem, customerId);
         return FileService.updateSingleRow(FILENAME, cartItemData, 0, 1);
     }
 
-    public boolean fileDeleteRow(CartItem cartItem, long foreignKeyId) {
-        List<String> cartItemData = toList(cartItem);
-        cartItemData.add(0, String.valueOf(foreignKeyId));
+    public boolean fileDeleteRow(CartItem cartItem, long customerId) {
+        List<String> cartItemData = toList(cartItem, customerId);
         return FileService.deleteByTwoId(FILENAME, List.of(cartItemData));
+    }
+
+    public boolean fileDeleteRow(List<CartItem> cartItemList, long customerId) {
+        CartItemDao cartItemDao = OODMS.getCartItemDao();
+        List<List<String>> cartItemData = cartItemList.stream().map(cartItem -> cartItemDao.toList(cartItem, customerId)).toList();
+        return FileService.deleteByTwoId(FILENAME, cartItemData);
     }
 
     // get all cart item
@@ -55,12 +60,9 @@ public class CartItemDao implements ForeignKey<CartItem> {
     }
 
     public boolean updateCart(List<CartItem> cart, long customerId) {
+        CartItemDao cartItemDao = OODMS.getCartItemDao();
         List<List<String>> newStringCart = new ArrayList<>(cart.stream()
-                .map(cartItem -> {
-                    List<String> cartItemList = toList(cartItem);
-                    cartItemList.add(0, String.valueOf(customerId));
-                    return cartItemList;
-                }).toList());
+                .map(cartItem -> cartItemDao.toList(cartItem, customerId)).toList());
         // update the file with new cart
         return FileService.updateMultipleRows(CartItemDao.FILENAME, newStringCart, 0, 1);
     }

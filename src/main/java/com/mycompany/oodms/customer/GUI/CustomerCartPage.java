@@ -44,8 +44,8 @@ public class CustomerCartPage extends javax.swing.JPanel {
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
 
-        productTable.removeColumn(productTableColumnModel.getColumn(0));
         productTableModel = (DefaultTableModel) productTable.getModel();
+        productTable.removeColumn(productTableColumnModel.getColumn(0));
 
         Customer customer = (Customer) OODMS.currentUser;
         List<CartItem> cartItemList = customer.getCart();
@@ -72,6 +72,7 @@ public class CustomerCartPage extends javax.swing.JPanel {
         checkOutBtt = new javax.swing.JButton();
         editBtt = new javax.swing.JButton();
         deleteBtt = new javax.swing.JButton();
+        titleLb = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1000, 700));
         setPreferredSize(new java.awt.Dimension(1000, 700));
@@ -175,6 +176,11 @@ public class CustomerCartPage extends javax.swing.JPanel {
             }
         });
         add(deleteBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 460, 140, 40));
+
+        titleLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        titleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLb.setText("Cart");
+        add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void productTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMousePressed
@@ -195,8 +201,7 @@ public class CustomerCartPage extends javax.swing.JPanel {
     }//GEN-LAST:event_backBttActionPerformed
 
     private void checkOutBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutBttActionPerformed
-        Customer customer = (Customer) OODMS.currentUser;
-        System.out.println(customer);
+        OODMS.frame.refresh(new CustomerCheckOutPage());
     }//GEN-LAST:event_checkOutBttActionPerformed
 
     private void deleteBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBttActionPerformed
@@ -261,5 +266,6 @@ public class CustomerCartPage extends javax.swing.JPanel {
     private javax.swing.JLabel despTitleLb;
     private javax.swing.JButton editBtt;
     private javax.swing.JTable productTable;
+    private javax.swing.JLabel titleLb;
     // End of variables declaration//GEN-END:variables
 }

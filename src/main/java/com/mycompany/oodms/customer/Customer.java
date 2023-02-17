@@ -9,8 +9,7 @@ import com.mycompany.oodms.order.CustomerOrderDao;
 import com.mycompany.oodms.user.User;
 import com.mycompany.oodms.user.UserDao;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Customer extends User {
     public static final String FILENAME = "customer";
@@ -91,6 +90,14 @@ public class Customer extends User {
         this.cart.remove(cartItem);
         // delete the cart data
         return cartItemDao.fileDeleteRow(cartItem, this.getId()) && itemDao.fileUpdate(item);
+    }
+
+    // delete cart item
+    public boolean clearCartItem() {
+        List<CartItem> cartList = new ArrayList<>(this.cart);
+        this.cart.clear();
+        // delete the cart data
+        return cartItemDao.fileDeleteRow(cartList, this.getId());
     }
 
     // create and save new customer order
