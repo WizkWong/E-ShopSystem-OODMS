@@ -287,7 +287,7 @@ public class ProductPage extends javax.swing.JPanel {
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
         }
-        List<Item> itemList = FileService.readFile(Item.FILENAME).stream().map(Item::new).toList();
+        List<Item> itemList = FileService.readFile(Item.ITEM_FILENAME).stream().map(Item::new).toList();
         itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
         itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
@@ -330,7 +330,7 @@ public class ProductPage extends javax.swing.JPanel {
             productTableModel.removeRow(i);
         }
         String searchTxt = searchFd.getText().toLowerCase();
-        List<Item> itemList = FileService.readFile(Item.FILENAME).stream().map(Item::new).toList();
+        List<Item> itemList = FileService.readFile(Item.ITEM_FILENAME).stream().map(Item::new).toList();
         if (searchTxt.equals("")) {
             itemList = itemList.stream().filter(item -> item.getCategory().equals(category)).toList();
             itemList.forEach(

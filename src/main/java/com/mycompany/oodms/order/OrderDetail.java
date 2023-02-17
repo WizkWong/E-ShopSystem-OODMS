@@ -39,7 +39,7 @@ public class OrderDetail {
         List<OrderDetail> orderDetail = new ArrayList<>();
         for (List<String> itemRow : orderDetailList) {
             // get from item file
-            List<String> item = FileService.getOneSpecificData(Item.FILENAME, FileService.ID_COLUMN, itemRow.get(1));
+            List<String> item = FileService.getOneSpecificData(Item.ITEM_FILENAME, FileService.ID_COLUMN, itemRow.get(1));
             // create new CartItem object then added into array
             orderDetail.add(new OrderDetail(new Item(item), Double.valueOf(itemRow.get(2)), Integer.valueOf(itemRow.get(3))));
         }

@@ -5,6 +5,7 @@
 package com.mycompany.oodms.admin.GUI;
 
 import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.user.GUI.HomePage;
 import java.awt.Dimension;
 
 /**
@@ -136,8 +137,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
     }//GEN-LAST:event_CreateAccButActionPerformed
 
     private void AddDataButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddDataButActionPerformed
-        // TODO add your handling code here:
-        OODMS.frame.refresh(new AddDataForm());
+        OODMS.frame.refresh(new AddProductPage());
     }//GEN-LAST:event_AddDataButActionPerformed
 
     private void ViewRecButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRecButActionPerformed
@@ -145,7 +145,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
     }//GEN-LAST:event_ViewRecButActionPerformed
 
     private void LogoutButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButActionPerformed
-        // TODO add your handling code here:
+        OODMS.frame.refresh(new HomePage());
     }//GEN-LAST:event_LogoutButActionPerformed
 
     private void ExitButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButActionPerformed
