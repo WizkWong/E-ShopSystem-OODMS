@@ -39,7 +39,7 @@ public class OODMS {
         FileService.createFile(Customer.FILENAME);
         FileService.createFile(DeliveryStaffDao.FILENAME);
         FileService.createFile(AdminDao.FILENAME);
-        FileService.createFile(ItemDao.FILENAME);
+        FileService.createFile(ItemDao.ITEM_FILENAME);
         FileService.createFile(ItemDao.CATEGORY_FILENAME);
         FileService.createFile(CartItemDao.FILENAME);
         FileService.createFile(CustomerOrderDao.FILENAME);

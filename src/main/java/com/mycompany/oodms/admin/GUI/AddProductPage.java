@@ -1,16 +1,20 @@
 package com.mycompany.oodms.admin.GUI;
 
-import com.mycompany.oodms.FileService;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.item.Item;
-import static com.mycompany.oodms.item.Item.CATEGORY_FILENAME;
+import com.mycompany.oodms.item.ItemDao;
+
 import java.awt.Color;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
 public class AddProductPage extends javax.swing.JPanel {
+
+    private final ItemDao itemDao;
+
     public AddProductPage() {
+        itemDao = OODMS.getItemDao();
         initComponents();
         ProCatRad1.setSelected(true);
         ProCatTxt.setEnabled(false);
@@ -18,7 +22,7 @@ public class AddProductPage extends javax.swing.JPanel {
         CatErrLab.setVisible(false);
         
         // Adding existing category to combo box
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
+        List<String> allCategory = itemDao.getAllCategory();
         
         // If there is no existing category, combo box will be disable
         if (allCategory.isEmpty()) {
@@ -28,8 +32,8 @@ public class AddProductPage extends javax.swing.JPanel {
             ProCatCom.setForeground(new Color(183, 206, 233));
         }
         
-        for(List category:allCategory) {
-            ProCatCom.addItem(category.get(1).toString());
+        for (String category : allCategory) {
+            ProCatCom.addItem(category);
         }
     }
 
@@ -186,20 +190,15 @@ public class AddProductPage extends javax.swing.JPanel {
         String ProDes = ProDesTxt.getText();
         if (ProCatRad1.isSelected()) {
             // Getting all the category data to search and append existing category id for the item
-            List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
-            ProCat = ProCatCom.getSelectedItem().toString();
-            
-            for(List category:allCategory) {
-                if (category.get(1).toString().equals(ProCat)) {
-                    ProCat = category.get(0).toString();
-                }
-            }
+            ProCat = (String) ProCatCom.getSelectedItem();
+            ProCat = itemDao.getCategoryIdByName(ProCat);
+
         } else {
             ProCat = ProCatTxt.getText();
         }
         
         String CheckEmpty = Item.validateEmpty(ProName, ProCat, ProPriceS, ProStockS, ProDes);
-        if (CheckEmpty == "empty") {
+        if (CheckEmpty.equals("empty")) {
             JOptionPane.showMessageDialog(this, "Please fill in all the text field !");
             return;
         }

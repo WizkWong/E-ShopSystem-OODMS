@@ -1,30 +1,26 @@
 package com.mycompany.oodms.item;
 
 import com.mycompany.oodms.Dao.FileService;
-import static com.mycompany.oodms.customer.Customer.FILENAME;
-import static com.mycompany.oodms.user.User.USER_FILENAME;
+import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.customer.CartItem;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class Item {
-    public static final String ITEM_FILENAME = "item";
-    public static final String CATEGORY_FILENAME = "category";
-    public static final int CATEGORY_COLUMN_NUM = 2;
     private static final Pattern Product_Validation = Pattern.compile("[0-9!@#$%&*()_+=|<>?{}\\\\[\\\\]~-]");
 
     private Long id;
     private String name;
-    private String category;
+    private Long categoryId;
     private Double price;
     private Integer stock;
     private String description;
 
-    public Item(Long id, String name, String category, Double price, Integer stock, String description) {
+    public Item(Long id, String name, Long categoryId, Double price, Integer stock, String description) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.categoryId = categoryId;
         this.price = price;
         this.stock = stock;
         this.description = description;
@@ -34,7 +30,7 @@ public class Item {
         this(
                 Long.valueOf(itemData.get(0)),
                 itemData.get(1),
-                itemData.get(2),
+                Long.valueOf(itemData.get(2)),
                 Double.valueOf(itemData.get(3)),
                 Integer.valueOf(itemData.get(4)),
                 itemData.get(5)
@@ -57,44 +53,11 @@ public class Item {
         }
     }
 
-    public static boolean addNewCategory(String categoryID, String categoryName) {
-        List<String> categoryData = List.of(
-                categoryID,
-                categoryName
-        );
-        return FileService.insertData(CATEGORY_FILENAME, categoryData);
-    }
-
-    public static boolean modifyCategory(String oldCategoryName, String newCategoryName) {
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
-        String content = "";
-        for (List<String> category : allCategory) {
-            if (category.get(0).equals(oldCategoryName)) {
-                content += newCategoryName + "\n";
-                continue;
-            }
-            content += category.get(0) + "\n";
-        }
-        return FileService.modifyFile(CATEGORY_FILENAME, content, false);
-    }
-
-    public static boolean deleteCategory(String categoryName) {
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
-        String content = "";
-        for (List<String> category : allCategory) {
-            if (category.get(0).equals(categoryName)) {
-                continue;
-            }
-            content += category.get(0) + "\n";
-        }
-        return FileService.modifyFile(CATEGORY_FILENAME, content, false);
-    }
-
     // Adding New Product
-    public static String addItem(String ProName, String ProCat, double ProPrice, int ProStock, String ProDes) {
+    public static String addItem(String name, String category, double price, int stock, String description) {
 
         // Get new id for product
-        Long id = FileService.getNewId(ITEM_FILENAME);
+        Long id = FileService.getNewId(ItemDao.ITEM_FILENAME);
         if (id == null || id == -1) {
             return "The system had met an error, please contact the technical support";
         }
@@ -102,52 +65,51 @@ public class Item {
         // Validate data
         String errorMessage = null;
 
-        // Check if ProCat is an id that already exist
+        // Check if category is an id that already exist
         String CatIDExist = "no";
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
-        for (List category:allCategory) {
-            if (category.get(0).toString().equals(ProCat)) {
+        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
+
+        for (List<String> tempCategory : allCategory) {
+            if (tempCategory.get(0).equals(category)) {
                 CatIDExist = "yes";
+                break;
             }
         }
 
-        // If ProCat is an id that already exist in category.txt, product category validation won't be needed
+        // If category is an id that already exist in category.txt, product category validation won't be needed
         if (CatIDExist.equals("yes")) {
-            errorMessage = validateItem(ProName, "ProCatGood");
+            errorMessage = validateItem(name, "ProCatGood");
         } else {
-            errorMessage = validateItem(ProName, ProCat);
+            errorMessage = validateItem(name, category);
         }
 
         if (!errorMessage.isEmpty()) {
             return errorMessage;
         }
 
-        String CategoryID = "";
+        Long categoryID;
         if (CatIDExist.equals("no")) {
             // Get new id for category if category does not exist
-            Long Catid = FileService.getNewId(CATEGORY_FILENAME);
-            if (Catid == null || Catid == -1) {
+            categoryID = FileService.getNewId(ItemDao.CATEGORY_FILENAME);
+            if (categoryID == null || categoryID == -1) {
                 return "The system had met an error, please contact the technical support";
             }
 
             // Append category data into category.txt
-            addNewCategory(Catid.toString(), ProName);
+            OODMS.getItemDao().addNewCategory(categoryID, name);
 
-            CategoryID = Catid.toString();
         } else {
-            CategoryID = ProCat;
+            categoryID = Long.valueOf(category);
         }
 
         // Save item as an object
-        Item Product = new Item(id, ProName, CategoryID, ProPrice, ProStock, ProDes);
+        Item item = new Item(id, name, categoryID, price, stock, description);
 
         // Append product data into item.txt
-        Product.fileAddNewRow();
+        OODMS.getItemDao().fileAddNewRow(item);
 
         return "";
     }
-
-
 
     // Validation for Adding New Product
     public static String validateItem(String ProName, String ProCat) {
@@ -162,7 +124,7 @@ public class Item {
         }
 
         // Getting all the category and append it into a list
-        List<List<String>> allCategory = FileService.readFile(CATEGORY_FILENAME);
+        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
 
         // If product category exist, there will be an error message
         boolean categoryExist = allCategory.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(ProCat));
@@ -197,12 +159,12 @@ public class Item {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Double getPrice() {
@@ -234,7 +196,7 @@ public class Item {
         return "Item{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
+                ", category='" + categoryId + '\'' +
                 ", price=" + price +
                 ", stock=" + stock +
                 '}';

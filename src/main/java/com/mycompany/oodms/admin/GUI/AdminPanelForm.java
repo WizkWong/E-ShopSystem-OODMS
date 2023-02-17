@@ -131,7 +131,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
     }//GEN-LAST:event_ManageAccButActionPerformed
 
     private void AddDataButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddDataButActionPerformed
-        OODMS.frame.refresh(new AddDataForm());
+        OODMS.frame.refresh(new AddProductPage());
     }//GEN-LAST:event_AddDataButActionPerformed
 
     private void ViewRecButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRecButActionPerformed

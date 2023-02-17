@@ -52,7 +52,7 @@ public class CustomerCartPage extends javax.swing.JPanel {
         List<CartItem> cartItemList = customer.getCart();
         cartItemList.forEach(cartItem -> {
             Item item = cartItem.getItem();
-            productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getCategory(), item.getPrice(), cartItem.getQuantity()});
+            productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getCategoryId(), item.getPrice(), cartItem.getQuantity()});
         });
     }
 
