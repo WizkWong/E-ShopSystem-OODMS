@@ -3,6 +3,7 @@ package com.mycompany.oodms.customer;
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.Dao.ObjectDao;
+import com.mycompany.oodms.user.User;
 import com.mycompany.oodms.user.UserDao;
 
 import java.util.ArrayList;
@@ -50,5 +51,17 @@ public class CustomerDao implements ObjectDao<Customer> {
             return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
         }
         return false;
+    }
+
+    // get the customer data by customer id
+    public Customer getById(long id) {
+        String idString = String.valueOf(id);
+        List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, idString);
+        List<String> customerData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, idString);
+        customerData = User.joinWithUser(customerData, userData);
+        if (customerData == null) {
+            return null;
+        }
+        return new Customer(customerData);
     }
 }

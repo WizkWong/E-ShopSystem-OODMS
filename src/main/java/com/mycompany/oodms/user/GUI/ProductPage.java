@@ -27,6 +27,7 @@ public class ProductPage extends javax.swing.JPanel {
     private final DefaultTableModel productTableModel;
     private final DefaultTableModel categoryTableModel;
     private final ItemDao itemDao;
+    private final String desphtml = "<html><p style=\"width:285px;\">%s</p></html>";
 
     /**
      * Creates new form ProductPage
@@ -193,8 +194,11 @@ public class ProductPage extends javax.swing.JPanel {
         despLb.setText("Please select any product from product table");
         despLb.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         despLb.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        despLb.setMaximumSize(new java.awt.Dimension(380, 600));
+        despLb.setMinimumSize(new java.awt.Dimension(380, 600));
         despLb.setOpaque(true);
-        add(despLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 110, 380, 600));
+        despLb.setPreferredSize(new java.awt.Dimension(380, 600));
+        add(despLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 110, -1, -1));
 
         backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         backBtt.setText("Back");
@@ -318,7 +322,7 @@ public class ProductPage extends javax.swing.JPanel {
             despLb.setText("Error, selected product cannot be found");
             return;
         }
-        despLb.setText(item.getDescription());
+        despLb.setText(String.format(desphtml, item.getDescription()));
         if (!(OODMS.currentUser instanceof Customer customer)) {
             return;
         }

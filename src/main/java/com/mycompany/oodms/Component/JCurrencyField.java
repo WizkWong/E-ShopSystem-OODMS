@@ -19,7 +19,12 @@ public class JCurrencyField extends JTextField {
         });
     }
 
-    public int getInteger() {
-        return Integer.parseInt(this.getText());
+    public Double getCurrency() {
+        try {
+            return Double.valueOf(this.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
