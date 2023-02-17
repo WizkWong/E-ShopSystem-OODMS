@@ -67,7 +67,7 @@ public class Item {
 
         // Check if category is an id that already exist
         String CatIDExist = "no";
-        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
+        List<List<String>> allCategory = OODMS.getItemDao().getAllCategoryIdAndName();
 
         for (List<String> tempCategory : allCategory) {
             if (tempCategory.get(0).equals(category)) {
@@ -124,7 +124,7 @@ public class Item {
         }
 
         // Getting all the category and append it into a list
-        List<List<String>> allCategory = FileService.readFile(ItemDao.CATEGORY_FILENAME);
+        List<List<String>> allCategory = OODMS.getItemDao().getAllCategoryIdAndName();
 
         // If product category exist, there will be an error message
         boolean categoryExist = allCategory.stream().anyMatch(list -> list.get(1).equalsIgnoreCase(ProCat));

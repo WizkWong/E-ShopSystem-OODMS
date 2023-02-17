@@ -22,7 +22,7 @@ public class AddProductPage extends javax.swing.JPanel {
         CatErrLab.setVisible(false);
         
         // Adding existing category to combo box
-        List<String> allCategory = itemDao.getAllCategory();
+        List<String> allCategory = itemDao.getAllCategoryName();
         
         // If there is no existing category, combo box will be disable
         if (allCategory.isEmpty()) {

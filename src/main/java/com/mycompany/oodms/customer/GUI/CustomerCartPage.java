@@ -43,7 +43,6 @@ public class CustomerCartPage extends javax.swing.JPanel {
         productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
-        productTableColumnModel.getColumn(4).setCellRenderer(centerRenderer);
 
         productTable.removeColumn(productTableColumnModel.getColumn(0));
         productTableModel = (DefaultTableModel) productTable.getModel();
@@ -52,7 +51,7 @@ public class CustomerCartPage extends javax.swing.JPanel {
         List<CartItem> cartItemList = customer.getCart();
         cartItemList.forEach(cartItem -> {
             Item item = cartItem.getItem();
-            productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getCategoryId(), item.getPrice(), cartItem.getQuantity()});
+            productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), cartItem.getQuantity()});
         });
     }
 
@@ -84,14 +83,14 @@ public class CustomerCartPage extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Name", "Category", "Price", "Quantity"
+                "ID", "Name", "Price", "Quantity"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -230,16 +229,23 @@ public class CustomerCartPage extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Item does not exist, please refresh!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int quantity = (int) productTableModel.getValueAt(select, 4);
-        EditNumberForm form = new EditNumberForm("Edit quantity of item", String.format("\"%s\" quantity:", item.getName()), quantity);
+        int quantity = (int) productTableModel.getValueAt(select, 3);
+        EditNumberForm form = new EditNumberForm("Edit quantity of item", String.format("Current stock left: %d quantity<br>\"%s\" quantity:", item.getStock(),item.getName()), quantity);
         int option = JOptionPane.showConfirmDialog(null, form, "Edit \"" + item.getName() + "\" quantity", JOptionPane.OK_CANCEL_OPTION);
         if (option != JOptionPane.OK_OPTION) {
             return;
         }
+
+        int newQuantity = form.getNumber();
+        if (newQuantity > item.getStock() + quantity) {
+            JOptionPane.showMessageDialog(null, String.format("Quantity chosen is exceed this item quantity, only %d left", item.getStock()), "Quantity Exceeded", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         Customer customer = (Customer) OODMS.currentUser;
-        if (customer.updateCartItem(item, form.getNumber())) {
+        if (customer.updateCartItem(item, newQuantity)) {
             JOptionPane.showMessageDialog(null, "Successfully update the cart item", "Success", JOptionPane.PLAIN_MESSAGE);
-            productTableModel.setValueAt(form.getNumber(), select, 4);
+            productTableModel.setValueAt(form.getNumber(), select, 3);
         } else {
             OODMS.showErrorMessage();
         }
