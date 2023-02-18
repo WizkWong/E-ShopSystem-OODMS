@@ -109,11 +109,7 @@ public class Customer extends User {
         }
         CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this, address);
         // save the order including the order payment, delivery order and order detail
-        if (customerOrderDao.fileAddNewRow(customerOrder)) {
-            this.cart.clear();
-            return true;
-        }
-        return false;
+        return customerOrderDao.fileAddNewRow(customerOrder);
     }
 
     // register a new account

@@ -219,7 +219,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         String address = unitNoField.getText() + ", " + streetField.getText() + ", " + cityField.getText() + " " + postalCodeField.getText() + ", " + stateField.getText();
 
         Customer customer = (Customer) OODMS.currentUser;
-        if (!customer.checkOut(address, (String) paymentCb.getSelectedItem())) {
+        if (!customer.checkOut((String) paymentCb.getSelectedItem(), address)) {
             OODMS.showErrorMessage();
             return;
         }
