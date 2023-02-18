@@ -32,9 +32,9 @@ public class CustomerOrderPaymentDao implements ObjectDao<CustomerOrderPayment> 
         return false;
     }
 
-    public CustomerOrderPayment getCustomerOrderPaymentById(CustomerOrder customerOrder) {
+    public CustomerOrderPayment getByCustomerOrderId(CustomerOrder customerOrder) {
         Long orderId = customerOrder.getId();
-        List<String> customerOrderPaymentData = FileService.getOneSpecificData(CustomerOrderDao.FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
+        List<String> customerOrderPaymentData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
         return new CustomerOrderPayment(
                 customerOrder,
                 customerOrderPaymentData.get(1),

@@ -222,7 +222,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         if (adminSection) {
             user = adminDao.getId(id);
         } else if (deliveryStaffSection) {
-            user = deliveryStaffDao.getId(id);
+            user = deliveryStaffDao.getById(id);
         }
         if (user == null) {
             JOptionPane.showMessageDialog(null, "This user is not Delivery Staff or Admin, please refresh the page!", "Error", JOptionPane.ERROR_MESSAGE);

@@ -43,8 +43,10 @@ public class ProductPage extends javax.swing.JPanel {
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
 
+        categoryTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         categoryTableModel = (DefaultTableModel) categoryTable.getModel();
-        categoryTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        // hide ID column
+        categoryTable.removeColumn(categoryTable.getColumnModel().getColumn(0));
 
         TableColumnModel productTableColumnModel = productTable.getColumnModel();
         productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
@@ -55,9 +57,9 @@ public class ProductPage extends javax.swing.JPanel {
         // hide Item ID column
         productTable.removeColumn(productTableColumnModel.getColumn(0));
 
-        List<String> categoryList = itemDao.getAllCategory();
-        for (String category : categoryList) {
-            categoryTableModel.addRow(new Object[] {category});
+        List<List<String>> categoryList = itemDao.getAllCategoryIdAndName();
+        for (List<String> category : categoryList) {
+            categoryTableModel.addRow(new Object[] {Long.valueOf(category.get(0)), category.get(1)});
         }
 
     }
@@ -116,14 +118,14 @@ public class ProductPage extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Category"
+                "ID", "Category"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class
+                java.lang.Long.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -145,6 +147,7 @@ public class ProductPage extends javax.swing.JPanel {
         jScrollPane1.setViewportView(categoryTable);
         if (categoryTable.getColumnModel().getColumnCount() > 0) {
             categoryTable.getColumnModel().getColumn(0).setResizable(false);
+            categoryTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 660));
@@ -301,7 +304,7 @@ public class ProductPage extends javax.swing.JPanel {
         noticeLb.setVisible(false);
         despLb.setText("Please select any product from product table");
         searchFd.setText("");
-        String category = (String) categoryTableModel.getValueAt(select, 0);
+        long category = (long) categoryTableModel.getValueAt(select, 0);
         int itemRow = productTableModel.getRowCount();
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
@@ -342,7 +345,7 @@ public class ProductPage extends javax.swing.JPanel {
         }
         addToCartBtt.setEnabled(false);
         despLb.setText("Please select any product from product table");
-        String category = (String) categoryTableModel.getValueAt(select, 0);
+        long category = (long) categoryTableModel.getValueAt(select, 0);
         int itemRow = productTableModel.getRowCount();
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);

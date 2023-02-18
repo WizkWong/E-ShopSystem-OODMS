@@ -16,21 +16,24 @@ public class CustomerOrder {
     private LocalDateTime orderDateTime;
     private List<OrderDetail> orderDetail;
     private CustomerOrderPayment customerOrderPayment;
+    private DeliveryOrder deliveryOrder;
 
-    public CustomerOrder(Long id, String typeOfPayment, Customer customer) {
+    public CustomerOrder(Long id, String typeOfPayment, Customer customer, String address) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = LocalDateTime.now();
         this.orderDetail = customer.getCart().stream().map(CartItem::convertToOrderDetail).toList();
         this.customerOrderPayment = new CustomerOrderPayment(this, typeOfPayment, OrderDetail.calculateTotalPrice(this.orderDetail));
+        this.deliveryOrder = new DeliveryOrder(this, address);
     }
 
     public CustomerOrder(Long id, Customer customer, LocalDateTime orderDateTime) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = orderDateTime;
-        this.orderDetail = OODMS.getOrderDetailDao().getOrderDetailByOrderId(id);
-        this.customerOrderPayment = OODMS.getCustomerOrderPaymentDao().getCustomerOrderPaymentById(this);
+        this.orderDetail = OODMS.getOrderDetailDao().getById(id);
+        this.customerOrderPayment = OODMS.getCustomerOrderPaymentDao().getByCustomerOrderId(this);
+        this.deliveryOrder = OODMS.getDeliveryOrderDao().getByCustomerOrderId(this);
     }
 
     public CustomerOrder(Long id, Customer customer, String orderDateTime) {
@@ -87,5 +90,13 @@ public class CustomerOrder {
 
     public void setCustomerOrderPayment(CustomerOrderPayment customerOrderPayment) {
         this.customerOrderPayment = customerOrderPayment;
+    }
+
+    public DeliveryOrder getDeliveryOrder() {
+        return deliveryOrder;
+    }
+
+    public void setDeliveryOrder(DeliveryOrder deliveryOrder) {
+        this.deliveryOrder = deliveryOrder;
     }
 }

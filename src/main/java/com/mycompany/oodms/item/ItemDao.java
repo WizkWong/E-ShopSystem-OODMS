@@ -67,13 +67,18 @@ public class ItemDao implements ObjectDao<Item> {
         return FileService.removeById(CATEGORY_FILENAME, List.of(List.of(String.valueOf(categoryId))));
     }
 
-    // get all category
-    public List<String> getAllCategory() {
+    // get all category id and name
+    public List<List<String>> getAllCategoryIdAndName() {
+        return FileService.readFile(CATEGORY_FILENAME);
+    }
+
+    // get all category name
+    public List<String> getAllCategoryName() {
         return FileService.readFile(CATEGORY_FILENAME).stream().map(list -> list.get(1)).toList();
     }
 
     // get category by id
-    public String getCategoryById(long id) {
+    public String getCategoryNameById(long id) {
         List<String> list = FileService.getOneSpecificData(CATEGORY_FILENAME, FileService.ID_COLUMN, String.valueOf(id));
         if (list.isEmpty()) {
             return null;

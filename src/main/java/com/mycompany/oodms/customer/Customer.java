@@ -9,8 +9,7 @@ import com.mycompany.oodms.order.CustomerOrderDao;
 import com.mycompany.oodms.user.User;
 import com.mycompany.oodms.user.UserDao;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Customer extends User {
     public static final String FILENAME = "customer";
@@ -93,20 +92,50 @@ public class Customer extends User {
         return cartItemDao.fileDeleteRow(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
+    // delete cart item
+    public void clearCartItem() {
+        List<CartItem> cartList = new ArrayList<>(this.cart);
+        this.cart.clear();
+        // delete the cart data
+        if (cartItemDao.fileDeleteRow(cartList, this.getId())) {
+            System.out.println("Fail to remove all Customer Cart Item");
+        }
+    }
+
     // create and save new customer order
-    public boolean checkOut(String typeOfPayment) {
+    public String checkOut(String typeOfPayment, String unitNo, String street, String city, String postalCode, String state) {
+        String errorMsg = "";
+        if (unitNo.isEmpty()) {
+            errorMsg += "Unit No is empty;";
+        }
+        if (street.isEmpty()) {
+            errorMsg += "Street is empty;";
+        }
+        if (city.isEmpty()) {
+            errorMsg += "City is empty;";
+        }
+        if (postalCode.isEmpty()) {
+            errorMsg += "Postal Code is empty;";
+        }
+        if (state.isEmpty()) {
+            errorMsg += "State is empty;";
+        }
+
+        if (!errorMsg.isEmpty()) {
+            return errorMsg;
+        }
         // get new id
         Long id = FileService.getNewId(CustomerOrderDao.FILENAME);
         if (id == null || id == -1) {
-            return false;
+            return "System Error";
         }
-        CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this);
+        String address = unitNo + ", " + street + ", " + city + " " + postalCode + ", " + state;
+        CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this, address);
         // save the order including the order payment, delivery order and order detail
-        if (customerOrderDao.fileAddNewRow(customerOrder)) {
-            this.cart.clear();
-            return true;
+        if (!customerOrderDao.fileAddNewRow(customerOrder)) {
+            return "System Error";
         }
-        return false;
+        return "";
     }
 
     // register a new account
@@ -127,7 +156,9 @@ public class Customer extends User {
 
         Customer customer = new Customer(id, name, password1, email, phoneNo, false, false);
         // save new customer data
-        OODMS.getCustomerDao().fileAddNewRow(customer);
+        if (!OODMS.getCustomerDao().fileAddNewRow(customer)) {
+            return "System Error";
+        }
 
         return "";
     }
