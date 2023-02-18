@@ -101,13 +101,13 @@ public class Customer extends User {
     }
 
     // create and save new customer order
-    public boolean checkOut(String typeOfPayment) {
+    public boolean checkOut(String typeOfPayment, String address) {
         // get new id
         Long id = FileService.getNewId(CustomerOrderDao.FILENAME);
         if (id == null || id == -1) {
             return false;
         }
-        CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this);
+        CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this, address);
         // save the order including the order payment, delivery order and order detail
         if (customerOrderDao.fileAddNewRow(customerOrder)) {
             this.cart.clear();

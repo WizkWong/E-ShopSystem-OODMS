@@ -16,13 +16,15 @@ public class CustomerOrder {
     private LocalDateTime orderDateTime;
     private List<OrderDetail> orderDetail;
     private CustomerOrderPayment customerOrderPayment;
+    private DeliveryOrder deliveryOrder;
 
-    public CustomerOrder(Long id, String typeOfPayment, Customer customer) {
+    public CustomerOrder(Long id, String typeOfPayment, Customer customer, String address) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = LocalDateTime.now();
         this.orderDetail = customer.getCart().stream().map(CartItem::convertToOrderDetail).toList();
         this.customerOrderPayment = new CustomerOrderPayment(this, typeOfPayment, OrderDetail.calculateTotalPrice(this.orderDetail));
+        this.deliveryOrder = new DeliveryOrder(this, address);
     }
 
     public CustomerOrder(Long id, Customer customer, LocalDateTime orderDateTime) {
@@ -87,5 +89,13 @@ public class CustomerOrder {
 
     public void setCustomerOrderPayment(CustomerOrderPayment customerOrderPayment) {
         this.customerOrderPayment = customerOrderPayment;
+    }
+
+    public DeliveryOrder getDeliveryOrder() {
+        return deliveryOrder;
+    }
+
+    public void setDeliveryOrder(DeliveryOrder deliveryOrder) {
+        this.deliveryOrder = deliveryOrder;
     }
 }

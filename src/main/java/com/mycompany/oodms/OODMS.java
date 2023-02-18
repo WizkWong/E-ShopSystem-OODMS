@@ -25,9 +25,11 @@ public class OODMS {
     private static final AdminDao adminDao = new AdminDao();
     private static final ItemDao itemDao = new ItemDao();
     private static final CartItemDao cartItemDao = new CartItemDao();
-    private static final CustomerOrderDao customerOrderDao = new CustomerOrderDao();
     private static final CustomerOrderPaymentDao customerOrderPaymentDao = new CustomerOrderPaymentDao();
     private static final OrderDetailDao orderDetailDao = new OrderDetailDao();
+    private static final DeliveryOrderDao deliveryOrderDao = new DeliveryOrderDao();
+    private static final CustomerOrderDao customerOrderDao = new CustomerOrderDao(customerOrderPaymentDao, orderDetailDao, deliveryOrderDao);
+
 
     public OODMS() {
         initialize();
@@ -45,6 +47,7 @@ public class OODMS {
         FileService.createFile(CustomerOrderDao.FILENAME);
         FileService.createFile(CustomerOrderPaymentDao.FILENAME);
         FileService.createFile(OrderDetailDao.FILENAME);
+        FileService.createFile(DeliveryOrderDao.FILENAME);
     }
 
     public static void showErrorMessage() {
@@ -85,6 +88,10 @@ public class OODMS {
 
     public static OrderDetailDao getOrderDetailDao() {
         return orderDetailDao;
+    }
+
+    public static DeliveryOrderDao getDeliveryOrderDao() {
+        return deliveryOrderDao;
     }
 
     public static void main(String[] args) {
