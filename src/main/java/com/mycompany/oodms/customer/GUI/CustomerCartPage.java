@@ -49,6 +49,9 @@ public class CustomerCartPage extends javax.swing.JPanel {
 
         Customer customer = (Customer) OODMS.currentUser;
         List<CartItem> cartItemList = customer.getCart();
+        if (cartItemList.isEmpty()) {
+            checkOutBtt.setEnabled(false);
+        }
         cartItemList.forEach(cartItem -> {
             Item item = cartItem.getItem();
             productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), cartItem.getQuantity()});

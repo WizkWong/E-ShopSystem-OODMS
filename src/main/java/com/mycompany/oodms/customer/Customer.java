@@ -93,23 +93,49 @@ public class Customer extends User {
     }
 
     // delete cart item
-    public boolean clearCartItem() {
+    public void clearCartItem() {
         List<CartItem> cartList = new ArrayList<>(this.cart);
         this.cart.clear();
         // delete the cart data
-        return cartItemDao.fileDeleteRow(cartList, this.getId());
+        if (cartItemDao.fileDeleteRow(cartList, this.getId())) {
+            System.out.println("Fail to remove all Customer Cart Item");
+        }
     }
 
     // create and save new customer order
-    public boolean checkOut(String typeOfPayment, String address) {
+    public String checkOut(String typeOfPayment, String unitNo, String street, String city, String postalCode, String state) {
+        String errorMsg = "";
+        if (unitNo.isEmpty()) {
+            errorMsg += "Unit No is empty;";
+        }
+        if (street.isEmpty()) {
+            errorMsg += "Street is empty;";
+        }
+        if (city.isEmpty()) {
+            errorMsg += "City is empty;";
+        }
+        if (postalCode.isEmpty()) {
+            errorMsg += "Postal Code is empty;";
+        }
+        if (state.isEmpty()) {
+            errorMsg += "State is empty;";
+        }
+
+        if (!errorMsg.isEmpty()) {
+            return errorMsg;
+        }
         // get new id
         Long id = FileService.getNewId(CustomerOrderDao.FILENAME);
         if (id == null || id == -1) {
-            return false;
+            return "System Error";
         }
+        String address = unitNo + ", " + street + ", " + city + " " + postalCode + ", " + state;
         CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this, address);
         // save the order including the order payment, delivery order and order detail
-        return customerOrderDao.fileAddNewRow(customerOrder);
+        if (!customerOrderDao.fileAddNewRow(customerOrder)) {
+            return "System Error";
+        }
+        return "";
     }
 
     // register a new account
@@ -130,7 +156,9 @@ public class Customer extends User {
 
         Customer customer = new Customer(id, name, password1, email, phoneNo, false, false);
         // save new customer data
-        OODMS.getCustomerDao().fileAddNewRow(customer);
+        if (!OODMS.getCustomerDao().fileAddNewRow(customer)) {
+            return "System Error";
+        }
 
         return "";
     }

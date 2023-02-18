@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.util.List;
 
 public class CustomerCheckOutPage extends javax.swing.JPanel {
@@ -20,6 +21,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
      */
     public CustomerCheckOutPage() {
         initComponents();
+        errorMsgLb.setVisible(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
@@ -69,6 +71,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         postalCodeField = new com.mycompany.oodms.Component.JNumberField();
         paymentLb = new javax.swing.JLabel();
         paymentCb = new javax.swing.JComboBox<>();
+        errorMsgLb = new javax.swing.JLabel();
         totalPriceLb = new javax.swing.JLabel();
         totalLb = new javax.swing.JLabel();
 
@@ -196,6 +199,10 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         paymentCb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debit Card", "Credit Card", "Shopee E-Wallet", "Touch 'n Go E-Wallet" }));
         jPanel1.add(paymentCb, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, 250, 40));
 
+        errorMsgLb.setForeground(java.awt.Color.red);
+        errorMsgLb.setText("There is empty field, please fill out the all the field!");
+        jPanel1.add(errorMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 370, 340, 20));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 520, 400));
 
         totalPriceLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -216,16 +223,45 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         if (option != JOptionPane.OK_OPTION) {
             return;
         }
-        String address = unitNoField.getText() + ", " + streetField.getText() + ", " + cityField.getText() + " " + postalCodeField.getText() + ", " + stateField.getText();
+
+        errorMsgLb.setVisible(false);
+        unitNoField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+        streetField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+        cityField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+        postalCodeField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
+        stateField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
 
         Customer customer = (Customer) OODMS.currentUser;
-        if (!customer.checkOut((String) paymentCb.getSelectedItem(), address)) {
+        String errorMsg = customer.checkOut((String) paymentCb.getSelectedItem(), unitNoField.getText(), streetField.getText(), cityField.getText(), postalCodeField.getText(), stateField.getText());
+
+        if (errorMsg.isEmpty()) {
+            customer.clearCartItem();
+            checkOutBtt.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Your order has been created, please check your order history to tract your order", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if (errorMsg.contains("System Error")) {
             OODMS.showErrorMessage();
             return;
         }
-        customer.clearCartItem();
-        checkOutBtt.setEnabled(false);
-        JOptionPane.showMessageDialog(null, "Your order has been created, please check your order history to tract your order", "Success", JOptionPane.INFORMATION_MESSAGE);
+        errorMsgLb.setVisible(true);
+        if (errorMsg.contains("Unit No is empty;")) {
+            unitNoField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+        }
+        if (errorMsg.contains("Street is empty;")) {
+            streetField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+        }
+        if (errorMsg.contains("City is empty;")) {
+            cityField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+        }
+        if (errorMsg.contains("Postal Code is empty;")) {
+            postalCodeField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+        }
+        if (errorMsg.contains("State is empty;")) {
+            stateField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+        }
+
     }//GEN-LAST:event_checkOutBttActionPerformed
 
 
@@ -235,6 +271,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
     private javax.swing.JButton checkOutBtt;
     private javax.swing.JTextField cityField;
     private javax.swing.JLabel cityLb;
+    private javax.swing.JLabel errorMsgLb;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox<String> paymentCb;
     private javax.swing.JLabel paymentLb;
