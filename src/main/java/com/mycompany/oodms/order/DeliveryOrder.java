@@ -1,5 +1,6 @@
 package com.mycompany.oodms.order;
 
+import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 
 import java.time.LocalDateTime;
@@ -31,8 +32,15 @@ public class DeliveryOrder {
         this.deliveredDateTime = deliveredDateTime;
     }
 
-    public DeliveryOrder(CustomerOrder customerOrder, DeliveryStaff deliveryStaff, String deliveryStatus, String address, String assignDateTime, String deliveredDateTime) {
-        this(customerOrder, deliveryStaff, DeliveryStatus.getStatus(deliveryStatus), address, LocalDateTime.parse(assignDateTime, formatDateTime), LocalDateTime.parse(deliveredDateTime, formatDateTime));
+    public DeliveryOrder(CustomerOrder customerOrder, String deliveryStaff, String deliveryStatus, String address, String assignDateTime, String deliveredDateTime) {
+        this(
+                customerOrder,
+                deliveryStaff.equals("null") ? null : OODMS.getDeliveryStaffDao().getById(Long.parseLong(deliveryStaff)),
+                DeliveryStatus.getStatus(deliveryStatus),
+                address,
+                assignDateTime.equals("null") ? null : LocalDateTime.parse(assignDateTime, formatDateTime),
+                deliveredDateTime.equals("null") ? null : LocalDateTime.parse(deliveredDateTime, formatDateTime)
+        );
     }
 
     public CustomerOrder getCustomerOrder() {

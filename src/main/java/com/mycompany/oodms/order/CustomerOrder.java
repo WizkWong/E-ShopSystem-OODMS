@@ -31,8 +31,9 @@ public class CustomerOrder {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = orderDateTime;
-        this.orderDetail = OODMS.getOrderDetailDao().getOrderDetailByOrderId(id);
-        this.customerOrderPayment = OODMS.getCustomerOrderPaymentDao().getCustomerOrderPaymentById(this);
+        this.orderDetail = OODMS.getOrderDetailDao().getById(id);
+        this.customerOrderPayment = OODMS.getCustomerOrderPaymentDao().getByCustomerOrderId(this);
+        this.deliveryOrder = OODMS.getDeliveryOrderDao().getByCustomerOrderId(this);
     }
 
     public CustomerOrder(Long id, Customer customer, String orderDateTime) {

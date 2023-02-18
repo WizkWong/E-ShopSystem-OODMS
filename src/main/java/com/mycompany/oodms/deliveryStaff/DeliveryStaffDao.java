@@ -3,7 +3,6 @@ package com.mycompany.oodms.deliveryStaff;
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.Dao.ObjectDao;
 import com.mycompany.oodms.OODMS;
-import com.mycompany.oodms.user.User;
 import com.mycompany.oodms.user.UserDao;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class DeliveryStaffDao implements ObjectDao<DeliveryStaff> {
         return array.stream().filter(list -> list.get(5).equals("true")).map(DeliveryStaff::new).toList();
     }
 
-    public DeliveryStaff getId(long id) {
+    public DeliveryStaff getById(long id) {
         List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, String.valueOf(id));
         if (userData.get(5).equals("true")) {
             return new DeliveryStaff(userData);
