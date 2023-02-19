@@ -5,7 +5,6 @@ import com.mycompany.oodms.Dao.ObjectDao;
 import com.mycompany.oodms.customer.Customer;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class CustomerOrderDao implements ObjectDao<CustomerOrder> {
@@ -55,9 +54,8 @@ public class CustomerOrderDao implements ObjectDao<CustomerOrder> {
         return false;
     }
 
-    public List<CustomerOrder> getByIdSortByLatestFive(Customer customer) {
+    public List<CustomerOrder> getById(Customer customer) {
         long id = customer.getId();
-        List<CustomerOrder> customerOrderList = FileService.getMultipleSpecificData(FILENAME, 1, String.valueOf(id)).stream().map(CustomerOrder::new).toList();
-        return customerOrderList.stream().sorted(Comparator.comparing(CustomerOrder::getOrderDateTime).reversed()).limit(5).toList();
+        return FileService.getMultipleSpecificData(FILENAME, 1, String.valueOf(id)).stream().map(CustomerOrder::new).toList();
     }
 }
