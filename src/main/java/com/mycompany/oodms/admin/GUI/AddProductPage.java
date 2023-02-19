@@ -88,11 +88,6 @@ public class AddProductPage extends javax.swing.JPanel {
         ProDesTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         ProDesTxt.setToolTipText("");
         ProDesTxt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        ProDesTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ProDesTxtActionPerformed(evt);
-            }
-        });
         jPanel1.add(ProDesTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 340, 30));
 
         ProNameLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -134,21 +129,11 @@ public class AddProductPage extends javax.swing.JPanel {
         CatErrLab.setForeground(new java.awt.Color(255, 0, 51));
         CatErrLab.setText("Category already exist !");
         CatErrLab.setBorder(null);
-        CatErrLab.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CatErrLabActionPerformed(evt);
-            }
-        });
         jPanel1.add(CatErrLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 110, 140, -1));
 
         NameErrLab.setForeground(new java.awt.Color(255, 0, 51));
         NameErrLab.setText("Product name is invalid !");
         NameErrLab.setBorder(null);
-        NameErrLab.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NameErrLabActionPerformed(evt);
-            }
-        });
         jPanel1.add(NameErrLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, 340, -1));
 
         jPanel1.add(ProCatCom, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 80, 120, 30));
@@ -237,18 +222,6 @@ public class AddProductPage extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_AddProButActionPerformed
-
-    private void ProDesTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProDesTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ProDesTxtActionPerformed
-
-    private void CatErrLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CatErrLabActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_CatErrLabActionPerformed
-
-    private void NameErrLabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NameErrLabActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_NameErrLabActionPerformed
 
     private void BackButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButActionPerformed
         OODMS.frame.refresh(new AdminPanelForm());

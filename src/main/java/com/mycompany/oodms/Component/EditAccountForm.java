@@ -99,6 +99,7 @@ public class EditAccountForm extends javax.swing.JPanel {
         add(PhoneNoLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 250, 150, 30));
 
         phoneNoField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
+        phoneNoField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         add(phoneNoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 250, 340, 30));
 
         usernameMsgLb.setText("Username must be at least 4 characters");
