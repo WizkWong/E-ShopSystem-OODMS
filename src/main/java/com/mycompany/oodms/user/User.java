@@ -93,6 +93,39 @@ public abstract class User {
         return errorMessage;
     }
 
+    // validate the input
+    public static String validate(String name, String email, String phoneNo) {
+        String errorMessage = "";
+
+        if (name.length() < 4) {
+            errorMessage += "Username character less than 4;";
+        }
+
+        if (!VALID_EMAIL_ADDRESS.matcher(email).find()) {
+            errorMessage += "Email is invalid;";
+        }
+
+        if (phoneNo.length() < 10) {
+            errorMessage += "Phone number is invalid;";
+        }
+
+        return errorMessage;
+    }
+
+    // validate the input
+    public static String validate(String password1, String password2) {
+        String errorMessage = "";
+
+        if (password1.length() < 8) {
+            errorMessage += "Password length less than 8;";
+
+        } else if (!password1.equals(password2)) {
+            errorMessage += "Password length is not same;";
+        }
+
+        return errorMessage;
+    }
+
     public static String checkUserExist(String name) {
         if (name.length() >= 4) {
             // get all user

@@ -176,6 +176,7 @@ public class ProductPage extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        productTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         productTable.setRowHeight(25);
         productTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         productTable.getTableHeader().setReorderingAllowed(false);
@@ -185,6 +186,12 @@ public class ProductPage extends javax.swing.JPanel {
             }
         });
         JScrollPane2.setViewportView(productTable);
+        if (productTable.getColumnModel().getColumnCount() > 0) {
+            productTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+            productTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+            productTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+            productTable.getColumnModel().getColumn(3).setPreferredWidth(30);
+        }
 
         add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 560, 660));
 

@@ -114,7 +114,7 @@ public class CustomerHomePage extends javax.swing.JPanel {
     }//GEN-LAST:event_cartBttActionPerformed
 
     private void profileBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileBttActionPerformed
-//        OODMS.frame.refresh(new CustomerProfilePage());
+        OODMS.frame.refresh(new CustomerProfilePage());
     }//GEN-LAST:event_profileBttActionPerformed
 
     private void logoutBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBttActionPerformed

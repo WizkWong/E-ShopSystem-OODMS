@@ -101,11 +101,6 @@ public class RegisterPage extends javax.swing.JPanel {
         usernameField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         usernameField.setToolTipText("");
         usernameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        usernameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameFieldActionPerformed(evt);
-            }
-        });
         formPn.add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 340, 30));
 
         pssLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -136,11 +131,7 @@ public class RegisterPage extends javax.swing.JPanel {
         formPn.add(PhoneNoLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 150, 30));
 
         phoneNoField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 255), 2, true));
-        phoneNoField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNoFieldActionPerformed(evt);
-            }
-        });
+        phoneNoField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         formPn.add(phoneNoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 340, 30));
 
         usernameMsgLb.setText("Username must be at least 4 characters");
@@ -221,14 +212,6 @@ public class RegisterPage extends javax.swing.JPanel {
             phoneNoField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
         }
     }//GEN-LAST:event_registerBttActionPerformed
-
-    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_usernameFieldActionPerformed
-
-    private void phoneNoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNoFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNoFieldActionPerformed
 
     private void resetRegisterFormUI() {
         usernameMsgLb.setText("Username must be at least 4 characters");
