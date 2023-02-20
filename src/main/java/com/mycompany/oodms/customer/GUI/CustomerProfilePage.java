@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.util.Optional;
 
 /**
  *
@@ -24,9 +25,11 @@ import java.awt.*;
  */
 public class CustomerProfilePage extends javax.swing.JPanel {
 
+    private final List<CustomerOrder> customerOrderList;
     private final CustomerDao customerDao;
     private final CustomerOrderDao customerOrderDao;
     private final DefaultTableModel orderHistoryTableModel;
+    private CustomerOrder orderSelected = null;
     /**
      * Creates new form CustomerProfilePage
      */
@@ -55,7 +58,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         productTableColumnModel.getColumn(4).setCellRenderer(centerRenderer);
 
         orderHistoryTableModel = (DefaultTableModel) orderHistoryTable.getModel();
-        List<CustomerOrder> customerOrderList = customerOrderDao.getById((Customer) OODMS.currentUser);
+        customerOrderList = customerOrderDao.getById((Customer) OODMS.currentUser);
         customerOrderList.forEach(order -> orderHistoryTableModel.addRow(new Object[] {
                 order.getId(),
                 order.getOrderDetail().size(),
@@ -301,7 +304,10 @@ public class CustomerProfilePage extends javax.swing.JPanel {
     }//GEN-LAST:event_changePssBttActionPerformed
 
     private void viewPHBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewPHBttActionPerformed
-        OODMS.frame.refresh(new CustomerPurchaseHistory());
+        if (orderSelected == null) {
+            return;
+        }
+        OODMS.frame.refresh(new CustomerPurchaseHistory(orderSelected));
     }//GEN-LAST:event_viewPHBttActionPerformed
 
     private void orderHistoryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderHistoryTableMousePressed
@@ -310,7 +316,13 @@ public class CustomerProfilePage extends javax.swing.JPanel {
             return;
         }
         long id = (long) orderHistoryTableModel.getValueAt(select, 0);
-        System.out.println(id);
+        Optional<CustomerOrder> customerOrderExist = customerOrderList.stream().filter(order -> order.getId() == id).findFirst();
+        if (customerOrderExist.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please refresh the page by back and re-enter this page", "Some Error Occured", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        orderSelected = customerOrderExist.get();
+
     }//GEN-LAST:event_orderHistoryTableMousePressed
 
     private void editProfileForm() {
