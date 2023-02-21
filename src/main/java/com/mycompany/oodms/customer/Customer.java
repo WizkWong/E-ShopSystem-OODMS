@@ -129,7 +129,7 @@ public class Customer extends User {
         if (id == null || id == -1) {
             return "System Error";
         }
-        String address = unitNo + ", " + street + ", " + city + " " + postalCode + ", " + state;
+        String address = unitNo + "," + street + "," + city + " " + postalCode + "," + state;
         CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this, address);
         // save the order including the order payment, delivery order and order detail
         if (!customerOrderDao.fileAddNewRow(customerOrder)) {

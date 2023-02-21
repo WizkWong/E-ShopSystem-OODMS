@@ -4,6 +4,18 @@
  */
 package com.mycompany.oodms.customer.GUI;
 
+import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.order.CustomerOrder;
+import com.mycompany.oodms.order.CustomerOrderPayment;
+import com.mycompany.oodms.order.DeliveryOrder;
+import com.mycompany.oodms.order.OrderDetail;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.util.List;
+
 /**
  *
  * @author Wong Chi Jian
@@ -13,8 +25,28 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
     /**
      * Creates new form CustomerPurchaseSummary
      */
-    public CustomerPurchaseHistory() {
+    public CustomerPurchaseHistory(CustomerOrder customerOrder) {
         initComponents();
+        CustomerOrderPayment customerOrderPayment = customerOrder.getCustomerOrderPayment();
+        DeliveryOrder deliveryOrder = customerOrder.getDeliveryOrder();
+        List<OrderDetail> orderDetailList = customerOrder.getOrderDetail();
+
+        paymentTypeULb.setText(customerOrderPayment.getTypeOfPayment());
+        totalPriceULb.setText("RM " + customerOrderPayment.getTotalPrice());
+        totalProductULb.setText(String.valueOf(orderDetailList.size()));
+        orderStatusULb.setText(deliveryOrder.getDeliveryStatus().getUserStatus());
+        orderDateTimeULb.setText(customerOrder.getStringOrderDateTime());
+        addressTextArea.setText(deliveryOrder.getAddress().replace(",", ",\n"));
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        TableColumnModel productTableColumnModel = productTable.getColumnModel();
+        productTableColumnModel.getColumn(1).setCellRenderer(centerRenderer);
+        productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
+
+        DefaultTableModel productTableModel = (DefaultTableModel) productTable.getModel();
+        orderDetailList.forEach(orderD -> productTableModel.addRow(new Object[] {orderD.getItem().getName(), orderD.getOrderPrice(), orderD.getQuantity()}));
     }
 
     /**
@@ -26,19 +58,176 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        titleLb = new javax.swing.JLabel();
+        poLb = new javax.swing.JLabel();
+        JScrollPane2 = new javax.swing.JScrollPane();
+        productTable = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        paymentTypeLb = new javax.swing.JLabel();
+        totalProductLb = new javax.swing.JLabel();
+        totalPriceLb = new javax.swing.JLabel();
+        orderStatusLb = new javax.swing.JLabel();
+        orderDateTimeLb = new javax.swing.JLabel();
+        paymentTypeULb = new javax.swing.JLabel();
+        totalProductULb = new javax.swing.JLabel();
+        totalPriceULb = new javax.swing.JLabel();
+        orderStatusULb = new javax.swing.JLabel();
+        orderDateTimeULb = new javax.swing.JLabel();
+        addressLb = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        addressTextArea = new javax.swing.JTextArea();
+        backBtt = new javax.swing.JButton();
+
+        setMinimumSize(new java.awt.Dimension(700, 600));
+        setPreferredSize(new java.awt.Dimension(700, 600));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        titleLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+        titleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLb.setText("Purchase History");
+        add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
+
+        poLb.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        poLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        poLb.setText("Product Order");
+        add(poLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 270, -1, -1));
+
+        productTable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        productTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Price", "Quantity"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        productTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        productTable.setRowHeight(25);
+        productTable.setRowSelectionAllowed(false);
+        productTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        productTable.getTableHeader().setReorderingAllowed(false);
+        JScrollPane2.setViewportView(productTable);
+        if (productTable.getColumnModel().getColumnCount() > 0) {
+            productTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+            productTable.getColumnModel().getColumn(1).setPreferredWidth(20);
+            productTable.getColumnModel().getColumn(2).setPreferredWidth(20);
+        }
+
+        add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 640, 260));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        paymentTypeLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        paymentTypeLb.setText("Payment Type:");
+        jPanel1.add(paymentTypeLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 5, 150, 30));
+
+        totalProductLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalProductLb.setText("Total Product:");
+        jPanel1.add(totalProductLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 85, 150, 30));
+
+        totalPriceLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalPriceLb.setText("Total Price");
+        jPanel1.add(totalPriceLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, 150, 30));
+
+        orderStatusLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        orderStatusLb.setText("Order Status:");
+        jPanel1.add(orderStatusLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 125, 150, 30));
+
+        orderDateTimeLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        orderDateTimeLb.setText("Order Date Time:");
+        jPanel1.add(orderDateTimeLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 165, 150, 30));
+
+        paymentTypeULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        paymentTypeULb.setText("Your Payment");
+        jPanel1.add(paymentTypeULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 5, 180, 30));
+
+        totalProductULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalProductULb.setText("0");
+        jPanel1.add(totalProductULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 85, 180, 30));
+
+        totalPriceULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalPriceULb.setText("RM 00.00");
+        jPanel1.add(totalPriceULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 45, 180, 30));
+
+        orderStatusULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        orderStatusULb.setText("Pending");
+        jPanel1.add(orderStatusULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 125, 180, 30));
+
+        orderDateTimeULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        orderDateTimeULb.setText("00-00-0000");
+        jPanel1.add(orderDateTimeULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 165, 180, 30));
+
+        addressLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        addressLb.setText("Address:");
+        jPanel1.add(addressLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 5, 120, 30));
+
+        addressTextArea.setColumns(20);
+        addressTextArea.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        addressTextArea.setRows(5);
+        addressTextArea.setFocusable(false);
+        addressTextArea.setMargin(new java.awt.Insets(2, 8, 2, 8));
+        addressTextArea.setVerifyInputWhenFocusTarget(false);
+        jScrollPane2.setViewportView(addressTextArea);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 40, 260, 150));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 640, 200));
+
+        backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        backBtt.setText("Back");
+        backBtt.setFocusable(false);
+        backBtt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backBtt.setInheritsPopupMenu(true);
+        backBtt.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        backBtt.setPreferredSize(new java.awt.Dimension(200, 50));
+        backBtt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backBttActionPerformed(evt);
+            }
+        });
+        add(backBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 40));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
+        OODMS.frame.refresh(new CustomerProfilePage());
+    }//GEN-LAST:event_backBttActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane JScrollPane2;
+    private javax.swing.JLabel addressLb;
+    private javax.swing.JTextArea addressTextArea;
+    private javax.swing.JButton backBtt;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel orderDateTimeLb;
+    private javax.swing.JLabel orderDateTimeULb;
+    private javax.swing.JLabel orderStatusLb;
+    private javax.swing.JLabel orderStatusULb;
+    private javax.swing.JLabel paymentTypeLb;
+    private javax.swing.JLabel paymentTypeULb;
+    private javax.swing.JLabel poLb;
+    private javax.swing.JTable productTable;
+    private javax.swing.JLabel titleLb;
+    private javax.swing.JLabel totalPriceLb;
+    private javax.swing.JLabel totalPriceULb;
+    private javax.swing.JLabel totalProductLb;
+    private javax.swing.JLabel totalProductULb;
     // End of variables declaration//GEN-END:variables
 }

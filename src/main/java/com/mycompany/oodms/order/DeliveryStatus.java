@@ -17,6 +17,7 @@ public enum DeliveryStatus {
         return status;
     }
 
+    // for customer to view the status
     public String getUserStatus() {
         return switch (this) {
             case UNASSIGNED, PENDING -> "Ordered";
@@ -26,6 +27,7 @@ public enum DeliveryStatus {
         };
     }
 
+    // get the status
     public static DeliveryStatus getStatus(String status) {
         return switch (status) {
             case "Unassigned" -> UNASSIGNED;
