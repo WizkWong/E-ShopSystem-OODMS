@@ -57,11 +57,11 @@ public class CustomerDao implements ObjectDao<Customer> {
     public Customer getById(long id) {
         String idString = String.valueOf(id);
         List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, idString);
-        List<String> customerData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, idString);
-        customerData = User.joinWithUser(customerData, userData);
-        if (customerData == null) {
+
+        if (userData.isEmpty()) {
             return null;
         }
-        return new Customer(customerData);
+        
+        return new Customer(userData);
     }
 }
