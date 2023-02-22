@@ -199,7 +199,12 @@ public class AddProductPage extends javax.swing.JPanel {
             return;
         }
         
-        if (errorMessage.contains("ProName_Err")) {
+        if (errorMessage.contains("ProName_Err1")) {
+            NameErrLab.setText("Product Name already exist !");
+            NameErrLab.setVisible(true);
+            ProNameTxt.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+        } else if (errorMessage.contains("ProCat_Err2")) {
+            NameErrLab.setText("Invalid Product Name !");
             NameErrLab.setVisible(true);
             ProNameTxt.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
         } else {
