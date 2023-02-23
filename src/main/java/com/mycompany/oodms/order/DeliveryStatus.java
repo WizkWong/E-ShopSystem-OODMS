@@ -4,8 +4,7 @@ public enum DeliveryStatus {
     UNASSIGNED("Unassigned"),
     PENDING("Pending"),
     DELIVERING("Delivering"),
-    DELIVERED("Delivered"),
-    CANCELLED("Cancelled");
+    DELIVERED("Delivered");
 
     private final String status;
 
@@ -23,7 +22,6 @@ public enum DeliveryStatus {
             case UNASSIGNED, PENDING -> "Ordered";
             case DELIVERING -> "Delivering";
             case DELIVERED -> "Delivered";
-            case CANCELLED -> "Cancelled";
         };
     }
 
@@ -34,7 +32,6 @@ public enum DeliveryStatus {
             case "Pending" -> PENDING;
             case "Delivering" -> DELIVERING;
             case "Delivered" -> DELIVERED;
-            case "Cancelled" -> CANCELLED;
             default -> null;
         };
     }
