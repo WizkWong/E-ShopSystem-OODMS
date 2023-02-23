@@ -24,9 +24,10 @@ public class AdminPanelForm extends javax.swing.JPanel {
         TitleLab = new javax.swing.JLabel();
         ManageAccBut = new javax.swing.JButton();
         AddDataBut = new javax.swing.JButton();
-        ViewRecBut = new javax.swing.JButton();
+        ManageProBut = new javax.swing.JButton();
         LogoutBut = new javax.swing.JButton();
         ExitBut = new javax.swing.JButton();
+        ManageCatBut = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(600, 300));
         setRequestFocusEnabled(false);
@@ -44,7 +45,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
         });
 
         AddDataBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
-        AddDataBut.setText("Add Data");
+        AddDataBut.setText("Add Product");
         AddDataBut.setFocusable(false);
         AddDataBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,12 +53,12 @@ public class AdminPanelForm extends javax.swing.JPanel {
             }
         });
 
-        ViewRecBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
-        ViewRecBut.setText("View Records");
-        ViewRecBut.setFocusable(false);
-        ViewRecBut.addActionListener(new java.awt.event.ActionListener() {
+        ManageProBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        ManageProBut.setText("Product Management");
+        ManageProBut.setFocusable(false);
+        ManageProBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ViewRecButActionPerformed(evt);
+                ManageProButActionPerformed(evt);
             }
         });
 
@@ -79,50 +80,57 @@ public class AdminPanelForm extends javax.swing.JPanel {
             }
         });
 
+        ManageCatBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        ManageCatBut.setText("Category Management");
+        ManageCatBut.setFocusable(false);
+        ManageCatBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ManageCatButActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(88, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(ManageAccBut)
-                        .addGap(79, 79, 79)
-                        .addComponent(AddDataBut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(TitleLab)
-                        .addGap(225, 225, 225))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(ViewRecBut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(222, 222, 222))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(228, 228, 228)
+                        .addComponent(TitleLab))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(464, 464, 464)
                         .addComponent(LogoutBut)
                         .addGap(6, 6, 6)
-                        .addComponent(ExitBut)
-                        .addContainerGap())))
+                        .addComponent(ExitBut))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(76, 76, 76)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ManageAccBut, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                            .addComponent(ManageProBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ManageCatBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(AddDataBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addComponent(TitleLab)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ManageAccBut)
-                    .addComponent(AddDataBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(AddDataBut)
+                    .addComponent(ManageAccBut))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(ViewRecBut, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(68, 68, 68))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LogoutBut)
-                            .addComponent(ExitBut))
-                        .addContainerGap())))
+                    .addComponent(ManageProBut)
+                    .addComponent(ManageCatBut))
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LogoutBut)
+                    .addComponent(ExitBut)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -134,9 +142,9 @@ public class AdminPanelForm extends javax.swing.JPanel {
         OODMS.frame.refresh(new AddProductPage());
     }//GEN-LAST:event_AddDataButActionPerformed
 
-    private void ViewRecButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewRecButActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ViewRecButActionPerformed
+    private void ManageProButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageProButActionPerformed
+        OODMS.frame.refresh(new AdminProductPage());
+    }//GEN-LAST:event_ManageProButActionPerformed
 
     private void LogoutButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButActionPerformed
         OODMS.currentUser = null;
@@ -147,13 +155,18 @@ public class AdminPanelForm extends javax.swing.JPanel {
         OODMS.frame.dispose();
     }//GEN-LAST:event_ExitButActionPerformed
 
+    private void ManageCatButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageCatButActionPerformed
+        OODMS.frame.refresh(new CategoryManagementPage());
+    }//GEN-LAST:event_ManageCatButActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddDataBut;
     private javax.swing.JButton ExitBut;
     private javax.swing.JButton LogoutBut;
     private javax.swing.JButton ManageAccBut;
+    private javax.swing.JButton ManageCatBut;
+    private javax.swing.JButton ManageProBut;
     private javax.swing.JLabel TitleLab;
-    private javax.swing.JButton ViewRecBut;
     // End of variables declaration//GEN-END:variables
 }

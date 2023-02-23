@@ -23,56 +23,53 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace pref="88" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="ManageAccBut" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
-                      <Component id="AddDataBut" min="-2" pref="150" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="228" pref="228" max="-2" attributes="0"/>
                       <Component id="TitleLab" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="225" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="ViewRecBut" min="-2" pref="150" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="222" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="464" pref="464" max="-2" attributes="0"/>
                       <Component id="LogoutBut" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                       <Component id="ExitBut" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="ManageAccBut" pref="207" max="32767" attributes="0"/>
+                          <Component id="ManageProBut" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="ManageCatBut" max="32767" attributes="0"/>
+                          <Component id="AddDataBut" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+              <EmptySpace min="60" pref="60" max="-2" attributes="0"/>
               <Component id="TitleLab" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="41" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="AddDataBut" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ManageAccBut" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="AddDataBut" alignment="3" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="ViewRecBut" min="-2" pref="31" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="LogoutBut" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ExitBut" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="ManageProBut" min="-2" max="-2" attributes="0"/>
+                  <Component id="ManageCatBut" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="40" pref="40" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="LogoutBut" min="-2" max="-2" attributes="0"/>
+                  <Component id="ExitBut" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -104,23 +101,23 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Calibri" size="18" style="2"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Add Data"/>
+        <Property name="text" type="java.lang.String" value="Add Product"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddDataButActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="ViewRecBut">
+    <Component class="javax.swing.JButton" name="ManageProBut">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Calibri" size="18" style="2"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="View Records"/>
+        <Property name="text" type="java.lang.String" value="Product Management"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ViewRecButActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ManageProButActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="LogoutBut">
@@ -145,6 +142,18 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ExitButActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="ManageCatBut">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri" size="18" style="2"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Category Management"/>
+        <Property name="focusable" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ManageCatButActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

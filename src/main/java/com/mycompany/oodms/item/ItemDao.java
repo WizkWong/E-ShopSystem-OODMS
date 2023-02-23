@@ -64,7 +64,7 @@ public class ItemDao implements ObjectDao<Item> {
     }
 
     public boolean deleteCategory(long categoryId) {
-        return FileService.removeById(CATEGORY_FILENAME, List.of(List.of(String.valueOf(categoryId))));
+        return FileService.deleteById(CATEGORY_FILENAME, List.of(List.of(String.valueOf(categoryId))));
     }
 
     // get all category id and name
@@ -87,7 +87,7 @@ public class ItemDao implements ObjectDao<Item> {
         return list.get(1);
     }
 
-    // get category id by category name
+    // Get category id by category name
     public String getCategoryIdByName(String name) {
         List<List<String>> categoryList = FileService.readFile(CATEGORY_FILENAME);
         for (List<String> category : categoryList) {
@@ -96,5 +96,9 @@ public class ItemDao implements ObjectDao<Item> {
             }
         }
         return name;
+    }
+    
+    public boolean remove(Item item) {
+        return FileService.removeById(ITEM_FILENAME, List.of(toList(item)));
     }
 }

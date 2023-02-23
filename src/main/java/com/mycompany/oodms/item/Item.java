@@ -117,12 +117,21 @@ public class Item {
 
         // If product name or category contains character other than alphabet and space, there will be an error message
         if (Product_Validation.matcher(ProName).find()) {
-            errorMessage += "ProName_Err";
+            errorMessage += "ProName_Err2";
         }
         if (Product_Validation.matcher(ProCat).find()) {
             errorMessage += "ProCat_Err2";
         }
 
+        // Getting all the product and append it into a list
+        List<Item> allProduct = OODMS.getItemDao().getAll();
+
+        // If product name exist, there will be an error message
+        boolean productExist = allProduct.stream().anyMatch(item -> item.getName().equalsIgnoreCase(ProName));
+        if (productExist) {
+            errorMessage += "ProName_Err1";
+        }
+        
         // Getting all the category and append it into a list
         List<List<String>> allCategory = OODMS.getItemDao().getAllCategoryIdAndName();
 

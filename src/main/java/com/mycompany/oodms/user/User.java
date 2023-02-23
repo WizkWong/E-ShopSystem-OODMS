@@ -40,31 +40,18 @@ public abstract class User {
             return null;
         }
         List<String> user = userExist.get();
-        List<String> userSubClassData;
+
         // check is staff
         if (user.get(5).equals("true")) {
-            userSubClassData = FileService.getOneSpecificData(DeliveryStaffDao.FILENAME, FileService.ID_COLUMN, user.get(0));
-            List<String> staffData = joinWithUser(userSubClassData, user);
-            if (staffData != null) {
-                return new DeliveryStaff(staffData);
-            }
+            return new DeliveryStaff(user);
         }
+        
         // check is admin
         else if ((user.get(6).equals("true"))) {
-            userSubClassData = FileService.getOneSpecificData(AdminDao.FILENAME, FileService.ID_COLUMN, user.get(0));
-            List<String> adminData = joinWithUser(userSubClassData, user);
-            if (adminData != null) {
-                return new Admin(adminData);
-            }
+            return new Admin(user);        
         }
-        else {
-            userSubClassData = FileService.getOneSpecificData(Customer.FILENAME, FileService.ID_COLUMN, user.get(0));
-            List<String> customerData = joinWithUser(userSubClassData, user);
-            if (customerData != null) {
-                return new Customer(customerData);
-            }
-        }
-        return null;
+        
+        return new Customer(user);
     }
 
     // validate the input
@@ -139,17 +126,6 @@ public abstract class User {
             }
         }
         return "";
-    }
-
-    // join List if user id match between two list
-    public static List<String> joinWithUser(List<String> subclassData, List<String> userData) {
-        if (subclassData.get(0).equals(userData.get(0))) {
-            subclassData.remove(0);
-            userData.addAll(subclassData);
-            return userData;
-        }
-        System.out.println("Id does not match, fail to join list");
-        return null;
     }
 
     public Long getId() {

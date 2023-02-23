@@ -21,7 +21,7 @@ public interface FileService {
     List<String> ALLOWED_REMOVE = List.of(ItemDao.ITEM_FILENAME, UserDao.FILENAME);
 
     // allow to delete the data
-    List<String> ALLOWED_DELETE = List.of(CartItemDao.FILENAME);
+    List<String> ALLOWED_DELETE = List.of(CartItemDao.FILENAME, ItemDao.CATEGORY_FILENAME);
 
     // create the txt file. If file directory does not exist, create new directory
     static void createFile(String filename) {
@@ -415,7 +415,37 @@ public interface FileService {
         }
         return modifyFile(filename, content, false);
     }
-
+    
+    // delete the data completely, only allow some file
+    static boolean deleteById(String filename, List<List<String>> arrayData) {
+        // check the file have right to execute this method or not
+        if (!ALLOWED_DELETE.contains(filename)) {
+            System.out.printf("%s file does not allow to delete the data!\n", filename);
+            return false;
+        }
+        // get all id and convert into set array to remove duplication
+        Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(0))).collect(Collectors.toSet());
+        List<List<String>> array = readFile(filename);
+        String content = "";
+        boolean remain;
+        int i = 0;
+        for (List<String> row : array) {
+            remain = true;
+            for (List<String> listId : setId) {
+                if (row.get(0).equals(listId.get(0))) {
+                    remain = false;
+                    break;
+                }
+            }
+            // if id match then will not add into content
+            if (remain) {
+                content += String.join(";", array.get(i)) + "\n";
+            }
+            i++;
+        }
+        return modifyFile(filename, content, false);
+    }
+    
     // delete the data completely, only allow some file
     static boolean deleteByTwoId(String filename, List<List<String>> arrayData) {
         // check the file have right to execute this method or not
