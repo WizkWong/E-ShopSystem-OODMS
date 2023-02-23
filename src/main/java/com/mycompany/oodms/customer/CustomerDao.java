@@ -1,67 +1,26 @@
 package com.mycompany.oodms.customer;
 
 import com.mycompany.oodms.Dao.FileService;
-import com.mycompany.oodms.OODMS;
-import com.mycompany.oodms.Dao.ObjectDao;
-import com.mycompany.oodms.user.User;
 import com.mycompany.oodms.user.UserDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerDao implements ObjectDao<Customer> {
-    public static final String FILENAME = "customer";
-
-    private final UserDao userDao;
-
-    public CustomerDao() {
-        this.userDao = OODMS.getUserDao();
-    }
+public class CustomerDao extends UserDao<Customer> {
 
     @Override
-    public List<String> toList(Customer customer) {
-        return new ArrayList<>(List.of(
-                String.valueOf(customer.getId()),
-                customer.getUsername(),
-                customer.getPassword(),
-                customer.getEmail(),
-                customer.getPhoneNo(),
-                String.valueOf(customer.getStaff()),
-                String.valueOf(customer.getAdmin())
-        ));
-    }
-
-    @Override
-    public boolean fileAddNewRow(Customer customer) {
-        if (userDao.fileAddNewRow(customer)) {
-            List<String> customerData = List.of(
-                    String.valueOf(customer.getId())
-            );
-            return FileService.insertData(FILENAME, customerData);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean fileUpdate(Customer customer) {
-        if (userDao.fileUpdate(customer)) {
-            List<String> customerData = List.of(
-                    String.valueOf(customer.getId())
-            );
-            return FileService.updateSingleRow(FILENAME, customerData, FileService.ID_COLUMN);
-        }
-        return false;
+    public List<Customer> getAll() {
+        List<List<String>> array = FileService.readFile(FILENAME);
+        return array.stream().filter(list -> list.get(5).equals("false") && list.get(6).equals("false")).map(Customer::new).toList();
     }
 
     // get the customer data by customer id
+    @Override
     public Customer getById(long id) {
         String idString = String.valueOf(id);
-        List<String> userData = FileService.getOneSpecificData(UserDao.FILENAME, FileService.ID_COLUMN, idString);
-
+        List<String> userData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, idString);
         if (userData.isEmpty()) {
             return null;
         }
-        
         return new Customer(userData);
     }
 }

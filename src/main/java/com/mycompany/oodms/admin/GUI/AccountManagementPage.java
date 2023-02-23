@@ -22,16 +22,14 @@ public class AccountManagementPage extends javax.swing.JPanel {
     private final DeliveryStaffDao deliveryStaffDao;
     private final DefaultTableModel accountTableModel;
     
-    private boolean adminSection;
-    private boolean deliveryStaffSection;
+    private static boolean adminSection = true;
+    private static boolean deliveryStaffSection = false;
     /**
      * Creates new form AccountManagementPage
      */
     public AccountManagementPage() {
         adminDao = OODMS.getAdminDao();
         deliveryStaffDao = OODMS.getDeliveryStaffDao();
-        adminSection = true;
-        deliveryStaffSection = false;
         initComponents();
 
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
@@ -39,7 +37,14 @@ public class AccountManagementPage extends javax.swing.JPanel {
         accountTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
 
         accountTableModel = (DefaultTableModel) accountTable.getModel();
-        loadTable(adminDao.getAll().stream().map(admin -> (User) admin).toList());
+
+        if (deliveryStaffSection) {
+            adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+            loadTable(deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList());
+        } else {
+            loadTable(adminDao.getAll().stream().map(admin -> (User) admin).toList());
+        }
     }
 
     /**
@@ -220,7 +225,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         long id = (long) accountTableModel.getValueAt(select, 0);
         User user = null;
         if (adminSection) {
-            user = adminDao.getId(id);
+            user = adminDao.getById(id);
         } else if (deliveryStaffSection) {
             user = deliveryStaffDao.getById(id);
         }
@@ -234,6 +239,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
     private void editBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBttActionPerformed
         User user = checkUserExist();
         if (user == null) {
+            JOptionPane.showMessageDialog(null, "User does not exist, please refresh the page", "User does not Exist", JOptionPane.ERROR_MESSAGE);
             return;
         }
         EditAccountForm form = new EditAccountForm(user);
@@ -255,6 +261,11 @@ public class AccountManagementPage extends javax.swing.JPanel {
     private void removeBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBttActionPerformed
         User user = checkUserExist();
         if (user == null) {
+            JOptionPane.showMessageDialog(null, "User does not exist, please refresh the page", "User does not Exist", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete User: " + user.getUsername(), "Warning", JOptionPane.OK_CANCEL_OPTION);
+        if (option != JOptionPane.OK_OPTION) {
             return;
         }
         boolean removed = false;

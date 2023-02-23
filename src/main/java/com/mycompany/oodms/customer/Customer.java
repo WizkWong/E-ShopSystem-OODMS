@@ -12,8 +12,6 @@ import com.mycompany.oodms.user.UserDao;
 import java.util.*;
 
 public class Customer extends User {
-    public static final String FILENAME = "customer";
-
     private final List<CartItem> cart;
 
     private final CartItemDao cartItemDao;

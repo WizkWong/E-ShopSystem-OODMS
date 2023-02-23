@@ -3,7 +3,6 @@ package com.mycompany.oodms;
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.admin.AdminDao;
 import com.mycompany.oodms.customer.CartItemDao;
-import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.customer.CustomerDao;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
 import com.mycompany.oodms.item.ItemDao;
@@ -19,7 +18,6 @@ public class OODMS {
     public static MainFrame frame;
     public static User currentUser;
 
-    private static final UserDao userDao = new UserDao();
     private static final CustomerDao customerDao = new CustomerDao();
     private static final DeliveryStaffDao deliveryStaffDao = new DeliveryStaffDao();
     private static final AdminDao adminDao = new AdminDao();
@@ -38,9 +36,6 @@ public class OODMS {
 
     public void initialize() {
         FileService.createFile(UserDao.FILENAME);
-        FileService.createFile(Customer.FILENAME);
-        FileService.createFile(DeliveryStaffDao.FILENAME);
-        FileService.createFile(AdminDao.FILENAME);
         FileService.createFile(ItemDao.ITEM_FILENAME);
         FileService.createFile(ItemDao.CATEGORY_FILENAME);
         FileService.createFile(CartItemDao.FILENAME);
@@ -52,10 +47,6 @@ public class OODMS {
 
     public static void showErrorMessage() {
         JOptionPane.showMessageDialog(null, "The system had met an error, please contact the technical support", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public static UserDao getUserDao() {
-        return userDao;
     }
 
     public static CustomerDao getCustomerDao() {
