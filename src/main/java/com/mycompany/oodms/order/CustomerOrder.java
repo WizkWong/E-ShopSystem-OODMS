@@ -18,12 +18,12 @@ public class CustomerOrder {
     private CustomerOrderPayment customerOrderPayment;
     private DeliveryOrder deliveryOrder;
 
-    public CustomerOrder(Long id, String typeOfPayment, Customer customer, String address) {
+    public CustomerOrder(Long id, String typeOfPayment, String cardNumber, Customer customer, String address) {
         this.id = id;
         this.customer = customer;
         this.orderDateTime = LocalDateTime.now();
         this.orderDetail = customer.getCart().stream().map(CartItem::convertToOrderDetail).toList();
-        this.customerOrderPayment = new CustomerOrderPayment(this, typeOfPayment, OrderDetail.calculateTotalPrice(this.orderDetail));
+        this.customerOrderPayment = new CustomerOrderPayment(this, typeOfPayment, cardNumber, OrderDetail.calculateTotalPrice(this.orderDetail));
         this.deliveryOrder = new DeliveryOrder(this, address);
     }
 
@@ -46,6 +46,28 @@ public class CustomerOrder {
                 OODMS.getCustomerDao().getById(Long.parseLong(customerOrderData.get(1))),
                 customerOrderData.get(2)
         );
+    }
+
+    public static String validate(String unitNo, String street, String city, String postalCode, String state) {
+        String errorMsg = "";
+
+        if (unitNo.isEmpty()) {
+            errorMsg += "Unit No is empty;";
+        }
+        if (street.isEmpty()) {
+            errorMsg += "Street is empty;";
+        }
+        if (city.isEmpty()) {
+            errorMsg += "City is empty;";
+        }
+        if (postalCode.isEmpty()) {
+            errorMsg += "Postal Code is empty;";
+        }
+        if (state.isEmpty()) {
+            errorMsg += "State is empty;";
+        }
+
+        return errorMsg;
     }
 
     public Long getId() {

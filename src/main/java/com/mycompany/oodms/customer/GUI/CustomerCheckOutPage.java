@@ -4,6 +4,7 @@ import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.customer.CartItem;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.item.Item;
+import com.mycompany.oodms.order.CustomerOrder;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -47,6 +48,22 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
             productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), cartItem.getQuantity()});
         });
         totalPriceLb.setText(String.valueOf(CartItem.calculateTotalPrice(cartItemList)));
+    }
+
+    public CustomerCheckOutPage(String address, String typeOfPayment) {
+        this();
+        String[] addressSplit = address.split(",");
+        unitNoField.setText(addressSplit[0]);
+        streetField.setText(addressSplit[1]);
+        cityField.setText(addressSplit[2].substring(0, addressSplit[2].lastIndexOf(" ")));
+        postalCodeField.setText(addressSplit[2].substring(addressSplit[2].lastIndexOf(" ") + 1));
+        stateField.setText(addressSplit[3]);
+
+        for (int i = 0; i < paymentCb.getItemCount(); i++) {
+            if (paymentCb.getItemAt(i).equals(typeOfPayment)) {
+                paymentCb.setSelectedIndex(i);
+            }
+        }
     }
 
     /**
@@ -247,13 +264,24 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
 
         Customer customer = (Customer) OODMS.currentUser;
         // validate, if no error message, create order
-        String errorMsg = customer.checkOut((String) paymentCb.getSelectedItem(), unitNoField.getText(), streetField.getText(), cityField.getText(), postalCodeField.getText(), stateField.getText());
+        String errorMsg = CustomerOrder.validate(unitNoField.getText(), streetField.getText(), cityField.getText(), postalCodeField.getText(), stateField.getText());
 
         // if success create order, clear all customer cart item and update the file
         if (errorMsg.isEmpty()) {
-            customer.clearCartItem();
-            checkOutBtt.setEnabled(false);
-            JOptionPane.showMessageDialog(null, "Your order has been created, please check your order history to tract your order", "Success", JOptionPane.INFORMATION_MESSAGE);
+            String address = unitNoField.getText() + "," + streetField.getText() + "," + cityField.getText() + " " + postalCodeField.getText() + "," + stateField.getText();
+            String typeOfPayment = (String) paymentCb.getSelectedItem();
+            if (typeOfPayment.equals("Debit Card") || typeOfPayment.equals("Credit Card")) {
+                OODMS.frame.refresh(new CustomerPaymentForm(address, typeOfPayment));
+                return;
+            }
+            CustomerOrder customerOrder = new CustomerOrder(null, typeOfPayment, "-", customer, address);
+            if (customer.checkOut(customerOrder)) {
+                customer.clearCartItem();
+                JOptionPane.showMessageDialog(null, "Your order has been created, please check your order history to tract your order", "Success", JOptionPane.INFORMATION_MESSAGE);
+                OODMS.frame.refresh(new CustomerHomePage());
+            } else {
+                OODMS.showErrorMessage();
+            }
             return;
         }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerOrderPaymentDao implements ObjectDao<CustomerOrderPayment> {
-    // columns order in file: CustomerOrder-ID, type-of-payment, total-price, payment-datetime
+    // columns order in file: CustomerOrder-ID, type-of-payment, card-number, total-price, payment-datetime
     public static final String FILENAME = "customer order payment";
 
     @Override
@@ -15,6 +15,7 @@ public class CustomerOrderPaymentDao implements ObjectDao<CustomerOrderPayment> 
         return new ArrayList<>(List.of(
                 String.valueOf(customerOrderPayment.getCustomerOrder().getId()),
                 customerOrderPayment.getTypeOfPayment(),
+                customerOrderPayment.getCardNumber(),
                 String.valueOf(customerOrderPayment.getTotalPrice()),
                 customerOrderPayment.getStringPaymentDateTime()
         ));
@@ -39,8 +40,9 @@ public class CustomerOrderPaymentDao implements ObjectDao<CustomerOrderPayment> 
         return new CustomerOrderPayment(
                 customerOrder,
                 customerOrderPaymentData.get(1),
-                Double.valueOf(customerOrderPaymentData.get(2)),
-                customerOrderPaymentData.get(3)
+                customerOrderPaymentData.get(2),
+                Double.valueOf(customerOrderPaymentData.get(3)),
+                customerOrderPaymentData.get(4)
         );
     }
 }
