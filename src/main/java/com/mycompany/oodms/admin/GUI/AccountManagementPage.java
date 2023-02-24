@@ -5,6 +5,7 @@ import com.mycompany.oodms.Component.EditAccountForm;
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.admin.Admin;
 import com.mycompany.oodms.admin.AdminDao;
+import com.mycompany.oodms.customer.CustomerDao;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
 import com.mycompany.oodms.user.User;
@@ -20,22 +21,25 @@ public class AccountManagementPage extends javax.swing.JPanel {
     
     private final AdminDao adminDao;
     private final DeliveryStaffDao deliveryStaffDao;
+    private final CustomerDao customerDao;
     private final DefaultTableModel accountTableModel;
     
     private static boolean adminSection = true;
     private static boolean deliveryStaffSection = false;
+    private static boolean customerSection = false;
     /**
      * Creates new form AccountManagementPage
      */
     public AccountManagementPage() {
         adminDao = OODMS.getAdminDao();
         deliveryStaffDao = OODMS.getDeliveryStaffDao();
+        customerDao = OODMS.getCustomerDao();
         initComponents();
 
-        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
-        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
-        // align the table column to left
-        accountTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        // align the table column to center
+        accountTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
         accountTableModel = (DefaultTableModel) accountTable.getModel();
 
@@ -43,7 +47,15 @@ public class AccountManagementPage extends javax.swing.JPanel {
         if (deliveryStaffSection) {
             adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
             dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+            customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            // get all delivery staff and load into GUI table
             loadTable(deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList());
+        } else if (customerSection) {
+            adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+            // get all customer and load into GUI table
+            loadTable(customerDao.getAll().stream().map(customer -> (User) customer).toList());
         } else {
             loadTable(adminDao.getAll().stream().map(admin -> (User) admin).toList());
         }
@@ -62,6 +74,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         accountTable = new javax.swing.JTable();
         dStaffBtt = new javax.swing.JButton();
         adminBtt = new javax.swing.JButton();
+        customerBtt = new javax.swing.JButton();
         backBtt = new javax.swing.JButton();
         editBtt = new javax.swing.JButton();
         removeBtt = new javax.swing.JButton();
@@ -128,6 +141,18 @@ public class AccountManagementPage extends javax.swing.JPanel {
             }
         });
         add(adminBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 140, -1));
+
+        customerBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        customerBtt.setText("Customer");
+        customerBtt.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        customerBtt.setFocusable(false);
+        customerBtt.setMargin(new java.awt.Insets(3, 14, 3, 14));
+        customerBtt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerBttActionPerformed(evt);
+            }
+        });
+        add(customerBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 100, 140, -1));
 
         backBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         backBtt.setText("Back");
@@ -205,10 +230,13 @@ public class AccountManagementPage extends javax.swing.JPanel {
         if (deliveryStaffSection) {
             return;
         }
+        createBtt.setEnabled(true);
         adminSection = false;
         deliveryStaffSection = true;
+        customerSection = false;
         adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         // get all delivery staff and load into GUI table
         loadTable(deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList());
     }//GEN-LAST:event_dStaffBttActionPerformed
@@ -218,10 +246,13 @@ public class AccountManagementPage extends javax.swing.JPanel {
         if (adminSection) {
             return;
         }
+        createBtt.setEnabled(true);
         adminSection = true;
         deliveryStaffSection = false;
+        customerSection = false;
         adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         // get all admin and load into GUI table
         loadTable(adminDao.getAll().stream().map(admin -> (User) admin).toList());
     }//GEN-LAST:event_adminBttActionPerformed
@@ -338,6 +369,10 @@ public class AccountManagementPage extends javax.swing.JPanel {
         } else if (deliveryStaffSection) {
             // get all the delivery staff
             userList = deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList();
+
+        } else if (customerSection) {
+            // get all the customer
+            userList = customerDao.getAll().stream().map(customer -> (User) customer).toList();
         }
         // if search field is empty, load all user into GUI table without filter it
         if (!searchTxt.equals("")) {
@@ -353,9 +388,29 @@ public class AccountManagementPage extends javax.swing.JPanel {
     }//GEN-LAST:event_searchEngine
 
     private void accountTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountTableMousePressed
+        if (customerSection) {
+            editBtt.setEnabled(false);
+            removeBtt.setEnabled(false);
+            return;
+        }
         editBtt.setEnabled(true);
         removeBtt.setEnabled(true);
     }//GEN-LAST:event_accountTableMousePressed
+
+    private void customerBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerBttActionPerformed
+        if (customerSection) {
+            return;
+        }
+        createBtt.setEnabled(false);
+        adminSection = false;
+        deliveryStaffSection = false;
+        customerSection = true;
+        adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        // get all admin and load into GUI table
+        loadTable(customerDao.getAll().stream().map(customer -> (User) customer).toList());
+    }//GEN-LAST:event_customerBttActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -363,6 +418,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
     private javax.swing.JButton adminBtt;
     private javax.swing.JButton backBtt;
     private javax.swing.JButton createBtt;
+    private javax.swing.JButton customerBtt;
     private javax.swing.JButton dStaffBtt;
     private javax.swing.JButton editBtt;
     private javax.swing.JScrollPane jScrollPane1;
