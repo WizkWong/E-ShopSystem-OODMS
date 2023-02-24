@@ -35,6 +35,7 @@ public class OODMS {
     }
 
     public void initialize() {
+        // create all the necessary files if not exist
         FileService.createFile(UserDao.FILENAME);
         FileService.createFile(ItemDao.ITEM_FILENAME);
         FileService.createFile(ItemDao.CATEGORY_FILENAME);

@@ -34,6 +34,7 @@ public class OrderDetailDao {
         return orderDetail;
     }
 
+    // save all order detail into file
     public boolean fileSaveAll(List<OrderDetail> orderDetail, long id) {
         List<List<String>> orderDetailStringList = orderDetail.stream().map(orderD -> toList(orderD, id)).toList();
         return FileService.insertMultipleData(OrderDetailDao.FILENAME, orderDetailStringList);

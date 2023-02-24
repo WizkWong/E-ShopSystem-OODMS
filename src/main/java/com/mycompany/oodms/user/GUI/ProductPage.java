@@ -35,6 +35,7 @@ public class ProductPage extends javax.swing.JPanel {
     public ProductPage() {
         initComponents();
         itemDao = OODMS.getItemDao();
+        // if user is not customer, hide add to cart button
         if (!(OODMS.currentUser instanceof Customer)) {
             addToCartBtt.setVisible(false);
         }
@@ -45,11 +46,14 @@ public class ProductPage extends javax.swing.JPanel {
 
         categoryTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         categoryTableModel = (DefaultTableModel) categoryTable.getModel();
-        // hide ID column
+        // hide Category ID column
         categoryTable.removeColumn(categoryTable.getColumnModel().getColumn(0));
 
+
         TableColumnModel productTableColumnModel = productTable.getColumnModel();
+        // align the table column to left
         productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
+        // align the table column to center
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
 
@@ -57,6 +61,7 @@ public class ProductPage extends javax.swing.JPanel {
         // hide Item ID column
         productTable.removeColumn(productTableColumnModel.getColumn(0));
 
+        // add all category into category table
         List<List<String>> categoryList = itemDao.getAllCategoryIdAndName();
         for (List<String> category : categoryList) {
             categoryTableModel.addRow(new Object[] {Long.valueOf(category.get(0)), category.get(1)});
@@ -240,6 +245,7 @@ public class ProductPage extends javax.swing.JPanel {
         add(searchFd, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 640, -1));
     }// </editor-fold>//GEN-END:initComponents
 
+    // if customer want to add item into their cart
     private void addToCartBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToCartBttActionPerformed
         int select = productTable.getSelectedRow();
         if (select < 0) {
@@ -247,6 +253,7 @@ public class ProductPage extends javax.swing.JPanel {
         }
         long id = (long) productTableModel.getValueAt(select, 0);
         Item item = itemDao.searchId(id);
+        // if item does not exist
         if (item == null) {
             JOptionPane.showMessageDialog(null, "Error", "Product does not exist", JOptionPane.ERROR_MESSAGE);
             return;
@@ -276,16 +283,20 @@ public class ProductPage extends javax.swing.JPanel {
         box.add(qtyLb);
         box.add(quantityFd);
 
+        // pop up dialog box
         int option = JOptionPane.showConfirmDialog(null, box, "Add to Cart", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        // get the customer input of item quantity
         int itemQuantity = quantityFd.getInteger();
         if (option == JOptionPane.OK_OPTION) {
+            // if input more than item current stock
             if (itemQuantity > item.getStock()) {
                 JOptionPane.showMessageDialog(null, "Your chosen quantity had exceed the stock, please choose a valid quantity", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             Customer customer = (Customer) OODMS.currentUser;
+            // add cart item
             if (customer.addCartItem(item, itemQuantity)) {
-                // the item already updated so no need minus by quantity again
+                // change the UI of table item quantity
                 productTableModel.setValueAt(item.getStock(), select, 3);
                 addToCartBtt.setEnabled(false);
                 addToCartBtt.setText("Item Added In Cart");
@@ -305,14 +316,17 @@ public class ProductPage extends javax.swing.JPanel {
         OODMS.frame.refresh(new HomePage());
     }//GEN-LAST:event_backBttActionPerformed
 
+    // select a category will display all the item in that category
     private void categoryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_categoryTableMousePressed
-        int select = categoryTable.getSelectedRow();
         addToCartBtt.setEnabled(false);
         noticeLb.setVisible(false);
         despLb.setText("Please select any product from product table");
         searchFd.setText("");
+
+        int select = categoryTable.getSelectedRow();
         long category = (long) categoryTableModel.getValueAt(select, 0);
         int itemRow = productTableModel.getRowCount();
+        // remove all item display in table
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
         }
@@ -322,17 +336,21 @@ public class ProductPage extends javax.swing.JPanel {
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()}));
     }//GEN-LAST:event_categoryTableMousePressed
 
+    // add or change description of item
     private void productTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMousePressed
         addToCartBtt.setText("Add To Cart");
         addToCartBtt.setEnabled(true);
+
         int select = productTable.getSelectedRow();
         long id = (long) productTableModel.getValueAt(select, 0);
         Item item = itemDao.searchId(id);
+        // if item is not found
         if (item == null) {
             despLb.setText("Error, selected product cannot be found");
             return;
         }
         despLb.setText(String.format(desphtml, item.getDescription()));
+        // if user is not a customer, stop execute this method
         if (!(OODMS.currentUser instanceof Customer customer)) {
             return;
         }
@@ -345,6 +363,7 @@ public class ProductPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_productTableMousePressed
 
+    // search item only
     private void searchEngine(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchEngine
         int select = categoryTable.getSelectedRow();
         if (select < 0) {
@@ -353,12 +372,15 @@ public class ProductPage extends javax.swing.JPanel {
         addToCartBtt.setEnabled(false);
         despLb.setText("Please select any product from product table");
         long category = (long) categoryTableModel.getValueAt(select, 0);
+
         int itemRow = productTableModel.getRowCount();
+        // remove all item display in table
         for (int i = itemRow - 1; i >= 0 ; i--) {
             productTableModel.removeRow(i);
         }
         String searchTxt = searchFd.getText().toLowerCase();
         List<Item> itemList = itemDao.getAll();
+        // if search bar is empty will not go through filter
         if (searchTxt.equals("")) {
             itemList = itemList.stream().filter(item -> item.getCategoryId().equals(category)).toList();
             itemList.forEach(
@@ -366,6 +388,7 @@ public class ProductPage extends javax.swing.JPanel {
             );
             return;
         }
+        // filter the item by search item name
         itemList = itemList.stream().filter(item -> item.getCategoryId().equals(category) && item.getName().toLowerCase().contains(searchTxt)).toList();
         itemList.forEach(
                 item -> productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), item.getStock()})

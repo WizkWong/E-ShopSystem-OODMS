@@ -7,13 +7,14 @@ import java.util.List;
 
 public class CustomerDao extends UserDao<Customer> {
 
+    // get all customer
     @Override
     public List<Customer> getAll() {
         List<List<String>> array = FileService.readFile(FILENAME);
         return array.stream().filter(list -> list.get(5).equals("false") && list.get(6).equals("false")).map(Customer::new).toList();
     }
 
-    // get the customer data by customer id
+    // get customer by customer id
     @Override
     public Customer getById(long id) {
         String idString = String.valueOf(id);

@@ -23,9 +23,11 @@ public class EditAccountForm extends javax.swing.JPanel {
         this.adminDao = OODMS.getAdminDao();
         this.deliveryStaffDao = OODMS.getDeliveryStaffDao();
         initComponents();
+        // hide error message
         cfPssMsgLb.setVisible(false);
         emailMsgLb.setVisible(false);
         phoneNoMsgLb.setVisible(false);
+        // set the user profile information into field
         usernameField.setText(user.getUsername());
         pssField1.setText(user.getPassword());
         pssField2.setText(user.getPassword());
@@ -128,12 +130,15 @@ public class EditAccountForm extends javax.swing.JPanel {
         String email = emailField.getText();
         String phoneNo = phoneNoField.getText();
 
+        // validate the user
         String errMsg = User.validate(username, pss1, pss2, email, phoneNo);
 
+        // check user exist or not. If username remain same, no error message.
         if (!user.getUsername().equals(username)) {
             errMsg += User.checkUserExist(username);
         }
 
+        // if no error message, update the user profile
         if (errMsg.isEmpty()) {
             user.setUsername(username);
             user.setPassword(pss1);
@@ -147,6 +152,7 @@ public class EditAccountForm extends javax.swing.JPanel {
             return true;
         }
 
+        // reset GUI
         usernameMsgLb.setText("Username must be at least 4 characters");
         usernameMsgLb.setForeground(Color.BLACK);
         usernameField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
@@ -164,6 +170,7 @@ public class EditAccountForm extends javax.swing.JPanel {
         phoneNoMsgLb.setVisible(false);
         phoneNoField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
 
+        // show error message in GUI
         if (errMsg.contains("System Error")) {
             OODMS.showErrorMessage();
             return false;

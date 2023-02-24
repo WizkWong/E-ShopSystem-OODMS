@@ -37,6 +37,7 @@ public class DeliveryOrderDao implements ObjectDao<DeliveryOrder> {
         return FileService.updateSingleRow(FILENAME, deliveryOrderData, FileService.ID_COLUMN);
     }
 
+    // get delivery order by customer order id
     public DeliveryOrder getByCustomerOrderId(CustomerOrder customerOrder) {
         Long orderId = customerOrder.getId();
         List<String> deliveryOrderData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));

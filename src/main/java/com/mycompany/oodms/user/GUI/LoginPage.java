@@ -131,6 +131,7 @@ public class LoginPage extends javax.swing.JPanel {
         String username = usernameField.getText();
         String pss = new String(pssField.getPassword());
         User user = User.verify(username, pss);
+        // if user found, redirect to specific page based on type of user
         if (user != null) {
             OODMS.currentUser = user;
             if (user instanceof Customer) {
@@ -142,6 +143,7 @@ public class LoginPage extends javax.swing.JPanel {
             }
             return;
         }
+        // if user not found, show error message label
         loginMsgLb.setVisible(true);
     }//GEN-LAST:event_loginBttActionPerformed
 

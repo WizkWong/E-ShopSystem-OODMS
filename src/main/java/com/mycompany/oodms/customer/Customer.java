@@ -76,7 +76,7 @@ public class Customer extends User {
         return cartItemDao.fileUpdate(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
-    // delete cart item
+    // delete customer cart item
     public boolean deleteCartItem(Item item) {
         Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
         if (existCartItem.isEmpty()) {
@@ -90,7 +90,7 @@ public class Customer extends User {
         return cartItemDao.fileDeleteRow(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
-    // delete cart item
+    // clear all the customer cart item
     public void clearCartItem() {
         List<CartItem> cartList = new ArrayList<>(this.cart);
         this.cart.clear();

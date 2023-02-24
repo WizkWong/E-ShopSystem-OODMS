@@ -31,6 +31,7 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         DeliveryOrder deliveryOrder = customerOrder.getDeliveryOrder();
         List<OrderDetail> orderDetailList = customerOrder.getOrderDetail();
 
+        // set all the customer order field
         paymentTypeULb.setText(customerOrderPayment.getTypeOfPayment());
         totalPriceULb.setText("RM " + customerOrderPayment.getTotalPrice());
         totalProductULb.setText(String.valueOf(orderDetailList.size()));
@@ -42,10 +43,12 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
         TableColumnModel productTableColumnModel = productTable.getColumnModel();
+        // align the table column to center
         productTableColumnModel.getColumn(1).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
 
         DefaultTableModel productTableModel = (DefaultTableModel) productTable.getModel();
+        // load all the purchase item from order into GUI table
         orderDetailList.forEach(orderD -> productTableModel.addRow(new Object[] {orderD.getItem().getName(), orderD.getOrderPrice(), orderD.getQuantity()}));
     }
 

@@ -51,7 +51,9 @@ public abstract class UserDao<T extends User> implements ObjectDao<T> {
         return FileService.updateSingleRow(FILENAME, userData, FileService.ID_COLUMN);
     }
 
+    // get all user
     public abstract List<T> getAll();
 
+    // get user by user id
     public abstract T getById(long id);
 }

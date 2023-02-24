@@ -54,6 +54,7 @@ public class CustomerOrderDao implements ObjectDao<CustomerOrder> {
         return false;
     }
 
+    // get all customer order by customer id
     public List<CustomerOrder> getById(Customer customer) {
         long id = customer.getId();
         return FileService.getMultipleSpecificData(FILENAME, 1, String.valueOf(id)).stream().map(CustomerOrder::new).toList();

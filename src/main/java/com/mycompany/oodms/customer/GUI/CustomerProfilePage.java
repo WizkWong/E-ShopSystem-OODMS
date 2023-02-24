@@ -37,12 +37,15 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         customerDao = OODMS.getCustomerDao();
         customerOrderDao = OODMS.getCustomerOrderDao();
         initComponents();
+        // hide error message field
         usernameMsgLb.setVisible(false);
         emailMsgLb.setVisible(false);
         phoneNoMsgLb.setVisible(false);
+        // hide edit field
         usernameField.setVisible(false);
         emailField.setVisible(false);
         phoneNoField.setVisible(false);
+        // set profile label
         usernameUserLb.setText(OODMS.currentUser.getUsername());
         emailUserLb.setText(OODMS.currentUser.getEmail());
         phoneNoUserLb.setText(OODMS.currentUser.getPhoneNo());
@@ -51,6 +54,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
         TableColumnModel productTableColumnModel = orderHistoryTable.getColumnModel();
+        // align the table column to center
         productTableColumnModel.getColumn(0).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(1).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
@@ -58,7 +62,9 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         productTableColumnModel.getColumn(4).setCellRenderer(centerRenderer);
 
         orderHistoryTableModel = (DefaultTableModel) orderHistoryTable.getModel();
+        // get all customer order relevant to current user
         customerOrderList = customerOrderDao.getById((Customer) OODMS.currentUser);
+        // load all customer order into GUI table
         customerOrderList.forEach(order -> orderHistoryTableModel.addRow(new Object[] {
                 order.getId(),
                 order.getOrderDetail().size(),
@@ -266,6 +272,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         add(usernameMsgLb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, 550, 20));
     }// </editor-fold>//GEN-END:initComponents
 
+    // switch the profile to view or edit form
     private void editBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBttActionPerformed
         if (editBtt.getText().equals("Edit Profile")) {
             editProfileForm();
@@ -278,6 +285,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         OODMS.frame.refresh(new CustomerHomePage());
     }//GEN-LAST:event_backBttActionPerformed
 
+    // change customer password
     private void changePssBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePssBttActionPerformed
         JLabel label = new JLabel("Please enter your password:");
         JPasswordField passwordField = new JPasswordField();
@@ -288,11 +296,13 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         panel.add(passwordField);
         while (true) {
             passwordField.setText("");
+            // pop up input-dialog box to enter the customer password
             int option = JOptionPane.showConfirmDialog(null, panel, "Verify Password", JOptionPane.OK_CANCEL_OPTION);
             if (option != JOptionPane.OK_OPTION) {
                 break;
             }
             String pss = new String(passwordField.getPassword());
+            // verify the password, if success have permission to change password
             if (OODMS.currentUser.getPassword().equals(pss)) {
                 OODMS.frame.refresh(new CustomerChangePasswordPage());
                 break;
@@ -303,13 +313,16 @@ public class CustomerProfilePage extends javax.swing.JPanel {
 
     }//GEN-LAST:event_changePssBttActionPerformed
 
+    // view the order history in detail
     private void viewPHBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewPHBttActionPerformed
         if (orderSelected == null) {
+            JOptionPane.showMessageDialog(null, "Please select any order to view its details", "Order is not select", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         OODMS.frame.refresh(new CustomerPurchaseHistory(orderSelected));
     }//GEN-LAST:event_viewPHBttActionPerformed
 
+    // set the selected order
     private void orderHistoryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderHistoryTableMousePressed
         int select = orderHistoryTable.getSelectedRow();
         if (select < 0) {
@@ -325,6 +338,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
 
     }//GEN-LAST:event_orderHistoryTableMousePressed
 
+    // change profile Label field to edit field
     private void editProfileForm() {
         editBtt.setText("Confirm Change");
         changePssBtt.setEnabled(false);
@@ -351,6 +365,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         phoneNoField.setVisible(true);
     }
 
+    // customer change their profile
     private void confirmChangeProfile() {
         usernameMsgLb.setText("Username must be at least 4 characters");
         usernameMsgLb.setForeground(Color.BLACK);
@@ -365,14 +380,18 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         String email = emailField.getText();
         String phoneNo = phoneNoField.getText();
 
+        // if no changes
         if (username.equals(usernameUserLb.getText()) && email.equals(emailUserLb.getText()) && phoneNo.equals(phoneNoUserLb.getText())) {
             resetToViewProfile();
             return;
         }
 
+        // validate the input field
         String errMsg = Customer.validate(username, email, phoneNo);
+        // check user exist or not. If username remain same, no error message.
         errMsg += username.equals(usernameUserLb.getText()) ? "" : User.checkUserExist(username);
 
+        // if no error message, update the customer profile
         if (errMsg.isEmpty()) {
             Customer customer = (Customer) OODMS.currentUser;
             customer.setUsername(username);
@@ -391,6 +410,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
             return;
         }
 
+        // show error message in GUI
         if (errMsg.contains("System Error")) {
             OODMS.showErrorMessage();
             return;
@@ -418,6 +438,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         }
     }
 
+    // reset back to view only profile
     private void resetToViewProfile() {
         editBtt.setText("Edit Profile");
         changePssBtt.setEnabled(true);

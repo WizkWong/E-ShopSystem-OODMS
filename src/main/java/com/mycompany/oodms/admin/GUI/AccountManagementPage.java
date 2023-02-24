@@ -34,10 +34,12 @@ public class AccountManagementPage extends javax.swing.JPanel {
 
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        // align the table column to left
         accountTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
 
         accountTableModel = (DefaultTableModel) accountTable.getModel();
 
+        // if selected the delivery staff in previous, auto select it back
         if (deliveryStaffSection) {
             adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
             dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -184,16 +186,21 @@ public class AccountManagementPage extends javax.swing.JPanel {
         add(searchLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 120, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    // load all user information into GUI table
     private void loadTable(List<User> userList) {
         int itemRow = accountTableModel.getRowCount();
+        // remove all the rows in GUI table
         for (int i = itemRow - 1; i >= 0 ; i--) {
             accountTableModel.removeRow(i);
         }
+        // load all the userList into table
         userList.forEach(user -> accountTableModel.addRow(new Object[] {user.getId(), user.getUsername(), user.getEmail(), user.getPhoneNo()}));
+        // set the button to disabled
         editBtt.setEnabled(false);
         removeBtt.setEnabled(false);
     }
-    
+
+    // switch to show delivery staff
     private void dStaffBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dStaffBttActionPerformed
         if (deliveryStaffSection) {
             return;
@@ -202,9 +209,11 @@ public class AccountManagementPage extends javax.swing.JPanel {
         deliveryStaffSection = true;
         adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        // get all delivery staff and load into GUI table
         loadTable(deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList());
     }//GEN-LAST:event_dStaffBttActionPerformed
 
+    // switch to show admin
     private void adminBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBttActionPerformed
         if (adminSection) {
             return;
@@ -213,6 +222,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         deliveryStaffSection = false;
         adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        // get all admin and load into GUI table
         loadTable(adminDao.getAll().stream().map(admin -> (User) admin).toList());
     }//GEN-LAST:event_adminBttActionPerformed
 
@@ -220,34 +230,38 @@ public class AccountManagementPage extends javax.swing.JPanel {
         OODMS.frame.refresh(new AdminPanelForm());
     }//GEN-LAST:event_backBttActionPerformed
 
+    // check user exist
     private User checkUserExist() {
         int select = accountTable.getSelectedRow();
         long id = (long) accountTableModel.getValueAt(select, 0);
         User user = null;
+
         if (adminSection) {
+            // get admin
             user = adminDao.getById(id);
         } else if (deliveryStaffSection) {
+            // get delivery staff
             user = deliveryStaffDao.getById(id);
-        }
-        if (user == null) {
-            JOptionPane.showMessageDialog(null, "This user is not Delivery Staff or Admin, please refresh the page!", "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
         }
         return user;
     }
 
+    // edit the user
     private void editBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBttActionPerformed
         User user = checkUserExist();
+        // if user does not exist, prompt error message
         if (user == null) {
             JOptionPane.showMessageDialog(null, "User does not exist, please refresh the page", "User does not Exist", JOptionPane.ERROR_MESSAGE);
             return;
         }
         EditAccountForm form = new EditAccountForm(user);
         while (true) {
+            // prompt a GUI form
             int option = JOptionPane.showConfirmDialog(null, form, "Edit Account", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (option != JOptionPane.OK_OPTION) {
                 break;
             }
+            // validate the input and update user profile
             if (form.formValidate()) {
                 JOptionPane.showMessageDialog(null, "Successfully Update Account", "Success", JOptionPane.INFORMATION_MESSAGE);
                 OODMS.frame.refresh(new AccountManagementPage());
@@ -258,22 +272,32 @@ public class AccountManagementPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_editBttActionPerformed
 
+    // remove the user
     private void removeBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBttActionPerformed
         User user = checkUserExist();
+        // if user does not exist, prompt error message
         if (user == null) {
             JOptionPane.showMessageDialog(null, "User does not exist, please refresh the page", "User does not Exist", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        // if only one admin account left, cannot allow the user to delete the last admin account
+        if (accountTableModel.getRowCount() == 1 && adminSection) {
+            JOptionPane.showMessageDialog(null, "Last Admin Account cannot be deleted", "Illegal Action", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // pop-up confirm dialog-box
         int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete User: " + user.getUsername(), "Warning", JOptionPane.OK_CANCEL_OPTION);
         if (option != JOptionPane.OK_OPTION) {
             return;
         }
         boolean removed = false;
+        // remove the admin or delivery staff account
         if (user instanceof Admin admin) {
             removed = adminDao.remove(admin);
         } else if (user instanceof DeliveryStaff deliveryStaff) {
             removed = deliveryStaffDao.remove(deliveryStaff);
         }
+        // if remove success
         if (removed) {
             JOptionPane.showMessageDialog(null, "Successfully Removed Account", "Success", JOptionPane.INFORMATION_MESSAGE);
             OODMS.frame.refresh(new AccountManagementPage());
@@ -282,13 +306,16 @@ public class AccountManagementPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_removeBttActionPerformed
 
+    // create the user
     private void createBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBttActionPerformed
         CreateAccountForm form = new CreateAccountForm();
         while (true) {
+            // prompt a GUI form
             int option = JOptionPane.showConfirmDialog(null, form, "Add Account", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (option != JOptionPane.OK_OPTION) {
                 break;
             }
+            // validate the input and create user
             if (form.formValidate()) {
                 JOptionPane.showMessageDialog(null, "Successfully Created Account", "Success", JOptionPane.INFORMATION_MESSAGE);
                 OODMS.frame.refresh(new AccountManagementPage());
@@ -299,16 +326,22 @@ public class AccountManagementPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_createBttActionPerformed
 
+    // search the user by user information
     private void searchEngine(KeyEvent evt) {//GEN-FIRST:event_searchEngine
+        // get the search field text
         String searchTxt = searchFd.getText().toLowerCase();
         List<User> userList = List.of();
         if (adminSection) {
+            // get all the admin
             userList = adminDao.getAll().stream().map(admin -> (User) admin).toList();
 
         } else if (deliveryStaffSection) {
+            // get all the delivery staff
             userList = deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList();
         }
+        // if search field is empty, load all user into GUI table without filter it
         if (!searchTxt.equals("")) {
+            // filter the user by search text field
             userList = userList.stream().filter(user ->
                     user.getId().toString().contains(searchTxt) ||
                     user.getUsername().toLowerCase().contains(searchTxt) ||

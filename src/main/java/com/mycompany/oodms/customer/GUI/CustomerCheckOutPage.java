@@ -28,15 +28,20 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
 
         TableColumnModel productTableColumnModel = productTable.getColumnModel();
+        // align the table column to left
         productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
+        // align the table column to center
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
 
         productTableModel = (DefaultTableModel) productTable.getModel();
+        // hide ID column
         productTable.removeColumn(productTableColumnModel.getColumn(0));
 
         Customer customer = (Customer) OODMS.currentUser;
+        // get customer cart
         List<CartItem> cartItemList = customer.getCart();
+        // load all customer cart item into GUI table
         cartItemList.forEach(cartItem -> {
             Item item = cartItem.getItem();
             productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), cartItem.getQuantity()});
@@ -226,6 +231,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         OODMS.frame.refresh(new CustomerCartPage());
     }//GEN-LAST:event_backBttActionPerformed
 
+    // customer check out
     private void checkOutBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutBttActionPerformed
         int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to confirm your order", "Warning", JOptionPane.OK_CANCEL_OPTION);
         if (option != JOptionPane.OK_OPTION) {
@@ -240,8 +246,10 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         stateField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
 
         Customer customer = (Customer) OODMS.currentUser;
+        // validate, if no error message, create order
         String errorMsg = customer.checkOut((String) paymentCb.getSelectedItem(), unitNoField.getText(), streetField.getText(), cityField.getText(), postalCodeField.getText(), stateField.getText());
 
+        // if success create order, clear all customer cart item and update the file
         if (errorMsg.isEmpty()) {
             customer.clearCartItem();
             checkOutBtt.setEnabled(false);
@@ -249,6 +257,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
             return;
         }
 
+        // show error message in GUI
         if (errorMsg.contains("System Error")) {
             OODMS.showErrorMessage();
             return;
