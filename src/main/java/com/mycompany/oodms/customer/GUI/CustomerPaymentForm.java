@@ -152,6 +152,10 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
     }//GEN-LAST:event_backBttActionPerformed
 
     private void confirmBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBttActionPerformed
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to confirm your order", "Warning", JOptionPane.OK_CANCEL_OPTION);
+        if (option != JOptionPane.OK_OPTION) {
+            return;
+        }
         String card = cardField.getText();
         String month = monthField.getText();
         String year = yearField.getText();

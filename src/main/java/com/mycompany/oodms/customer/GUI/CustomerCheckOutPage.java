@@ -250,11 +250,6 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
 
     // customer check out
     private void checkOutBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutBttActionPerformed
-        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to confirm your order", "Warning", JOptionPane.OK_CANCEL_OPTION);
-        if (option != JOptionPane.OK_OPTION) {
-            return;
-        }
-
         errorMsgLb.setVisible(false);
         unitNoField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
         streetField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
