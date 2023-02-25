@@ -31,94 +31,102 @@ public class AdminPanelForm extends javax.swing.JPanel {
         OrderDeliManBut = new javax.swing.JButton();
         ViewReportBut = new javax.swing.JButton();
 
-        setMinimumSize(new java.awt.Dimension(600, 335));
-        setPreferredSize(new java.awt.Dimension(600, 335));
+        setMinimumSize(new java.awt.Dimension(675, 380));
+        setPreferredSize(new java.awt.Dimension(675, 380));
         setRequestFocusEnabled(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
         TitleLab.setText("Admin Panel");
-        add(TitleLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, -1, -1));
+        add(TitleLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, -1, -1));
 
         ManageAccBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ManageAccBut.setText("Account Management");
         ManageAccBut.setFocusable(false);
+        ManageAccBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         ManageAccBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ManageAccButActionPerformed(evt);
             }
         });
-        add(ManageAccBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 250, -1));
+        add(ManageAccBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 250, 40));
 
         AddDataBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         AddDataBut.setText("Add Product");
         AddDataBut.setFocusable(false);
+        AddDataBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         AddDataBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddDataButActionPerformed(evt);
             }
         });
-        add(AddDataBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 250, -1));
+        add(AddDataBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 110, 250, 40));
 
         ManageProBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ManageProBut.setText("Product Management");
         ManageProBut.setFocusable(false);
+        ManageProBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         ManageProBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ManageProButActionPerformed(evt);
             }
         });
-        add(ManageProBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 250, -1));
+        add(ManageProBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 250, 40));
 
         LogoutBut.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         LogoutBut.setText("Logout");
         LogoutBut.setFocusable(false);
+        LogoutBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         LogoutBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LogoutButActionPerformed(evt);
             }
         });
-        add(LogoutBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(463, 300, -1, -1));
+        add(LogoutBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 340, 90, 30));
 
         ExitBut.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         ExitBut.setText("Exit");
         ExitBut.setFocusable(false);
+        ExitBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         ExitBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ExitButActionPerformed(evt);
             }
         });
-        add(ExitBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(537, 300, -1, -1));
+        add(ExitBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 340, 90, 30));
 
         ManageCatBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ManageCatBut.setText("Category Management");
         ManageCatBut.setFocusable(false);
+        ManageCatBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         ManageCatBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ManageCatButActionPerformed(evt);
             }
         });
-        add(ManageCatBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 170, 250, -1));
+        add(ManageCatBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 190, 250, 40));
 
         OrderDeliManBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         OrderDeliManBut.setText("Order Delivery Management");
         OrderDeliManBut.setFocusable(false);
+        OrderDeliManBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         OrderDeliManBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OrderDeliManButActionPerformed(evt);
             }
         });
-        add(OrderDeliManBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 250, -1));
+        add(OrderDeliManBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 250, 40));
 
         ViewReportBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ViewReportBut.setText("View Report");
         ViewReportBut.setFocusable(false);
+        ViewReportBut.setMargin(new java.awt.Insets(4, 14, 3, 14));
         ViewReportBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewReportButActionPerformed(evt);
             }
         });
-        add(ViewReportBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 230, 250, -1));
+        add(ViewReportBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 270, 250, 40));
     }// </editor-fold>//GEN-END:initComponents
 
     private void ManageAccButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageAccButActionPerformed

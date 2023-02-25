@@ -44,8 +44,8 @@ public class CustomerHomePage extends javax.swing.JPanel {
 
         titleLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         titleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titleLb.setText("Welcome to XXX");
-        add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 40, -1, -1));
+        titleLb.setText("Welcome");
+        add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 40, -1, -1));
 
         productBtt.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         productBtt.setText("Our Product");
