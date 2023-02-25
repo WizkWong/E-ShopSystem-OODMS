@@ -356,11 +356,9 @@
               <Font name="Segoe UI" size="16" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
+              <StringArray count="2">
                 <StringItem index="0" value="Debit Card"/>
                 <StringItem index="1" value="Credit Card"/>
-                <StringItem index="2" value="Shopee E-Wallet"/>
-                <StringItem index="3" value="Touch &apos;n Go E-Wallet"/>
               </StringArray>
             </Property>
           </Properties>

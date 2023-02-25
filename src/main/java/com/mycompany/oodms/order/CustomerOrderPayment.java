@@ -35,6 +35,8 @@ public class CustomerOrderPayment {
 
         if (card.isEmpty()) {
             errorMsg += "Card is empty;";
+        } else if (card.length() != 16) {
+            errorMsg += "Card is invalid;";
         }
         if (monthString.isEmpty()) {
             errorMsg += "Month is empty;";

@@ -45,6 +45,7 @@ public class CustomerChangePasswordPage extends javax.swing.JPanel {
         cfPssMsgLb = new javax.swing.JLabel();
         changePssBtt = new javax.swing.JButton();
         titleLb = new javax.swing.JLabel();
+        backBtt = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(540, 250));
         setPreferredSize(new java.awt.Dimension(540, 250));
@@ -87,6 +88,20 @@ public class CustomerChangePasswordPage extends javax.swing.JPanel {
         titleLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLb.setText("Change Password");
         add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, -1, -1));
+
+        backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        backBtt.setText("Back");
+        backBtt.setFocusable(false);
+        backBtt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backBtt.setInheritsPopupMenu(true);
+        backBtt.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        backBtt.setPreferredSize(new java.awt.Dimension(200, 50));
+        backBtt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backBttActionPerformed(evt);
+            }
+        });
+        add(backBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 40));
     }// </editor-fold>//GEN-END:initComponents
 
     private void changePssBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePssBttActionPerformed
@@ -127,8 +142,13 @@ public class CustomerChangePasswordPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_changePssBttActionPerformed
 
+    private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
+        OODMS.frame.refresh(new CustomerProfilePage());
+    }//GEN-LAST:event_backBttActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backBtt;
     private javax.swing.JLabel cfPssLb;
     private javax.swing.JLabel cfPssMsgLb;
     private javax.swing.JButton changePssBtt;

@@ -30,6 +30,7 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
         this.typeOfPayment = typeOfPayment;
         initComponents();
         expiryInvalidMsgLb.setVisible(false);
+        cardMsgLb.setVisible(false);
         cvcMsgLb.setVisible(false);
         errorMsgLb.setVisible(false);
         expiryExpireMsgLb.setVisible(false);
@@ -48,6 +49,7 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
         titleLb = new javax.swing.JLabel();
         cardLb = new javax.swing.JLabel();
         cardField = new com.mycompany.oodms.Component.JNumberField();
+        cardMsgLb = new javax.swing.JLabel();
         slashLb = new javax.swing.JLabel();
         expiryLb = new javax.swing.JLabel();
         exLb = new javax.swing.JLabel();
@@ -88,6 +90,10 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
         cardField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         add(cardField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 340, 30));
 
+        cardMsgLb.setForeground(java.awt.Color.red);
+        cardMsgLb.setText("Card Number is Invalid!");
+        add(cardMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 160, 20));
+
         slashLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         slashLb.setText("/");
         add(slashLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, 20, 30));
@@ -125,7 +131,7 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
         add(cvcField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 90, 30));
 
         cvcMsgLb.setForeground(java.awt.Color.red);
-        cvcMsgLb.setText("CVC Invalid");
+        cvcMsgLb.setText("CVC is Invalid");
         add(cvcMsgLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 80, 20));
 
         backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -188,6 +194,10 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
             cardField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
             errorMsgLb.setVisible(true);
         }
+        if (errorMsg.contains("Card is invalid;")) {
+            cardField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
+            cardMsgLb.setVisible(true);
+        }
         if (errorMsg.contains("Month is empty;")) {
             monthField.setBorder(BorderFactory.createLineBorder(Color.RED, 2, true));
             errorMsgLb.setVisible(true);
@@ -220,6 +230,7 @@ public class CustomerPaymentForm extends javax.swing.JPanel {
     private javax.swing.JButton backBtt;
     private com.mycompany.oodms.Component.JNumberField cardField;
     private javax.swing.JLabel cardLb;
+    private javax.swing.JLabel cardMsgLb;
     private javax.swing.JButton confirmBtt;
     private com.mycompany.oodms.Component.JNumberField cvcField;
     private javax.swing.JLabel cvcLb;

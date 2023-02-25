@@ -226,7 +226,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         jPanel1.add(paymentLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 120, 30));
 
         paymentCb.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        paymentCb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debit Card", "Credit Card", "Shopee E-Wallet", "Touch 'n Go E-Wallet" }));
+        paymentCb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debit Card", "Credit Card" }));
         jPanel1.add(paymentCb, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, 250, 40));
 
         errorMsgLb.setForeground(java.awt.Color.red);
@@ -265,18 +265,7 @@ public class CustomerCheckOutPage extends javax.swing.JPanel {
         if (errorMsg.isEmpty()) {
             String address = unitNoField.getText() + "," + streetField.getText() + "," + cityField.getText() + " " + postalCodeField.getText() + "," + stateField.getText();
             String typeOfPayment = (String) paymentCb.getSelectedItem();
-            if (typeOfPayment.equals("Debit Card") || typeOfPayment.equals("Credit Card")) {
-                OODMS.frame.refresh(new CustomerPaymentForm(address, typeOfPayment));
-                return;
-            }
-            CustomerOrder customerOrder = new CustomerOrder(null, typeOfPayment, "-", customer, address);
-            if (customer.checkOut(customerOrder)) {
-                customer.clearCartItem();
-                JOptionPane.showMessageDialog(null, "Your order has been created, please check your order history to tract your order", "Success", JOptionPane.INFORMATION_MESSAGE);
-                OODMS.frame.refresh(new CustomerHomePage());
-            } else {
-                OODMS.showErrorMessage();
-            }
+            OODMS.frame.refresh(new CustomerPaymentForm(address, typeOfPayment));
             return;
         }
 

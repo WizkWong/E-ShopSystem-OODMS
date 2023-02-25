@@ -30,9 +30,11 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         CustomerOrderPayment customerOrderPayment = customerOrder.getCustomerOrderPayment();
         DeliveryOrder deliveryOrder = customerOrder.getDeliveryOrder();
         List<OrderDetail> orderDetailList = customerOrder.getOrderDetail();
+        String card = customerOrderPayment.getCardNumber();
 
         // set all the customer order field
         paymentTypeULb.setText(customerOrderPayment.getTypeOfPayment());
+        cardNumberULb.setText("XXXX XXXX XXXX " + card.substring(card.length() - 4));
         totalPriceULb.setText("RM " + customerOrderPayment.getTotalPrice());
         totalProductULb.setText(String.valueOf(orderDetailList.size()));
         orderStatusULb.setText(deliveryOrder.getDeliveryStatus().getUserStatus());
@@ -67,11 +69,13 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         productTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         paymentTypeLb = new javax.swing.JLabel();
+        paymentTypeULb = new javax.swing.JLabel();
+        cardNumberLb = new javax.swing.JLabel();
+        cardNumberULb = new javax.swing.JLabel();
         totalProductLb = new javax.swing.JLabel();
         totalPriceLb = new javax.swing.JLabel();
         orderStatusLb = new javax.swing.JLabel();
         orderDateTimeLb = new javax.swing.JLabel();
-        paymentTypeULb = new javax.swing.JLabel();
         totalProductULb = new javax.swing.JLabel();
         totalPriceULb = new javax.swing.JLabel();
         orderStatusULb = new javax.swing.JLabel();
@@ -93,7 +97,7 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         poLb.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         poLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         poLb.setText("Product Order");
-        add(poLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 270, -1, -1));
+        add(poLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 340, -1, -1));
 
         productTable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         productTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -131,7 +135,7 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
             productTable.getColumnModel().getColumn(2).setPreferredWidth(20);
         }
 
-        add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 640, 260));
+        add(JScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 640, 260));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -140,41 +144,49 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         paymentTypeLb.setText("Payment Type:");
         jPanel1.add(paymentTypeLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 5, 150, 30));
 
-        totalProductLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        totalProductLb.setText("Total Product Type:");
-        jPanel1.add(totalProductLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 85, 160, 30));
-
-        totalPriceLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        totalPriceLb.setText("Total Price:");
-        jPanel1.add(totalPriceLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, 150, 30));
-
-        orderStatusLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        orderStatusLb.setText("Order Status:");
-        jPanel1.add(orderStatusLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 125, 150, 30));
-
-        orderDateTimeLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        orderDateTimeLb.setText("Order Date Time:");
-        jPanel1.add(orderDateTimeLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 165, 150, 30));
-
         paymentTypeULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         paymentTypeULb.setText("Your Payment");
         jPanel1.add(paymentTypeULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 0, 170, 40));
 
+        cardNumberLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        cardNumberLb.setText("Card Number:");
+        jPanel1.add(cardNumberLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, 150, 30));
+
+        cardNumberULb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cardNumberULb.setText("XXXX XXXX XXXX 0000");
+        jPanel1.add(cardNumberULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 41, 170, 40));
+
+        totalProductLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalProductLb.setText("Total Product Type:");
+        jPanel1.add(totalProductLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 125, 160, 30));
+
+        totalPriceLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalPriceLb.setText("Total Price:");
+        jPanel1.add(totalPriceLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 85, 150, 30));
+
+        orderStatusLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        orderStatusLb.setText("Order Status:");
+        jPanel1.add(orderStatusLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 165, 150, 30));
+
+        orderDateTimeLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        orderDateTimeLb.setText("Order Date Time:");
+        jPanel1.add(orderDateTimeLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 205, 150, 30));
+
         totalProductULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         totalProductULb.setText("0");
-        jPanel1.add(totalProductULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 170, 40));
+        jPanel1.add(totalProductULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 120, 170, 40));
 
         totalPriceULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         totalPriceULb.setText("RM 00.00");
-        jPanel1.add(totalPriceULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 40, 170, 40));
+        jPanel1.add(totalPriceULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 170, 40));
 
         orderStatusULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         orderStatusULb.setText("Pending");
-        jPanel1.add(orderStatusULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 120, 170, 40));
+        jPanel1.add(orderStatusULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 170, 40));
 
         orderDateTimeULb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         orderDateTimeULb.setText("00-00-0000");
-        jPanel1.add(orderDateTimeULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 170, 40));
+        jPanel1.add(orderDateTimeULb, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 170, 40));
 
         addressLb.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         addressLb.setText("Address:");
@@ -190,7 +202,7 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 40, 260, 150));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 640, 200));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 640, 250));
 
         backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         backBtt.setText("Back");
@@ -217,6 +229,8 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
     private javax.swing.JLabel addressLb;
     private javax.swing.JTextArea addressTextArea;
     private javax.swing.JButton backBtt;
+    private javax.swing.JLabel cardNumberLb;
+    private javax.swing.JLabel cardNumberULb;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel orderDateTimeLb;

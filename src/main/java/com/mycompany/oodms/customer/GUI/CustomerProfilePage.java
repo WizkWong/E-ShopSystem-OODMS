@@ -252,6 +252,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
             }
         });
         orderHistoryTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        orderHistoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         orderHistoryTable.getTableHeader().setReorderingAllowed(false);
         orderHistoryTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
