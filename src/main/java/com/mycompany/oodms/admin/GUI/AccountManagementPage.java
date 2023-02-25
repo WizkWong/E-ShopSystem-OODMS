@@ -14,7 +14,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class AccountManagementPage extends javax.swing.JPanel {
@@ -211,7 +210,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         searchFd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchFd.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                searchEngine(evt);
+                searchFdKeyReleased(evt);
             }
         });
         add(searchFd, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 580, -1));
@@ -247,6 +246,11 @@ public class AccountManagementPage extends javax.swing.JPanel {
         adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        // if search field got text, filter user then add into table
+        if (!searchFd.getText().isEmpty()) {
+            searchEngine(searchFd.getText());
+            return;
+        }
         // get all delivery staff and load into GUI table
         loadTable(deliveryStaffDao.getAll().stream().map(deliveryStaff -> (User) deliveryStaff).toList());
     }//GEN-LAST:event_dStaffBttActionPerformed
@@ -263,6 +267,11 @@ public class AccountManagementPage extends javax.swing.JPanel {
         adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        // if search field got text, filter user then add into table
+        if (!searchFd.getText().isEmpty()) {
+            searchEngine(searchFd.getText());
+            return;
+        }
         // get all admin and load into GUI table
         loadTable(adminDao.getAll().stream().map(admin -> (User) admin).toList());
     }//GEN-LAST:event_adminBttActionPerformed
@@ -367,10 +376,44 @@ public class AccountManagementPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_createBttActionPerformed
 
-    // search the user by user information
-    private void searchEngine(KeyEvent evt) {//GEN-FIRST:event_searchEngine
+    private void accountTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountTableMousePressed
+        if (customerSection) {
+            editBtt.setEnabled(false);
+            removeBtt.setEnabled(false);
+            return;
+        }
+        editBtt.setEnabled(true);
+        removeBtt.setEnabled(true);
+    }//GEN-LAST:event_accountTableMousePressed
+
+    private void customerBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerBttActionPerformed
+        if (customerSection) {
+            return;
+        }
+        createBtt.setEnabled(false);
+        adminSection = false;
+        deliveryStaffSection = false;
+        customerSection = true;
+        adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+
+        // if search field got text, filter user then add into table
+        if (!searchFd.getText().isEmpty()) {
+            searchEngine(searchFd.getText());
+            return;
+        }
+        // get all admin and load into GUI table
+        loadTable(customerDao.getAll().stream().map(customer -> (User) customer).toList());
+    }//GEN-LAST:event_customerBttActionPerformed
+
+    private void searchFdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFdKeyReleased
+        searchEngine(searchFd.getText());
+    }//GEN-LAST:event_searchFdKeyReleased
+    
+    private void searchEngine(String txt) {
         // get the search field text
-        String searchTxt = searchFd.getText().toLowerCase();
+        String searchTxt = txt.toLowerCase();
         List<User> userList = List.of();
         if (adminSection) {
             // get all the admin
@@ -393,33 +436,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
             ).toList();
         }
         loadTable(userList);
-    }//GEN-LAST:event_searchEngine
-
-    private void accountTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountTableMousePressed
-        if (customerSection) {
-            editBtt.setEnabled(false);
-            removeBtt.setEnabled(false);
-            return;
-        }
-        editBtt.setEnabled(true);
-        removeBtt.setEnabled(true);
-    }//GEN-LAST:event_accountTableMousePressed
-
-    private void customerBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerBttActionPerformed
-        if (customerSection) {
-            return;
-        }
-        createBtt.setEnabled(false);
-        adminSection = false;
-        deliveryStaffSection = false;
-        customerSection = true;
-        adminBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        dStaffBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        customerBtt.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-        // get all admin and load into GUI table
-        loadTable(customerDao.getAll().stream().map(customer -> (User) customer).toList());
-    }//GEN-LAST:event_customerBttActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel SearchBarLab;
