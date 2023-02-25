@@ -15,31 +15,35 @@ public class DeliveryOrder {
     private String address;
     private LocalDateTime assignDateTime;
     private LocalDateTime deliveredDateTime;
+    private String feedback;
 
-    public DeliveryOrder(CustomerOrder customerOrder, String address) {
+    public DeliveryOrder(CustomerOrder customerOrder, String address, String feedback) {
         this.customerOrder = customerOrder;
         this.deliveryStaff = new DeliveryStaff();
         this.deliveryStatus = DeliveryStatus.UNASSIGNED;
         this.address = address;
+        this.feedback = feedback;
     }
 
-    public DeliveryOrder(CustomerOrder customerOrder, DeliveryStaff deliveryStaff, DeliveryStatus deliveryStatus, String address, LocalDateTime assignDateTime, LocalDateTime deliveredDateTime) {
+    public DeliveryOrder(CustomerOrder customerOrder, DeliveryStaff deliveryStaff, DeliveryStatus deliveryStatus, String address, LocalDateTime assignDateTime, LocalDateTime deliveredDateTime, String feedback) {
         this.customerOrder = customerOrder;
         this.deliveryStaff = deliveryStaff;
         this.deliveryStatus = deliveryStatus;
         this.address = address;
         this.assignDateTime = assignDateTime;
         this.deliveredDateTime = deliveredDateTime;
+        this.feedback = feedback;
     }
 
-    public DeliveryOrder(CustomerOrder customerOrder, String deliveryStaff, String deliveryStatus, String address, String assignDateTime, String deliveredDateTime) {
+    public DeliveryOrder(CustomerOrder customerOrder, String deliveryStaff, String deliveryStatus, String address, String assignDateTime, String deliveredDateTime, String feedback) {
         this(
                 customerOrder,
                 deliveryStaff.equals("null") ? null : OODMS.getDeliveryStaffDao().getById(Long.parseLong(deliveryStaff)),
                 DeliveryStatus.getStatus(deliveryStatus),
                 address,
                 assignDateTime.equals("null") ? null : LocalDateTime.parse(assignDateTime, formatDateTime),
-                deliveredDateTime.equals("null") ? null : LocalDateTime.parse(deliveredDateTime, formatDateTime)
+                deliveredDateTime.equals("null") ? null : LocalDateTime.parse(deliveredDateTime, formatDateTime),
+                feedback.equals("null") ? null : feedback
         );
     }
 
@@ -103,5 +107,13 @@ public class DeliveryOrder {
 
     public void setDeliveredDateTime(LocalDateTime deliveredDateTime) {
         this.deliveredDateTime = deliveredDateTime;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }

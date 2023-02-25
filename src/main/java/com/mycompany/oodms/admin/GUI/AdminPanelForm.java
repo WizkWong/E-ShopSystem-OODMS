@@ -28,12 +28,17 @@ public class AdminPanelForm extends javax.swing.JPanel {
         LogoutBut = new javax.swing.JButton();
         ExitBut = new javax.swing.JButton();
         ManageCatBut = new javax.swing.JButton();
+        OrderDeliManBut = new javax.swing.JButton();
+        ViewReportBut = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(600, 300));
+        setMinimumSize(new java.awt.Dimension(600, 335));
+        setPreferredSize(new java.awt.Dimension(600, 335));
         setRequestFocusEnabled(false);
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
         TitleLab.setText("Admin Panel");
+        add(TitleLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, -1, -1));
 
         ManageAccBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ManageAccBut.setText("Account Management");
@@ -43,6 +48,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
                 ManageAccButActionPerformed(evt);
             }
         });
+        add(ManageAccBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 250, -1));
 
         AddDataBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         AddDataBut.setText("Add Product");
@@ -52,6 +58,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
                 AddDataButActionPerformed(evt);
             }
         });
+        add(AddDataBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 250, -1));
 
         ManageProBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ManageProBut.setText("Product Management");
@@ -61,6 +68,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
                 ManageProButActionPerformed(evt);
             }
         });
+        add(ManageProBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 250, -1));
 
         LogoutBut.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         LogoutBut.setText("Logout");
@@ -70,6 +78,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
                 LogoutButActionPerformed(evt);
             }
         });
+        add(LogoutBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(463, 300, -1, -1));
 
         ExitBut.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         ExitBut.setText("Exit");
@@ -79,6 +88,7 @@ public class AdminPanelForm extends javax.swing.JPanel {
                 ExitButActionPerformed(evt);
             }
         });
+        add(ExitBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(537, 300, -1, -1));
 
         ManageCatBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         ManageCatBut.setText("Category Management");
@@ -88,50 +98,27 @@ public class AdminPanelForm extends javax.swing.JPanel {
                 ManageCatButActionPerformed(evt);
             }
         });
+        add(ManageCatBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 170, 250, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(228, 228, 228)
-                        .addComponent(TitleLab))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(464, 464, 464)
-                        .addComponent(LogoutBut)
-                        .addGap(6, 6, 6)
-                        .addComponent(ExitBut))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ManageAccBut, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                            .addComponent(ManageProBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ManageCatBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(AddDataBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(12, 12, 12))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(TitleLab)
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddDataBut)
-                    .addComponent(ManageAccBut))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ManageProBut)
-                    .addComponent(ManageCatBut))
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LogoutBut)
-                    .addComponent(ExitBut)))
-        );
+        OrderDeliManBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        OrderDeliManBut.setText("Order Delivery Management");
+        OrderDeliManBut.setFocusable(false);
+        OrderDeliManBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OrderDeliManButActionPerformed(evt);
+            }
+        });
+        add(OrderDeliManBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 250, -1));
+
+        ViewReportBut.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        ViewReportBut.setText("View Report");
+        ViewReportBut.setFocusable(false);
+        ViewReportBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewReportButActionPerformed(evt);
+            }
+        });
+        add(ViewReportBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 230, 250, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void ManageAccButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageAccButActionPerformed
@@ -159,6 +146,14 @@ public class AdminPanelForm extends javax.swing.JPanel {
         OODMS.frame.refresh(new CategoryManagementPage());
     }//GEN-LAST:event_ManageCatButActionPerformed
 
+    private void OrderDeliManButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderDeliManButActionPerformed
+        OODMS.frame.refresh(new OrderDeliveryManagementPage());
+    }//GEN-LAST:event_OrderDeliManButActionPerformed
+
+    private void ViewReportButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewReportButActionPerformed
+        OODMS.frame.refresh(new ViewReportPage());
+    }//GEN-LAST:event_ViewReportButActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddDataBut;
@@ -167,6 +162,8 @@ public class AdminPanelForm extends javax.swing.JPanel {
     private javax.swing.JButton ManageAccBut;
     private javax.swing.JButton ManageCatBut;
     private javax.swing.JButton ManageProBut;
+    private javax.swing.JButton OrderDeliManBut;
     private javax.swing.JLabel TitleLab;
+    private javax.swing.JButton ViewReportBut;
     // End of variables declaration//GEN-END:variables
 }

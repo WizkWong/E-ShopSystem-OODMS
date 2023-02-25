@@ -233,7 +233,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Order ID", "Total Product", "Total Price", "Order Date Time", "Delivering Status"
+                "Order ID", "Total Product Type", "Total Price", "Order Date Time", "Delivering Status"
             }
         ) {
             Class[] types = new Class [] {
@@ -252,6 +252,7 @@ public class CustomerProfilePage extends javax.swing.JPanel {
             }
         });
         orderHistoryTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        orderHistoryTable.getTableHeader().setReorderingAllowed(false);
         orderHistoryTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 orderHistoryTableMousePressed(evt);
@@ -259,11 +260,11 @@ public class CustomerProfilePage extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(orderHistoryTable);
         if (orderHistoryTable.getColumnModel().getColumnCount() > 0) {
-            orderHistoryTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-            orderHistoryTable.getColumnModel().getColumn(1).setPreferredWidth(30);
-            orderHistoryTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+            orderHistoryTable.getColumnModel().getColumn(0).setPreferredWidth(35);
+            orderHistoryTable.getColumnModel().getColumn(1).setPreferredWidth(55);
+            orderHistoryTable.getColumnModel().getColumn(2).setPreferredWidth(45);
             orderHistoryTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-            orderHistoryTable.getColumnModel().getColumn(4).setPreferredWidth(50);
+            orderHistoryTable.getColumnModel().getColumn(4).setPreferredWidth(45);
         }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 530, 150));

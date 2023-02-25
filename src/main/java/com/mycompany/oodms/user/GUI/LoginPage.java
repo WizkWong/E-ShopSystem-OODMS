@@ -10,6 +10,7 @@ import com.mycompany.oodms.admin.GUI.AdminPanelForm;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.customer.GUI.CustomerHomePage;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
+import com.mycompany.oodms.deliveryStaff.GUI.DeliveryStaffHomePage;
 import com.mycompany.oodms.user.User;
 
 /**
@@ -139,7 +140,7 @@ public class LoginPage extends javax.swing.JPanel {
             } else if (user instanceof Admin) {
                 OODMS.frame.refresh(new AdminPanelForm());
             } else if (user instanceof DeliveryStaff) {
-                System.out.println("delivery staff");
+                OODMS.frame.refresh(new DeliveryStaffHomePage());
             }
             return;
         }
