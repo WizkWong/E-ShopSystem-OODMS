@@ -2,6 +2,7 @@ package com.mycompany.oodms;
 
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.admin.AdminDao;
+import com.mycompany.oodms.admin.GUI.AdminPanelForm;
 import com.mycompany.oodms.customer.CartItemDao;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.customer.CustomerDao;
@@ -33,7 +34,7 @@ public class OODMS {
 
     public OODMS() {
         initialize();
-        frame = new MainFrame(new HomePage());
+        frame = new MainFrame(new AdminPanelForm());
     }
 
     public void initialize() {

@@ -24,7 +24,7 @@ public class CustomerOrder {
         this.orderDateTime = LocalDateTime.now();
         this.orderDetail = customer.getCart().stream().map(CartItem::convertToOrderDetail).toList();
         this.customerOrderPayment = new CustomerOrderPayment(this, typeOfPayment, OrderDetail.calculateTotalPrice(this.orderDetail));
-        this.deliveryOrder = new DeliveryOrder(this, address);
+        this.deliveryOrder = new DeliveryOrder(this, address, null);
     }
 
     public CustomerOrder(Long id, Customer customer, LocalDateTime orderDateTime) {

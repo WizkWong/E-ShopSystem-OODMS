@@ -64,6 +64,17 @@ public class DeliveryStaffDao implements ObjectDao<DeliveryStaff> {
         }
         return null;
     }
+    
+    // Get delivery staff id using username
+    public Long getIdByUsername(String username) {
+        List<List<String>> userList = FileService.readFile(FILENAME);
+        for (List<String> user : userList) {
+            if (user.get(1).equals(username)) {
+                return Long.parseLong(user.get(0));
+            }
+        }
+        return null;
+    }
 
     public boolean remove(DeliveryStaff deliveryStaff) {
         return FileService.removeById(UserDao.FILENAME, List.of(toList(deliveryStaff)));

@@ -19,7 +19,7 @@ public enum DeliveryStatus {
     // for customer to view the status
     public String getUserStatus() {
         return switch (this) {
-            case UNASSIGNED, PENDING -> "Ordered";
+            case UNASSIGNED, PENDING -> "Pending";
             case DELIVERING -> "Delivering";
             case DELIVERED -> "Delivered";
         };

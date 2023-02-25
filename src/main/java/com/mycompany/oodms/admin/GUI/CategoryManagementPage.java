@@ -97,18 +97,10 @@ public class CategoryManagementPage extends javax.swing.JPanel {
 
         SeachLab.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         SeachLab.setText("Category ID/NAME :");
-        add(SeachLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, -1, -1));
+        add(SeachLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, 160, 30));
 
         SearchTxt.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        SearchTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchTxtActionPerformed(evt);
-            }
-        });
         SearchTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                SearchTxtKeyPressed(evt);
-            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 SearchTxtKeyReleased(evt);
             }
@@ -171,10 +163,6 @@ public class CategoryManagementPage extends javax.swing.JPanel {
     private void BackButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButActionPerformed
         OODMS.frame.refresh(new AdminPanelForm());
     }//GEN-LAST:event_BackButActionPerformed
-
-    private void SearchTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchTxtActionPerformed
-        
-    }//GEN-LAST:event_SearchTxtActionPerformed
 
     private void ModifyCatButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyCatButActionPerformed
         // Get selected row
@@ -241,15 +229,12 @@ public class CategoryManagementPage extends javax.swing.JPanel {
         DeleteCatBut.setEnabled(true);
     }//GEN-LAST:event_CategoryTabMousePressed
 
-    private void SearchTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchTxtKeyPressed
-        
-    }//GEN-LAST:event_SearchTxtKeyPressed
-
     private void SearchTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchTxtKeyReleased
         // Disable both modify and delete button
         ModifyCatBut.setEnabled(false);
         DeleteCatBut.setEnabled(false);
 
+        // Get keyword from SearchTxt and filter the table using the keyword
         TableRowSorter rowSorter = new TableRowSorter((DefaultTableModel) CategoryTab.getModel());
         rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + SearchTxt.getText(), 0, 1));
         CategoryTab.setRowSorter(rowSorter);

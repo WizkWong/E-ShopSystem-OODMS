@@ -2,6 +2,9 @@ package com.mycompany.oodms.order;
 
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.Dao.ObjectDao;
+import com.mycompany.oodms.OODMS;
+import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
+import static com.mycompany.oodms.order.CustomerOrderDao.FILENAME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +12,7 @@ import java.util.List;
 
 public class DeliveryOrderDao implements ObjectDao<DeliveryOrder> {
     // note: null value will be store
-    // columns order in file: CustomerOrder ID, Delivery Staff ID, Delivery Status, Address, Assign Date Time, Delivered Date Time
+    // columns order in file: CustomerOrder ID, Delivery Staff ID, Delivery Status, Address, Assign Date Time, Delivered Date Time, Feedback
     public static final String FILENAME = "delivery order";
 
     @Override
@@ -21,7 +24,8 @@ public class DeliveryOrderDao implements ObjectDao<DeliveryOrder> {
                 deliveryOrder.getDeliveryStatus().getStatus(),
                 deliveryOrder.getAddress(),
                 deliveryOrder.getStringAssignDateTime(),
-                deliveryOrder.getStringDeliveredDateTime()
+                deliveryOrder.getStringDeliveredDateTime(),
+                deliveryOrder.getFeedback()
         ));
     }
 
@@ -40,6 +44,6 @@ public class DeliveryOrderDao implements ObjectDao<DeliveryOrder> {
     public DeliveryOrder getByCustomerOrderId(CustomerOrder customerOrder) {
         Long orderId = customerOrder.getId();
         List<String> deliveryOrderData = FileService.getOneSpecificData(FILENAME, FileService.ID_COLUMN, String.valueOf(orderId));
-        return new DeliveryOrder(customerOrder, deliveryOrderData.get(1), deliveryOrderData.get(2), deliveryOrderData.get(3), deliveryOrderData.get(4), deliveryOrderData.get(5));
+        return new DeliveryOrder(customerOrder, deliveryOrderData.get(1), deliveryOrderData.get(2), deliveryOrderData.get(3), deliveryOrderData.get(4), deliveryOrderData.get(5), deliveryOrderData.get(6));
     }
 }
