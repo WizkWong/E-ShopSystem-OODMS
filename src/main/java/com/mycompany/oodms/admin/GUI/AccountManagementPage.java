@@ -70,6 +70,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        TitleLab = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         accountTable = new javax.swing.JTable();
         dStaffBtt = new javax.swing.JButton();
@@ -79,13 +80,17 @@ public class AccountManagementPage extends javax.swing.JPanel {
         editBtt = new javax.swing.JButton();
         removeBtt = new javax.swing.JButton();
         createBtt = new javax.swing.JButton();
-        searchFd = new javax.swing.JTextField();
         searchLb = new javax.swing.JLabel();
-        TitleLab = new javax.swing.JLabel();
+        searchFd = new javax.swing.JTextField();
+        SearchBarLab = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1000, 600));
         setPreferredSize(new java.awt.Dimension(1000, 600));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
+        TitleLab.setText("Account Management");
+        add(TitleLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, -1, -1));
 
         accountTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -117,7 +122,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(accountTable);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 690, -1));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, 690, -1));
 
         dStaffBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         dStaffBtt.setText("Delivery Staff");
@@ -129,7 +134,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 dStaffBttActionPerformed(evt);
             }
         });
-        add(dStaffBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 140, -1));
+        add(dStaffBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, 140, -1));
 
         adminBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         adminBtt.setText("Admin");
@@ -141,7 +146,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 adminBttActionPerformed(evt);
             }
         });
-        add(adminBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 140, -1));
+        add(adminBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 140, -1));
 
         customerBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         customerBtt.setText("Customer");
@@ -153,7 +158,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 customerBttActionPerformed(evt);
             }
         });
-        add(customerBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 100, 140, -1));
+        add(customerBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 110, 140, -1));
 
         backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         backBtt.setText("Back");
@@ -174,7 +179,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 editBttActionPerformed(evt);
             }
         });
-        add(editBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 200, 150, -1));
+        add(editBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 210, 150, -1));
 
         removeBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         removeBtt.setText("Remove Account");
@@ -185,7 +190,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 removeBttActionPerformed(evt);
             }
         });
-        add(removeBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 270, -1, -1));
+        add(removeBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, -1, -1));
 
         createBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
         createBtt.setText("Create Account");
@@ -196,7 +201,12 @@ public class AccountManagementPage extends javax.swing.JPanel {
                 createBttActionPerformed(evt);
             }
         });
-        add(createBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 130, 150, -1));
+        add(createBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 140, 150, -1));
+
+        searchLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        searchLb.setText("Search Account:");
+        add(searchLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 120, 40));
 
         searchFd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchFd.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -206,14 +216,9 @@ public class AccountManagementPage extends javax.swing.JPanel {
         });
         add(searchFd, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 580, -1));
 
-        searchLb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        searchLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        searchLb.setText("Search Account:");
-        add(searchLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 120, 40));
-
-        TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
-        TitleLab.setText("Account Management");
-        add(TitleLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, -1, -1));
+        SearchBarLab.setForeground(new java.awt.Color(204, 0, 255));
+        SearchBarLab.setText("*Only ID & Username can be search");
+        add(SearchBarLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 80, -1, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     // load all user information into GUI table
@@ -384,9 +389,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
             // filter the user by search text field
             userList = userList.stream().filter(user ->
                     user.getId().toString().contains(searchTxt) ||
-                    user.getUsername().toLowerCase().contains(searchTxt) ||
-                    user.getEmail().toLowerCase().contains(searchTxt) ||
-                    user.getPhoneNo().contains(searchTxt)
+                    user.getUsername().toLowerCase().contains(searchTxt)
             ).toList();
         }
         loadTable(userList);
@@ -419,6 +422,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SearchBarLab;
     private javax.swing.JLabel TitleLab;
     private javax.swing.JTable accountTable;
     private javax.swing.JButton adminBtt;
