@@ -4,12 +4,16 @@ import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.order.CustomerOrder;
 import com.mycompany.oodms.order.CustomerOrderDao;
 import com.mycompany.oodms.order.DeliveryStatus;
+import com.mycompany.oodms.order.OrderDetail;
 
+import javax.swing.*;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class ViewReportPage extends javax.swing.JPanel {
 
+    private static final DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("MM - yyyy");
     private final CustomerOrderDao customerOrderDao;
     private final List<CustomerOrder> customerOrderList;
     
@@ -19,42 +23,7 @@ public class ViewReportPage extends javax.swing.JPanel {
         
         // Get every data of every customer order
         customerOrderList = customerOrderDao.getAll();
-        
-        
-        double TotalIncome = 0;
-        int TotalProductSold = 0;
-        int TotalOrderPending = 0;
-        int TotalOrderDelivering = 0;
-        int TotalOrderDelivered = 0;
-        for (int i1 = 0; i1 < customerOrderList.size(); i1++) {
-            // Get total income
-            TotalIncome += customerOrderList.get(i1).getCustomerOrderPayment().getTotalPrice();
-            
-            // Get total product sold
-            for (int i2 = 0; i2 < customerOrderList.get(i1).getOrderDetail().size(); i2++) {
-                TotalProductSold += customerOrderList.get(i1).getOrderDetail().get(i2).getQuantity();
-            }                       
-            
-            // Get total order pending, delivering and delivered
-            if (customerOrderList.get(i1).getDeliveryOrder().getDeliveryStatus().getStatus().equalsIgnoreCase(DeliveryStatus.PENDING.toString())) {
-                TotalOrderPending += 1;
-            } else if (customerOrderList.get(i1).getDeliveryOrder().getDeliveryStatus().getStatus().equalsIgnoreCase(DeliveryStatus.DELIVERING.toString())) {
-                TotalOrderDelivering += 1;
-            } else if (customerOrderList.get(i1).getDeliveryOrder().getDeliveryStatus().getStatus().equalsIgnoreCase(DeliveryStatus.DELIVERED.toString())) {
-                TotalOrderDelivered += 1;
-            }            
-        }
-        
-        // Get total amount of order
-        int TotalAmountOrder = customerOrderList.size();
-        
-        TotalIncomeTxt.setText("RM " + Double.toString(TotalIncome));
-        TotalProductSoldTxt.setText(Integer.toString(TotalProductSold));
-        TotalAmountofOrderTxt.setText(Integer.toString(TotalAmountOrder));
-        TotalOrderPendingTxt.setText(Integer.toString(TotalOrderPending));
-        TotalOrderDeliveringTxt.setText(Integer.toString(TotalOrderDelivering));
-        TotalOrderDeliveringTxt.setText(Integer.toString(TotalOrderDelivering));
-        TotalOrderDeliveredTxt.setText(Integer.toString(TotalOrderDelivered));
+        generateReport(customerOrderList);
     }
 
     /**
@@ -69,6 +38,8 @@ public class ViewReportPage extends javax.swing.JPanel {
         TitleLab = new javax.swing.JLabel();
         backBtt = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+        DateLabel = new javax.swing.JLabel();
+        MonthYearLabel = new javax.swing.JLabel();
         TotalOrderDeliveredTxt = new javax.swing.JLabel();
         TotalIncomeLab = new javax.swing.JLabel();
         TotalOrderPendingLab = new javax.swing.JLabel();
@@ -83,8 +54,9 @@ public class ViewReportPage extends javax.swing.JPanel {
         TotalOrderDeliveringTxt = new javax.swing.JLabel();
         ViewMonthlyReport = new javax.swing.JButton();
 
-        setMinimumSize(new java.awt.Dimension(600, 440));
-        setPreferredSize(new java.awt.Dimension(600, 440));
+        setMinimumSize(new java.awt.Dimension(600, 490));
+        setPreferredSize(new java.awt.Dimension(600, 490));
+        setRequestFocusEnabled(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
@@ -104,55 +76,63 @@ public class ViewReportPage extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        DateLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        DateLabel.setText("Date of Month Year:");
+        jPanel1.add(DateLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 170, 30));
+
+        MonthYearLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        MonthYearLabel.setText("All");
+        jPanel1.add(MonthYearLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, 180, 30));
+
         TotalOrderDeliveredTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalOrderDeliveredTxt.setText("0");
-        jPanel1.add(TotalOrderDeliveredTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 210, 180, 30));
+        jPanel1.add(TotalOrderDeliveredTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 250, 180, 30));
 
         TotalIncomeLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalIncomeLab.setText("Total Income:");
-        jPanel1.add(TotalIncomeLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 170, 30));
+        jPanel1.add(TotalIncomeLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 170, 30));
 
         TotalOrderPendingLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalOrderPendingLab.setText("Total Order Pending:");
-        jPanel1.add(TotalOrderPendingLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 200, 30));
+        jPanel1.add(TotalOrderPendingLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 200, 30));
 
         TotalProductSoldLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalProductSoldLab.setText("Total Product Sold:");
-        jPanel1.add(TotalProductSoldLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 170, 30));
+        jPanel1.add(TotalProductSoldLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 170, 30));
 
         TotalAmountofOrderLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalAmountofOrderLab.setText("Total Amount of Order:");
-        jPanel1.add(TotalAmountofOrderLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 200, 30));
+        jPanel1.add(TotalAmountofOrderLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 200, 30));
 
         TotalOrderDeliveringLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalOrderDeliveringLab.setText("Total Order Delivering:");
-        jPanel1.add(TotalOrderDeliveringLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 200, 30));
+        jPanel1.add(TotalOrderDeliveringLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 200, 30));
 
         TotalOrderDeliveredLab.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalOrderDeliveredLab.setText("Total Order Delivered:");
-        jPanel1.add(TotalOrderDeliveredLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 200, 30));
+        jPanel1.add(TotalOrderDeliveredLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 200, 30));
 
         TotalIncomeTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalIncomeTxt.setText("RM 00.00");
-        jPanel1.add(TotalIncomeTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, 180, 30));
+        jPanel1.add(TotalIncomeTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, 180, 30));
 
         TotalProductSoldTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalProductSoldTxt.setText("0");
-        jPanel1.add(TotalProductSoldTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, 180, 30));
+        jPanel1.add(TotalProductSoldTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 90, 180, 30));
 
         TotalAmountofOrderTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalAmountofOrderTxt.setText("0");
-        jPanel1.add(TotalAmountofOrderTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 90, 180, 30));
+        jPanel1.add(TotalAmountofOrderTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 180, 30));
 
         TotalOrderPendingTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalOrderPendingTxt.setText("0");
-        jPanel1.add(TotalOrderPendingTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 180, 30));
+        jPanel1.add(TotalOrderPendingTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, 180, 30));
 
         TotalOrderDeliveringTxt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TotalOrderDeliveringTxt.setText("0");
-        jPanel1.add(TotalOrderDeliveringTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, 180, 30));
+        jPanel1.add(TotalOrderDeliveringTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 210, 180, 30));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 480, 260));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 480, 310));
 
         ViewMonthlyReport.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         ViewMonthlyReport.setText("View Monthly Report");
@@ -162,7 +142,7 @@ public class ViewReportPage extends javax.swing.JPanel {
                 ViewMonthlyReportActionPerformed(evt);
             }
         });
-        add(ViewMonthlyReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 380, 240, 40));
+        add(ViewMonthlyReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 430, 240, 40));
     }// </editor-fold>//GEN-END:initComponents
 
     private void backBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBttActionPerformed
@@ -170,22 +150,70 @@ public class ViewReportPage extends javax.swing.JPanel {
     }//GEN-LAST:event_backBttActionPerformed
 
     private void ViewMonthlyReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewMonthlyReportActionPerformed
-        for (int i = 0; i < customerOrderList.size(); i++) {
-            customerOrderList.get(i).getOrderDateTime();
-        }
-        String[] MonthArray = {};
+        // get all the month and year format and remove duplication
+        Object[] MonthArray = customerOrderList.stream().map(
+                order -> YearMonth.from(order.getOrderDateTime()).format(formatDate)
+        ).distinct().toArray();
         
-        String choice = (String)JOptionPane.showInputDialog(null, "Please select a month", 
+        String choice = (String) JOptionPane.showInputDialog(null, "Please select a month",
             "View Monthly Report", JOptionPane.QUESTION_MESSAGE, null, MonthArray, null);
         
         // If cancel button is press
         if (choice == null) {
             return;
-        }        
+        }
+        MonthYearLabel.setText(choice);
+        YearMonth yearMonth = YearMonth.parse(choice, formatDate);
+        generateReport(customerOrderList.stream().filter(
+                order -> YearMonth.from(order.getOrderDateTime()).equals(yearMonth)
+        ).toList());
     }//GEN-LAST:event_ViewMonthlyReportActionPerformed
 
+    private void generateReport(List<CustomerOrder> customerOrderList) {
+        double TotalIncome = 0;
+        int TotalProductSold = 0;
+        int TotalOrderPending = 0;
+        int TotalOrderDelivering = 0;
+        int TotalOrderDelivered = 0;
 
+        DeliveryStatus deliveryStatus;
+        for (CustomerOrder customerOrder : customerOrderList) {
+            // Get total income
+            TotalIncome += customerOrder.getCustomerOrderPayment().getTotalPrice();
+
+            // Get total product sold
+            for (OrderDetail orderDetail : customerOrder.getOrderDetail()) {
+                TotalProductSold += orderDetail.getQuantity();
+            }
+
+            deliveryStatus = customerOrder.getDeliveryOrder().getDeliveryStatus();
+
+            // Get total order pending, delivering and delivered
+            if (deliveryStatus.equals(DeliveryStatus.PENDING)){
+                TotalOrderPending += 1;
+
+            } else if (deliveryStatus.equals(DeliveryStatus.DELIVERING)) {
+                TotalOrderDelivering += 1;
+
+            } else if (deliveryStatus.equals(DeliveryStatus.DELIVERED)) {
+                TotalOrderDelivered += 1;
+            }
+        }
+
+        // Get total amount of order
+        int TotalAmountOrder = customerOrderList.size();
+
+        TotalIncomeTxt.setText("RM " + TotalIncome);
+        TotalProductSoldTxt.setText(Integer.toString(TotalProductSold));
+        TotalAmountofOrderTxt.setText(Integer.toString(TotalAmountOrder));
+        TotalOrderPendingTxt.setText(Integer.toString(TotalOrderPending));
+        TotalOrderDeliveringTxt.setText(Integer.toString(TotalOrderDelivering));
+        TotalOrderDeliveringTxt.setText(Integer.toString(TotalOrderDelivering));
+        TotalOrderDeliveredTxt.setText(Integer.toString(TotalOrderDelivered));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel DateLabel;
+    private javax.swing.JLabel MonthYearLabel;
     private javax.swing.JLabel TitleLab;
     private javax.swing.JLabel TotalAmountofOrderLab;
     private javax.swing.JLabel TotalAmountofOrderTxt;
