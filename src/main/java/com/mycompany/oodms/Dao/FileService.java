@@ -115,6 +115,7 @@ public interface FileService {
             System.out.printf("Cannot find the \"%s\" file\n", textFile);
             return null;
         }
+        // get the id from file
         FileReader fr;
         BufferedReader br = null;
         String lastLine = null;
@@ -133,22 +134,24 @@ public interface FileService {
         } finally {
             closeFile(br);
         }
+        // if empty file, means no id will return 0
         if (lastLine == null) {
             return 0L;
         }
         long id;
+        // check is number or not, if not return -1L. Note that in GUI will prompt system error message if is -1L
         try {
             id = Long.parseLong(lastLine.split(";")[0]);
         } catch (Exception e) {
             e.printStackTrace();
             return -1L;
         }
+        // increment id by 1
         return id + 1;
     }
 
-    // replace the file with new content
+    // rewrite the file with new content
     static boolean modifyFile(String filename, String content, Boolean append) {
-        // replace the file
         String textFile = String.format("%s%s.txt", FILE_DIRECTORY, filename);
         File file = new File(textFile);
         // check file exist or not
@@ -161,6 +164,7 @@ public interface FileService {
         try {
             fw = new FileWriter(textFile, append);
             bw = new BufferedWriter(fw);
+            // rewrite the file
             bw.write(content);
 
         } catch (IOException e) {
@@ -220,6 +224,7 @@ public interface FileService {
             while ((line = br.readLine()) != null) {
                 if (line.length() > 0) {
                     tempArray = line.split(";");
+                    // if found, add into array
                     if (matchData.equals(tempArray[column])) {
                         // split ";" into array then add into array
                         array.add(new ArrayList<>(Arrays.asList(line.split(";"))));
@@ -232,6 +237,7 @@ public interface FileService {
         } finally {
             closeFile(br);
         }
+        // return all found data
         return array;
     }
 
@@ -256,6 +262,7 @@ public interface FileService {
             while ((line = br.readLine()) != null) {
                 if (line.length() > 0) {
                     tempArray = line.split(";");
+                    // if found, stop loop
                     if (matchData.equals(tempArray[column])) {
                         array.addAll(List.of(line.split(";")));
                         break;
@@ -268,6 +275,7 @@ public interface FileService {
         } finally {
             closeFile(br);
         }
+        // return first found data
         return array;
     }
 

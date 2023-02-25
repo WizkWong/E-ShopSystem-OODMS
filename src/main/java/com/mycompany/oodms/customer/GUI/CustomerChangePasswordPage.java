@@ -100,8 +100,10 @@ public class CustomerChangePasswordPage extends javax.swing.JPanel {
         String pss1 = new String(pssField1.getPassword());
         String pss2 = new String(pssField2.getPassword());
 
+        // validate the password field
         String errMsg = User.validate(pss1,pss2);
 
+        // if no error message after validate, update customer password
         if (errMsg.isEmpty()) {
             Customer customer = (Customer) OODMS.currentUser;
             customer.setPassword(pss1);
@@ -113,6 +115,7 @@ public class CustomerChangePasswordPage extends javax.swing.JPanel {
             OODMS.frame.refresh(new CustomerProfilePage());
             return;
         }
+        // show error message in GUI
         if (errMsg.contains("Password length less than 8")) {
             pssMsgLb.setText("Password invalid, password length must be at least 8!");
             pssMsgLb.setForeground(Color.RED);

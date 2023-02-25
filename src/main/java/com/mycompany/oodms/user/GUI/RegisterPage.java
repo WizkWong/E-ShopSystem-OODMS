@@ -166,8 +166,10 @@ public class RegisterPage extends javax.swing.JPanel {
         String email = emailField.getText();
         String phoneNo = phoneNoField.getText();
 
+        // register the customer, if failed to register will return error message
         String errMsg = Customer.register(username, pss1, pss2, email, phoneNo);
 
+        // if error message is empty, show a pop-up dialog and redirect to home page
         if (errMsg.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Account has successfully created", "Success", JOptionPane.INFORMATION_MESSAGE);
             OODMS.frame.refresh(new HomePage());
@@ -213,6 +215,7 @@ public class RegisterPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_registerBttActionPerformed
 
+    // reset the UI
     private void resetRegisterFormUI() {
         usernameMsgLb.setText("Username must be at least 4 characters");
         usernameMsgLb.setForeground(Color.BLACK);

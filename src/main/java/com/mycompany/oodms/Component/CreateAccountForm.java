@@ -127,15 +127,19 @@ public class CreateAccountForm extends javax.swing.JPanel {
 
         String errMsg = "";
         if (role.equals("Admin")) {
+            // create admin account
             errMsg += Admin.createAcc(username, pss1, pss2, email, phoneNo);
         } else if (role.equals("Delivery Staff")) {
+            // create delivery staff account
             errMsg += DeliveryStaff.createAcc(username, pss1, pss2, email, phoneNo);
         }
 
+        // if no error message
         if (errMsg.isEmpty()) {
             return true;
         }
 
+        // reset GUI
         usernameMsgLb.setText("Username must be at least 4 characters");
         usernameMsgLb.setForeground(Color.BLACK);
         usernameField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
@@ -153,6 +157,7 @@ public class CreateAccountForm extends javax.swing.JPanel {
         phoneNoMsgLb.setVisible(false);
         phoneNoField.setBorder(BorderFactory.createLineBorder(new Color(51,153,255), 2, true));
 
+        // show error message in GUI
         if (errMsg.contains("System Error")) {
             OODMS.showErrorMessage();
             return false;

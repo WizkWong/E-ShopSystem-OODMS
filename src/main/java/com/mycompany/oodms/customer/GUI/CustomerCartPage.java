@@ -40,18 +40,24 @@ public class CustomerCartPage extends javax.swing.JPanel {
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
 
         TableColumnModel productTableColumnModel = productTable.getColumnModel();
+        // align the table column to left
         productTableColumnModel.getColumn(1).setCellRenderer(leftRenderer);
+        // align the table column to center
         productTableColumnModel.getColumn(2).setCellRenderer(centerRenderer);
         productTableColumnModel.getColumn(3).setCellRenderer(centerRenderer);
 
         productTableModel = (DefaultTableModel) productTable.getModel();
+        // hide ID column
         productTable.removeColumn(productTableColumnModel.getColumn(0));
 
         Customer customer = (Customer) OODMS.currentUser;
+        // get customer cart
         List<CartItem> cartItemList = customer.getCart();
+        // if empty cart, cannot check out
         if (cartItemList.isEmpty()) {
             checkOutBtt.setEnabled(false);
         }
+        // load all customer cart item into GUI table
         cartItemList.forEach(cartItem -> {
             Item item = cartItem.getItem();
             productTableModel.addRow(new Object[] {item.getId(), item.getName(), item.getPrice(), cartItem.getQuantity()});
@@ -193,10 +199,12 @@ public class CustomerCartPage extends javax.swing.JPanel {
         add(titleLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
+    // add or change description of item
     private void productTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMousePressed
         int select = productTable.getSelectedRow();
         long id = (long) productTableModel.getValueAt(select, 0);
         Item item = itemDao.searchId(id);
+        // if item does not exist
         if (item == null) {
             despLb.setText("Error, selected product cannot be found");
             return;
@@ -210,23 +218,28 @@ public class CustomerCartPage extends javax.swing.JPanel {
         OODMS.frame.refresh(new CustomerHomePage());
     }//GEN-LAST:event_backBttActionPerformed
 
+    // go to check out page
     private void checkOutBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutBttActionPerformed
         OODMS.frame.refresh(new CustomerCheckOutPage());
     }//GEN-LAST:event_checkOutBttActionPerformed
 
+    // remove customer cart item
     private void deleteBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBttActionPerformed
         int select = productTable.getSelectedRow();
         long id = (long) productTableModel.getValueAt(select, 0);
         Item item = itemDao.searchId(id);
+        // if item does not exist
         if (item == null) {
             JOptionPane.showMessageDialog(null, "Item does not exist, please refresh!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        // pop up confirm box
         int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove this cart item", "Warning", JOptionPane.OK_CANCEL_OPTION);
         if (option != JOptionPane.OK_OPTION) {
             return;
         }
         Customer customer = (Customer) OODMS.currentUser;
+        // remove cart item from file
         if (customer.deleteCartItem(item)) {
             JOptionPane.showMessageDialog(null, "Successfully remove the cart item", "Success", JOptionPane.PLAIN_MESSAGE);
             productTableModel.removeRow(select);
@@ -236,28 +249,34 @@ public class CustomerCartPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteBttActionPerformed
 
+    // edit customer cart item of quantity
     private void editBttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBttActionPerformed
         int select = productTable.getSelectedRow();
         long id = (long) productTableModel.getValueAt(select, 0);
         Item item = itemDao.searchId(id);
+        // if item does not exist
         if (item == null) {
             JOptionPane.showMessageDialog(null, "Item does not exist, please refresh!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         int quantity = (int) productTableModel.getValueAt(select, 3);
+        // pop up input dialog box
         EditNumberForm form = new EditNumberForm("Edit quantity of item", String.format("Current stock left: %d quantity<br>\"%s\" quantity:", item.getStock(),item.getName()), quantity);
         int option = JOptionPane.showConfirmDialog(null, form, "Edit \"" + item.getName() + "\" quantity", JOptionPane.OK_CANCEL_OPTION);
+        // if confirm
         if (option != JOptionPane.OK_OPTION) {
             return;
         }
 
         int newQuantity = form.getNumber();
+        // if customer inout of quantity more than current stock, show message and stop update the item cart
         if (newQuantity > item.getStock() + quantity) {
             JOptionPane.showMessageDialog(null, String.format("Quantity chosen is exceed this item quantity, only %d left", item.getStock()), "Quantity Exceeded", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Customer customer = (Customer) OODMS.currentUser;
+        // update cart item from file
         if (customer.updateCartItem(item, newQuantity)) {
             JOptionPane.showMessageDialog(null, "Successfully update the cart item", "Success", JOptionPane.PLAIN_MESSAGE);
             productTableModel.setValueAt(form.getNumber(), select, 3);

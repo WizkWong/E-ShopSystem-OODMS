@@ -2,10 +2,8 @@ package com.mycompany.oodms.user;
 
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.admin.Admin;
-import com.mycompany.oodms.admin.AdminDao;
 import com.mycompany.oodms.customer.Customer;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
-import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +31,9 @@ public abstract class User {
     }
 
     public static User verify(String username, String password) {
+        // get all user
         List<List<String>> allUser = FileService.readFile(UserDao.FILENAME);
+        // find the first match username and password
         Optional<List<String>> userExist = allUser.stream().filter(list -> list.get(1).equals(username) && list.get(2).equals(password)).findFirst();
         // if no match
         if (userExist.isEmpty()) {
@@ -50,11 +50,11 @@ public abstract class User {
         else if ((user.get(6).equals("true"))) {
             return new Admin(user);        
         }
-        
+
         return new Customer(user);
     }
 
-    // validate the input
+    // validate the name, password, email and phone number
     public static String validate(String name, String password1, String password2, String email, String phoneNo) {
         String errorMessage = "";
 
@@ -80,7 +80,7 @@ public abstract class User {
         return errorMessage;
     }
 
-    // validate the input
+    // validate the name, email and phone number
     public static String validate(String name, String email, String phoneNo) {
         String errorMessage = "";
 
@@ -99,7 +99,7 @@ public abstract class User {
         return errorMessage;
     }
 
-    // validate the input
+    // validate the password
     public static String validate(String password1, String password2) {
         String errorMessage = "";
 

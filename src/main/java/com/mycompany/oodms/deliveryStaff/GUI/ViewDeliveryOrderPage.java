@@ -2,13 +2,11 @@ package com.mycompany.oodms.deliveryStaff.GUI;
 
 import com.mycompany.oodms.OODMS;
 import com.mycompany.oodms.deliveryStaff.DeliveryStaff;
-import com.mycompany.oodms.deliveryStaff.DeliveryStaffDao;
 import com.mycompany.oodms.order.CustomerOrder;
 import com.mycompany.oodms.order.CustomerOrderDao;
 import com.mycompany.oodms.order.DeliveryOrder;
 import com.mycompany.oodms.order.DeliveryOrderDao;
 import com.mycompany.oodms.order.DeliveryStatus;
-import com.mycompany.oodms.user.UserDao;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -24,10 +22,8 @@ import javax.swing.table.TableRowSorter;
 public class ViewDeliveryOrderPage extends javax.swing.JPanel {
 
     private final DefaultTableModel OrderTableModel;
-    private final List<CustomerOrder> customerOrderList;
     private final CustomerOrderDao customerOrderDao;
     private final DeliveryOrderDao deliveryOrderDao;
-    private final DeliveryStaffDao deliveryStaffDao;
 
     private boolean allSection;
     private boolean pendingSection;
@@ -37,7 +33,6 @@ public class ViewDeliveryOrderPage extends javax.swing.JPanel {
     public ViewDeliveryOrderPage() {
         customerOrderDao = OODMS.getCustomerOrderDao();
         deliveryOrderDao = OODMS.getDeliveryOrderDao();
-        deliveryStaffDao = OODMS.getDeliveryStaffDao();
         initComponents();
 
         // Set each section button to true and false, true if lowered, false if raised
@@ -81,10 +76,6 @@ public class ViewDeliveryOrderPage extends javax.swing.JPanel {
         OrderTab.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 
         OrderTableModel = (DefaultTableModel) OrderTab.getModel();
-
-        // Get every data of customer order that is assign to the current delivery staff
-        //customerOrderList = deliveryOrderDao.getByDeliveryStaffId(OODMS.currentUser.getId());
-        customerOrderList = customerOrderDao.getAll();
 
         // Append every data into the table
         loadTable(customerOrderDao.getAllbyDeliveryStaffId((DeliveryStaff) OODMS.currentUser));
@@ -309,7 +300,7 @@ public class ViewDeliveryOrderPage extends javax.swing.JPanel {
         DeliveredOrderBut.setEnabled(false);
 
         // Get keyword from SearchTxt and filter the table using the keyword
-        TableRowSorter rowSorter = new TableRowSorter((DefaultTableModel) OrderTab.getModel());
+        TableRowSorter rowSorter = new TableRowSorter(OrderTab.getModel());
         rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + SearchTxt.getText(), 0, 4, 5));
         OrderTab.setRowSorter(rowSorter);
     }//GEN-LAST:event_SearchTxtsearchEngine

@@ -12,8 +12,6 @@ import com.mycompany.oodms.user.UserDao;
 import java.util.*;
 
 public class Customer extends User {
-    public static final String FILENAME = "customer";
-
     private final List<CartItem> cart;
 
     private final CartItemDao cartItemDao;
@@ -78,7 +76,7 @@ public class Customer extends User {
         return cartItemDao.fileUpdate(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
-    // delete cart item
+    // delete customer cart item
     public boolean deleteCartItem(Item item) {
         Optional<CartItem> existCartItem = this.cart.stream().filter(cartItem -> cartItem.getItem().getId().equals(item.getId())).findFirst();
         if (existCartItem.isEmpty()) {
@@ -92,50 +90,27 @@ public class Customer extends User {
         return cartItemDao.fileDeleteRow(cartItem, this.getId()) && itemDao.fileUpdate(item);
     }
 
-    // delete cart item
+    // clear all the customer cart item
     public void clearCartItem() {
         List<CartItem> cartList = new ArrayList<>(this.cart);
         this.cart.clear();
         // delete the cart data
-        if (cartItemDao.fileDeleteRow(cartList, this.getId())) {
+        if (!cartItemDao.fileDeleteRow(cartList, this.getId())) {
             System.out.println("Fail to remove all Customer Cart Item");
         }
     }
 
     // create and save new customer order
-    public String checkOut(String typeOfPayment, String unitNo, String street, String city, String postalCode, String state) {
-        String errorMsg = "";
-        if (unitNo.isEmpty()) {
-            errorMsg += "Unit No is empty;";
-        }
-        if (street.isEmpty()) {
-            errorMsg += "Street is empty;";
-        }
-        if (city.isEmpty()) {
-            errorMsg += "City is empty;";
-        }
-        if (postalCode.isEmpty()) {
-            errorMsg += "Postal Code is empty;";
-        }
-        if (state.isEmpty()) {
-            errorMsg += "State is empty;";
-        }
+    public boolean checkOut(CustomerOrder customerOrder) {
 
-        if (!errorMsg.isEmpty()) {
-            return errorMsg;
-        }
         // get new id
         Long id = FileService.getNewId(CustomerOrderDao.FILENAME);
         if (id == null || id == -1) {
-            return "System Error";
+            return false;
         }
-        String address = unitNo + "," + street + "," + city + " " + postalCode + "," + state;
-        CustomerOrder customerOrder = new CustomerOrder(id, typeOfPayment, this, address);
+        customerOrder.setId(id);
         // save the order including the order payment, delivery order and order detail
-        if (!customerOrderDao.fileAddNewRow(customerOrder)) {
-            return "System Error";
-        }
-        return "";
+        return customerOrderDao.fileAddNewRow(customerOrder);
     }
 
     // register a new account

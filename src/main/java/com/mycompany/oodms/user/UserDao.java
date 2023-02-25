@@ -6,12 +6,12 @@ import com.mycompany.oodms.Dao.ObjectDao;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao implements ObjectDao<User> {
+public abstract class UserDao<T extends User> implements ObjectDao<T> {
     // columns order in file: User ID, Username, Password, Email, Phone Number, IsStaff, IsAdmin
     public static final String FILENAME = "user";
 
     @Override
-    public List<String> toList(User user) {
+    public List<String> toList(T user) {
         return new ArrayList<>(List.of(
                 String.valueOf(user.getId()),
                 user.getUsername(),
@@ -24,7 +24,7 @@ public class UserDao implements ObjectDao<User> {
     }
 
     @Override
-    public boolean fileAddNewRow(User user) {
+    public boolean fileAddNewRow(T user) {
         List<String> userData = List.of(
                 String.valueOf(user.getId()),
                 user.getUsername(),
@@ -38,7 +38,7 @@ public class UserDao implements ObjectDao<User> {
     }
 
     @Override
-    public boolean fileUpdate(User user) {
+    public boolean fileUpdate(T user) {
         List<String> userData = List.of(
                 String.valueOf(user.getId()),
                 user.getUsername(),
@@ -50,4 +50,10 @@ public class UserDao implements ObjectDao<User> {
         );
         return FileService.updateSingleRow(FILENAME, userData, FileService.ID_COLUMN);
     }
+
+    // get all user
+    public abstract List<T> getAll();
+
+    // get user by user id
+    public abstract T getById(long id);
 }

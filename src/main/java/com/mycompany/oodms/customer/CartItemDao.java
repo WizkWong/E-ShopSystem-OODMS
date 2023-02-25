@@ -58,12 +58,4 @@ public class CartItemDao implements ForeignKey<CartItem> {
         }
         return cart;
     }
-
-    public boolean updateCart(List<CartItem> cart, long customerId) {
-        CartItemDao cartItemDao = OODMS.getCartItemDao();
-        List<List<String>> newStringCart = new ArrayList<>(cart.stream()
-                .map(cartItem -> cartItemDao.toList(cartItem, customerId)).toList());
-        // update the file with new cart
-        return FileService.updateMultipleRows(CartItemDao.FILENAME, newStringCart, 0, 1);
-    }
 }
