@@ -61,6 +61,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         createBtt = new javax.swing.JButton();
         searchFd = new javax.swing.JTextField();
         searchLb = new javax.swing.JLabel();
+        TitleLab = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1000, 600));
         setPreferredSize(new java.awt.Dimension(1000, 600));
@@ -122,7 +123,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
         });
         add(adminBtt, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 140, -1));
 
-        backBtt.setFont(new java.awt.Font("Calibri", 2, 18)); // NOI18N
+        backBtt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         backBtt.setText("Back");
         backBtt.setFocusable(false);
         backBtt.addActionListener(new java.awt.event.ActionListener() {
@@ -177,6 +178,10 @@ public class AccountManagementPage extends javax.swing.JPanel {
         searchLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         searchLb.setText("Search Account:");
         add(searchLb, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 120, 40));
+
+        TitleLab.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
+        TitleLab.setText("Account Management");
+        add(TitleLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void loadTable(List<User> userList) {
@@ -315,6 +320,7 @@ public class AccountManagementPage extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel TitleLab;
     private javax.swing.JTable accountTable;
     private javax.swing.JButton adminBtt;
     private javax.swing.JButton backBtt;
