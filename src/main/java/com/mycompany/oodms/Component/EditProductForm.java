@@ -28,7 +28,7 @@ public class EditProductForm extends javax.swing.JPanel {
         
         // Setting the select product details
         ProNameTxt.setText(item.getName());
-        ProStockTxt.setText(item.getPrice().toString());
+        ProPriceTxt.setText(item.getPrice().toString());
         ProStockTxt.setText(item.getStock().toString());
         ProDesTxt.setText(item.getDescription());
         
@@ -216,7 +216,7 @@ public class EditProductForm extends javax.swing.JPanel {
                 Long NewCategoryID = FileService.getNewId(ItemDao.CATEGORY_FILENAME);
 
                 // Append category data into category.txt
-                OODMS.getItemDao().addNewCategory(NewCategoryID, ProName);
+                OODMS.getItemDao().addNewCategory(NewCategoryID, ProCat);
                 
                 item.setCategory(NewCategoryID);
             }

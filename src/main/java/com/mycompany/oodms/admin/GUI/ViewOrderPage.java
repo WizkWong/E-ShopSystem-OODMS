@@ -282,7 +282,7 @@ public class ViewOrderPage extends javax.swing.JPanel {
 
         AssignOrderLab.setForeground(new java.awt.Color(204, 0, 255));
         AssignOrderLab.setText("*Assign Order is only available when order status is unassigned or pending");
-        add(AssignOrderLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 770, 400, 20));
+        add(AssignOrderLab, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 770, 430, 20));
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButActionPerformed

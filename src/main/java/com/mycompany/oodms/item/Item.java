@@ -96,7 +96,7 @@ public class Item {
             }
 
             // Append category data into category.txt
-            OODMS.getItemDao().addNewCategory(categoryID, name);
+            OODMS.getItemDao().addNewCategory(categoryID, category);
 
         } else {
             categoryID = Long.valueOf(category);
