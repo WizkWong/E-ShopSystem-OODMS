@@ -36,13 +36,13 @@ public class CartItemDao implements ForeignKey<CartItem> {
 
     public boolean fileDeleteRow(CartItem cartItem, long customerId) {
         List<String> cartItemData = toList(cartItem, customerId);
-        return FileService.deleteByTwoId(FILENAME, List.of(cartItemData));
+        return FileService.deleteByTwoId(FILENAME, List.of(cartItemData), 0, 1);
     }
 
     public boolean fileDeleteRow(List<CartItem> cartItemList, long customerId) {
         CartItemDao cartItemDao = OODMS.getCartItemDao();
         List<List<String>> cartItemData = cartItemList.stream().map(cartItem -> cartItemDao.toList(cartItem, customerId)).toList();
-        return FileService.deleteByTwoId(FILENAME, cartItemData);
+        return FileService.deleteByTwoId(FILENAME, cartItemData, 0, 1);
     }
 
     // get all cart item

@@ -3,6 +3,8 @@ package com.mycompany.oodms.item;
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.Dao.ObjectDao;
 
+import com.mycompany.oodms.customer.CartItemDao;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class ItemDao implements ObjectDao<Item> {
     }
 
     public boolean deleteCategory(long categoryId) {
-        return FileService.deleteById(CATEGORY_FILENAME, List.of(List.of(String.valueOf(categoryId))));
+        return FileService.deleteById(CATEGORY_FILENAME, List.of(List.of(String.valueOf(categoryId))), 0);
     }
 
     // get all category id and name
@@ -99,6 +101,9 @@ public class ItemDao implements ObjectDao<Item> {
     }
     
     public boolean remove(Item item) {
+        // remove cart item contain this item
+        List<List<String>> cartItemList = FileService.getMultipleSpecificData(CartItemDao.FILENAME, 1, String.valueOf(item.getId()));
+        FileService.deleteById(CartItemDao.FILENAME, cartItemList, 1);
         return FileService.removeById(ITEM_FILENAME, List.of(toList(item)));
     }
 }

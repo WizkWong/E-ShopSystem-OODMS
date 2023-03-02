@@ -281,9 +281,16 @@ public interface FileService {
 
     private static String convertToContent(String filename, List<String> data) {
         int lastIndex = data.size() - 1;
-        return ALLOWED_REMOVE.contains(filename) && !(data.get(lastIndex).equals("E") || data.get(lastIndex).equals("D")) ?
-                String.join(";", data) + ";E\n" :
-                String.join(";", data) + "\n";
+        // if filename does not allow remove
+        if (!ALLOWED_REMOVE.contains(filename)) {
+            return String.join(";", data) + "\n";
+        }
+        // note after this line, all the data are allow to be remove
+        // if data does not contain "E" and "D" at last index, add "E" in last index
+        if (!data.get(lastIndex).equals("E") && !data.get(lastIndex).equals("D")) {
+            return String.join(";", data) + ";E\n";
+        }
+        return String.join(";", data) + "\n";
     }
 
     /* NEVER USE THIS METHOD WHEN THERE ARE MULTIPLE SAME ID IN MORE THAN ONE COLUMN
@@ -425,14 +432,14 @@ public interface FileService {
     }
     
     // delete the data completely, only allow some file
-    static boolean deleteById(String filename, List<List<String>> arrayData) {
+    static boolean deleteById(String filename, List<List<String>> arrayData, int columnId) {
         // check the file have right to execute this method or not
         if (!ALLOWED_DELETE.contains(filename)) {
             System.out.printf("%s file does not allow to delete the data!\n", filename);
             return false;
         }
         // get all id and convert into set array to remove duplication
-        Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(0))).collect(Collectors.toSet());
+        Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(columnId))).collect(Collectors.toSet());
         List<List<String>> array = readFile(filename);
         String content = "";
         boolean remain;
@@ -440,7 +447,7 @@ public interface FileService {
         for (List<String> row : array) {
             remain = true;
             for (List<String> listId : setId) {
-                if (row.get(0).equals(listId.get(0))) {
+                if (row.get(columnId).equals(listId.get(0))) {
                     remain = false;
                     break;
                 }
@@ -455,14 +462,14 @@ public interface FileService {
     }
     
     // delete the data completely, only allow some file
-    static boolean deleteByTwoId(String filename, List<List<String>> arrayData) {
+    static boolean deleteByTwoId(String filename, List<List<String>> arrayData, int firstColumnId, int secondColumnId) {
         // check the file have right to execute this method or not
         if (!ALLOWED_DELETE.contains(filename)) {
             System.out.printf("%s file does not allow to delete the data!\n", filename);
             return false;
         }
         // get all id and convert into set array to remove duplication
-        Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(0), array.get(1))).collect(Collectors.toSet());
+        Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(firstColumnId), array.get(secondColumnId))).collect(Collectors.toSet());
         List<List<String>> array = readFile(filename);
         String content = "";
         boolean remain;
@@ -470,7 +477,7 @@ public interface FileService {
         for (List<String> row : array) {
             remain = true;
             for (List<String> listId : setId) {
-                if (row.get(0).equals(listId.get(0)) && row.get(1).equals(listId.get(1))) {
+                if (row.get(firstColumnId).equals(listId.get(0)) && row.get(secondColumnId).equals(listId.get(1))) {
                     remain = false;
                     break;
                 }

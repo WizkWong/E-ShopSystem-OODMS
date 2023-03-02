@@ -6,7 +6,6 @@ package com.mycompany.oodms.Component;
 
 import com.mycompany.oodms.Dao.FileService;
 import com.mycompany.oodms.OODMS;
-import com.mycompany.oodms.admin.GUI.AdminPanelForm;
 import com.mycompany.oodms.item.Item;
 import com.mycompany.oodms.item.ItemDao;
 import java.awt.Color;
@@ -165,7 +164,7 @@ public class EditProductForm extends javax.swing.JPanel {
     public boolean formValidate(Item item) {
         String ProName = ProNameTxt.getText();
         String ProCat = "";
-        String ProPriceS = ProStockTxt.getText();
+        String ProPriceS = ProPriceTxt.getText();
         String ProStockS = ProStockTxt.getText();
         String ProDes = ProDesTxt.getText();
         if (ProCatRad1.isSelected()) {
