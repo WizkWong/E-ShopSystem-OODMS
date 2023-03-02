@@ -268,7 +268,10 @@ public class CustomerCartPage extends javax.swing.JPanel {
             return;
         }
 
-        int newQuantity = form.getNumber();
+        Integer newQuantity = form.getNumber();
+        if (newQuantity == null) {
+            return;
+        }
         // if customer inout of quantity more than current stock, show message and stop update the item cart
         if (newQuantity > item.getStock() + quantity) {
             JOptionPane.showMessageDialog(null, String.format("Quantity chosen is exceed this item quantity, only %d left", item.getStock()), "Quantity Exceeded", JOptionPane.ERROR_MESSAGE);

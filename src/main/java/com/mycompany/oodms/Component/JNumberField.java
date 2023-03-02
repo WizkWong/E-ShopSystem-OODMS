@@ -19,7 +19,11 @@ public class JNumberField extends JTextField {
         });
     }
 
-    public int getInteger() {
+    public Integer getInteger() {
+        if (this.getText().isEmpty()) {
+            return null;
+        }
         return Integer.parseInt(this.getText());
+
     }
 }

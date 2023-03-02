@@ -53,7 +53,7 @@ public class EditNumberForm extends javax.swing.JPanel {
         itemLb1.setText(":");
         add(itemLb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 10, 30));
     }// </editor-fold>//GEN-END:initComponents
-    public int getNumber() {
+    public Integer getNumber() {
         return numberField.getInteger();
     }
 

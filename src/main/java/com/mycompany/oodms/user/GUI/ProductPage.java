@@ -286,7 +286,10 @@ public class ProductPage extends javax.swing.JPanel {
         // pop up dialog box
         int option = JOptionPane.showConfirmDialog(null, box, "Add to Cart", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
         // get the customer input of item quantity
-        int itemQuantity = quantityFd.getInteger();
+        Integer itemQuantity = quantityFd.getInteger();
+        if (itemQuantity == null) {
+            return;
+        }
         if (option == JOptionPane.OK_OPTION) {
             // if input more than item current stock
             if (itemQuantity > item.getStock()) {
