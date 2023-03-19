@@ -85,8 +85,8 @@ public class CustomerPurchaseHistory extends javax.swing.JPanel {
         addressTextArea = new javax.swing.JTextArea();
         backBtt = new javax.swing.JButton();
 
-        setMinimumSize(new java.awt.Dimension(700, 600));
-        setPreferredSize(new java.awt.Dimension(700, 600));
+        setMinimumSize(new java.awt.Dimension(700, 662));
+        setPreferredSize(new java.awt.Dimension(700, 662));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         titleLb.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
