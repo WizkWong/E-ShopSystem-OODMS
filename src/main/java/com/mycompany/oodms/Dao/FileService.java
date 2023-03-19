@@ -197,11 +197,11 @@ public interface FileService {
 
     // insert multiple new data into the file
     static boolean insertMultipleData(String filename, List<List<String>> dataList) {
-        String content = "";
+        StringBuilder content = new StringBuilder();
         for (List<String> data : dataList) {
-            content += ALLOWED_REMOVE.contains(filename) ? String.join(";", data) + ";E\n" : String.join(";", data) + "\n";
+            content.append(ALLOWED_REMOVE.contains(filename) ? String.join(";", data) + ";E\n" : String.join(";", data) + "\n");
         }
-        return modifyFile(filename, content, true);
+        return modifyFile(filename, content.toString(), true);
     }
 
     // get all the match data by specific column
@@ -304,7 +304,7 @@ public interface FileService {
         }
         // read file to get all the data
         List<List<String>> oldArray = readFile(filename, true);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         int i = 0;
         for (List<String> oldRow : oldArray) {
             for (List<String> newRow : newArray) {
@@ -315,7 +315,7 @@ public interface FileService {
                     break;
                 }
             }
-            content += convertToContent(filename, oldArray.get(i));
+            content.append(convertToContent(filename, oldArray.get(i)));
             i++;
         }
 
@@ -323,13 +323,13 @@ public interface FileService {
             System.out.printf("These are the data that is not found in %s\n", filename);
             System.out.println(newArray);
         }
-        return modifyFile(filename, content, false);
+        return modifyFile(filename, content.toString(), false);
     }
 
     // get all the data by two column
     static boolean updateMultipleRows(String filename, List<List<String>> newArray, int column1, int column2) {
         List<List<String>> oldArray = readFile(filename, true);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         int i = 0;
         for (List<String> oldRow : oldArray) {
             for (List<String> newRow : newArray) {
@@ -340,7 +340,7 @@ public interface FileService {
                     break;
                 }
             }
-            content += convertToContent(filename, oldArray.get(i));
+            content.append(convertToContent(filename, oldArray.get(i)));
             i++;
         }
 
@@ -348,13 +348,13 @@ public interface FileService {
             System.out.printf("These are the data that is not found in %s\n", filename);
             System.out.println(newArray);
         }
-        return modifyFile(filename, content, false);
+        return modifyFile(filename, content.toString(), false);
     }
 
     // only update single row by matching one column
     static boolean updateSingleRow(String filename, List<String> newData, int column1) {
         List<List<String>> oldArray = readFile(filename, true);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         boolean found = false;
         int i = 0;
         for (List<String> oldRow : oldArray) {
@@ -363,12 +363,12 @@ public interface FileService {
                 oldArray.set(i, newData);
                 found = true;
             }
-            content += convertToContent(filename, oldArray.get(i));
+            content.append(convertToContent(filename, oldArray.get(i)));
             i++;
         }
         // if data got replace then execute to replace the file
         if (found) {
-            return modifyFile(filename, content, false);
+            return modifyFile(filename, content.toString(), false);
         }
 
         System.out.printf("Data {%s} of column{%d} is not found in %s\n", newData, column1, filename);
@@ -378,7 +378,7 @@ public interface FileService {
     // only update single row by matching two column
     static boolean updateSingleRow(String filename, List<String> newData, int column1, int column2) {
         List<List<String>> oldArray = readFile(filename, true);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         boolean found = false;
         int i = 0;
         for (List<String> oldRow : oldArray) {
@@ -387,12 +387,12 @@ public interface FileService {
                 oldArray.set(i, newData);
                 found = true;
             }
-            content += convertToContent(filename, oldArray.get(i));
+            content.append(convertToContent(filename, oldArray.get(i)));
             i++;
         }
         // if data got replace then execute to replace the file
         if (found) {
-            return modifyFile(filename, content, false);
+            return modifyFile(filename, content.toString(), false);
         }
 
         System.out.printf("Data {%s} of column{%d} is not found in %s\n", newData, column1, filename);
@@ -415,7 +415,7 @@ public interface FileService {
         // get all id and convert into set array to remove duplication
         Set<String> setId = arrayData.stream().map(array -> array.get(0)).collect(Collectors.toSet());
         List<List<String>> array = readFile(filename, true);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         int lastIndex = array.get(0).toArray().length - 1;
         int i = 0;
         for (List<String> row : array) {
@@ -425,10 +425,10 @@ public interface FileService {
                     break;
                 }
             }
-            content += String.join(";", array.get(i)) + "\n";
+            content.append(String.join(";", array.get(i))).append("\n");
             i++;
         }
-        return modifyFile(filename, content, false);
+        return modifyFile(filename, content.toString(), false);
     }
     
     // delete the data completely, only allow some file
@@ -441,7 +441,7 @@ public interface FileService {
         // get all id and convert into set array to remove duplication
         Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(columnId))).collect(Collectors.toSet());
         List<List<String>> array = readFile(filename);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         boolean remain;
         int i = 0;
         for (List<String> row : array) {
@@ -454,11 +454,11 @@ public interface FileService {
             }
             // if id match then will not add into content
             if (remain) {
-                content += String.join(";", array.get(i)) + "\n";
+                content.append(String.join(";", array.get(i))).append("\n");
             }
             i++;
         }
-        return modifyFile(filename, content, false);
+        return modifyFile(filename, content.toString(), false);
     }
     
     // delete the data completely, only allow some file
@@ -471,7 +471,7 @@ public interface FileService {
         // get all id and convert into set array to remove duplication
         Set<List<String>> setId = arrayData.stream().map(array -> List.of(array.get(firstColumnId), array.get(secondColumnId))).collect(Collectors.toSet());
         List<List<String>> array = readFile(filename);
-        String content = "";
+        StringBuilder content = new StringBuilder();
         boolean remain;
         int i = 0;
         for (List<String> row : array) {
@@ -484,10 +484,10 @@ public interface FileService {
             }
             // if id match then will not add into content
             if (remain) {
-                content += String.join(";", array.get(i)) + "\n";
+                content.append(String.join(";", array.get(i))).append("\n");
             }
             i++;
         }
-        return modifyFile(filename, content, false);
+        return modifyFile(filename, content.toString(), false);
     }
 }
